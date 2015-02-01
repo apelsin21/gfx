@@ -1,8 +1,8 @@
 #include <iostream>
 
-int main(void) {
+#include "core/device.hpp"
 
-    std::cout << "hello, gfx!\n";
+int main(void) {
 
     return 0;
 }

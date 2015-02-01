@@ -5,7 +5,6 @@ project(gfx)
 #install through package manager
 set(LIBRARIES
     GLEW
-    enet
     freeimage
     assimp
     GL
