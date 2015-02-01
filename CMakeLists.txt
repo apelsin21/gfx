@@ -18,6 +18,7 @@ PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 find_package(Freetype REQUIRED)
 
 set(CMAKE_CXX_FLAGS " -std=c++11")
+set(EXECUTABLE_OUTPUT_PATH ./build)
 
 include_directories(${SDL2_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
