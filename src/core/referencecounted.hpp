@@ -4,7 +4,7 @@
 namespace core {
     class ReferenceCounted {
         private:
-            int _referenceCount;
+            int _nReferences;
         public:
             ReferenceCounted();
             virtual ~ReferenceCounted();

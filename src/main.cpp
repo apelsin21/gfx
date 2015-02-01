@@ -6,7 +6,21 @@
 int main(void) {
     core::Device* device = new core::Device(gfx::DRIVER_TYPE::OPENGL);
 
-    std::cout << "device driver type: " << device->getDriverType() << "\n";
+    const char* typeName = "";
+
+    switch(device->getDriverType()) {
+        case gfx::DRIVER_TYPE::NONE:
+            typeName = "NONE";
+            break;
+        case gfx::DRIVER_TYPE::OPENGL:
+            typeName = "OPENGL";
+            break;
+        default:
+            typeName = "UNKNOWN";
+            break;
+    }
+
+    std::cout << "device driver type: " << typeName << "\n";
     
     device->drop();
     

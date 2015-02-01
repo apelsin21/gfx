@@ -1,7 +1,7 @@
 #include "core/referencecounted.hpp"
 
 core::ReferenceCounted::ReferenceCounted()
-    : _referenceCount(1) {
+    : _nReferences(1) {
     
 }
 
@@ -9,13 +9,13 @@ core::ReferenceCounted::~ReferenceCounted() {
 }
 
 void core::ReferenceCounted::grab() {
-    this->_referenceCount++;
+    this->_nReferences++;
 }
 
 bool core::ReferenceCounted::drop() {
-    this->_referenceCount--;
+    this->_nReferences--;
 
-    if(!this->_referenceCount) {
+    if(!this->_nReferences) {
         delete this;
         return true;
     }
@@ -24,5 +24,5 @@ bool core::ReferenceCounted::drop() {
 }
 
 int core::ReferenceCounted::getReferenceCount() {
-    return this->_referenceCount;
+    return this->_nReferences;
 }
