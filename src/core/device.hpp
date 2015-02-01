@@ -15,6 +15,8 @@ namespace core {
         public:
             Device(gfx::DRIVER_TYPE);
             ~Device();
+
+            gfx::DRIVER_TYPE getDriverType();
     };
 }
 

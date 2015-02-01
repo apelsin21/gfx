@@ -4,17 +4,17 @@
 namespace core {
     class ReferenceCounted {
         private:
-            int referenceCount;
+            int _referenceCount;
         public:
             ReferenceCounted();
             virtual ~ReferenceCounted();
 
-            void Grab();
+            void grab();
             // returns true if nothing is referencing it,
             // otheriwse returns false
-            bool Drop();
+            bool drop();
 
-            int GetReferenceCount();
+            int getReferenceCount();
     };
 }
 

@@ -17,12 +17,11 @@ PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 find_package(Freetype REQUIRED)
 
 set(CMAKE_CXX_FLAGS " -std=c++11")
-set(EXECUTABLE_OUTPUT_PATH ./build)
 
-include_directories(${SDL2_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${SDL2_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-add_executable(${PROJECT_NAME} ./src/main.cpp ${SOURCES} ${HEADERS})
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp ${SOURCES} ${HEADERS})
 
 target_link_libraries(${PROJECT_NAME} ${FREETYPE_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
