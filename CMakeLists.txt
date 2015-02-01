@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(gfx)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
 if(UNIX)
     #libraries that can be found in default path in unix
