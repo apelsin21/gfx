@@ -6,7 +6,10 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/core/device.cpp
 
     #gfx
-	#gui
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sdl2window.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/window.cpp
+	
+    #gui
 	#scene
     #game
  
@@ -20,7 +23,9 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/core/device.hpp
 
 	#gfx
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/drivertypes.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/drivertype.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/window.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sdl2window.hpp
 
 	#gui
 	#scene
