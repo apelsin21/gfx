@@ -5,6 +5,8 @@ gfx::SDL2Window::SDL2Window() {
 gfx::SDL2Window::~SDL2Window() {
     if(this->initialized)  { //deinitialize sdl2
         
+        SDL_GL_DeleteContext(this->_sdlContext);
+        
         if(this->_pSdlWindow != nullptr) {
             SDL_DestroyWindow(this->_pSdlWindow);
         }
@@ -28,6 +30,11 @@ bool gfx::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
         return false;
     }
 
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
     this->_pSdlWindow = SDL_CreateWindow(this->title.c_str(),
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             this->resolution.x, this->resolution.y,
@@ -38,6 +45,8 @@ bool gfx::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
         this->initialized = false;
         return false;
     }
+
+    this->_sdlContext = SDL_GL_CreateContext(this->_pSdlWindow);
 
     this->open = true;
     this->initialized = true;

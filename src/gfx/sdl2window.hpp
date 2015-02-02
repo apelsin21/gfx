@@ -14,6 +14,7 @@ namespace gfx {
     class SDL2Window : public Window {
         private:
             SDL_Window* _pSdlWindow;
+            SDL_GLContext _sdlContext;
         public:
             SDL2Window();
             ~SDL2Window();
