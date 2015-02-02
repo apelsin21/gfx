@@ -49,15 +49,49 @@ bool gfx::SDL2Window::isInitialized() {
 }
 
 std::string gfx::SDL2Window::getTitle() {
+    if(!this->initialized) {
+        return this->title;
+    }
+
+    this->title = std::string(SDL_GetWindowTitle(this->_pSdlWindow));
+
     return this->title;
 }
 bool gfx::SDL2Window::setTitle(const std::string& t) {
+    if(!this->initialized) {
+        return false;
+    }
+
+    this->title = t;
+
+    SDL_SetWindowTitle(this->_pSdlWindow, this->title.c_str());
+
+    return true;
 }
 
 glm::vec2 gfx::SDL2Window::getResolution() {
+    if(!this->initialized) {
+        return this->resolution;
+    }
+    
+
+    int w = 0, h = 0;
+    SDL_GetWindowSize(this->_pSdlWindow, &w, &h);
+
+    this->resolution = glm::vec2(w, h);
+    
     return this->resolution;
 }
 bool gfx::SDL2Window::setResolution(const glm::vec2& r) {
+    if(!this->initialized) {
+        return false;
+    }
+
+    this->resolution = r;
+
+    SDL_SetWindowSize(this->_pSdlWindow, (int)this->resolution.x, (int)this->resolution.y);
+
+    return true;
 }
 
 glm::vec2 gfx::SDL2Window::getPosition() {
@@ -101,25 +135,121 @@ bool gfx::SDL2Window::isFullscreen() {
     return this->fullscreen;
 }
 bool gfx::SDL2Window::setFullscreen(bool f) {
+    if(!this->initialized) {
+        return false;
+    }
+    
+    this->fullscreen = f;
+
+    if(this->fullscreen) {
+        //set window fullscreen
+        if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN) < 0) {
+            return false;
+        }
+    } else {
+        //set window to windowed mode
+        if(SDL_SetWindowFullscreen(this->_pSdlWindow, 0) < 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+bool gfx::SDL2Window::setBorderlessFullscreen(bool f) {
+    if(!this->initialized) {
+        return false;
+    }
+    
+    this->fullscreen = f;
+
+    if(this->fullscreen) {
+        //set window to borderless fullscreen
+        if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP) < 0) {
+            return false;
+        }
+    } else {
+        //set window to windowed mode
+        if(SDL_SetWindowFullscreen(this->_pSdlWindow, 0) < 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool gfx::SDL2Window::isMaximized() {
     return this->maximized;
 }
 bool gfx::SDL2Window::setMaximized(bool m) {
+    if(!this->initialized) {
+        return false;
+    }
+    
+    this->maximized = m;
+
+    if(this->maximized) {
+        //maximize window
+        SDL_MaximizeWindow(this->_pSdlWindow);
+    } else {
+        //restore window
+        SDL_RestoreWindow(this->_pSdlWindow);
+    }
+
+    return true;
 }
 
 bool gfx::SDL2Window::isHidden() {
     return this->hidden;
 }
 bool gfx::SDL2Window::setHidden(bool h) {
+    if(!this->initialized) {
+        return false;
+    }
+
+    this->hidden = h;
+
+    if(this->hidden) {
+        //hides window
+        SDL_HideWindow(this->_pSdlWindow);
+    } else {
+        //shows window
+        SDL_ShowWindow(this->_pSdlWindow);
+    }
+
+    return true;
 }
 
 bool gfx::SDL2Window::isFocused() {
-    return this->focused;
+    if(!this->initialized) {
+        return this->focused;
+    }
+
+    if(SDL_GetWindowGrab(this->_pSdlWindow) == SDL_TRUE) {
+        return true;
+    } else {
+        return false;
+    }
 }
 bool gfx::SDL2Window::setFocused(bool f) {
+    if(!this->initialized) {
+        return false;
+    }
+
+    this->focused = f;
+
+    if(this->focused) {
+        SDL_SetWindowGrab(this->_pSdlWindow, SDL_TRUE);
+    } else {
+        SDL_SetWindowGrab(this->_pSdlWindow, SDL_FALSE);
+    }
+
+    return true;
 }
 
 void gfx::SDL2Window::swapBuffers() {
+    if(!this->initialized) {
+        return;
+    }
+
+    SDL_GL_SwapWindow(this->_pSdlWindow);
 }

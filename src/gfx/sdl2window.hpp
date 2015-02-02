@@ -35,6 +35,7 @@ namespace gfx {
 
             bool isFullscreen();
             bool setFullscreen(bool);
+            bool setBorderlessFullscreen(bool);
 
             bool isMaximized();
             bool setMaximized(bool);
