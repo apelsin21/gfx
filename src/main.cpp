@@ -8,9 +8,9 @@
 #include "gfx/windowtype.hpp"
 
 int main(void) {
-    core::Device* device = new core::Device(gfx::DRIVER_TYPE::OPENGL);
+    core::Device* device = new core::Device(gfx::DRIVER_TYPE::DRIVER_TYPE_OPENGL);
 
-    gfx::Window* window = device->createWindow(gfx::WINDOW_TYPE::SDL2, "Test Window", glm::vec2(800, 600));
+    gfx::Window* window = device->createWindow(gfx::WINDOW_TYPE::WINDOW_TYPE_SDL2, "Test Window", glm::vec2(800, 600));
 
     if(window == nullptr) {
         std::cout << "window is nullptr\n";

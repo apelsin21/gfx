@@ -25,6 +25,7 @@ set(HEADERS
 	#gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/drivertype.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/window.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/windowevent.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sdl2window.hpp
 
 	#gui

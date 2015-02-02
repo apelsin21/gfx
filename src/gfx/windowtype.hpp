@@ -3,7 +3,8 @@
 
 namespace gfx {
     enum WINDOW_TYPE {
-        SDL2,
+        WINDOW_TYPE_NONE,
+        WINDOW_TYPE_SDL2,
     };
 }
 

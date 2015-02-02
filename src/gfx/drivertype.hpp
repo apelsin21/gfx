@@ -3,7 +3,8 @@
 
 namespace gfx {
     enum DRIVER_TYPE {
-        OPENGL
+        DRIVER_TYPE_NONE,
+        DRIVER_TYPE_OPENGL
     };
 }
 

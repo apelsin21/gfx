@@ -16,7 +16,7 @@ gfx::Window* core::Device::createWindow(gfx::WINDOW_TYPE type, const std::string
     gfx::Window* window;
 
     switch(this->windowType) {
-        case gfx::WINDOW_TYPE::SDL2:
+        case gfx::WINDOW_TYPE::WINDOW_TYPE_SDL2:
             window = new gfx::SDL2Window();
             break;
         default:
