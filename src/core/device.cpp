@@ -10,17 +10,21 @@ gfx::DRIVER_TYPE core::Device::getDriverType() {
     return this->driverType;
 }
 
-gfx::Window* core::Device::createWindow(gfx::WINDOW_TYPE t) {
-    this->windowType = t;
+gfx::Window* core::Device::createWindow(gfx::WINDOW_TYPE type, const std::string& title, const glm::vec2& res) {
+    this->windowType = type;
 
     gfx::Window* window;
 
-    switch(t) {
+    switch(this->windowType) {
         case gfx::WINDOW_TYPE::SDL2:
-            window = new gfx::SDL2Window();  
+            window = new gfx::SDL2Window();
             break;
         default:
             break;
+    }
+
+    if(!window->initialize(title, res)) {
+        std::cout << "window failed to initialize\n";
     }
 
     return window;

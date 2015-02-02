@@ -1,6 +1,8 @@
 #ifndef REFERENCE_COUNTED_HPP
 #define REFERENCE_COUNTED_HPP
 
+#include <iostream>
+
 namespace core {
     class ReferenceCounted {
         private:

@@ -1,6 +1,11 @@
 #ifndef DEVICE_HPP
 #define DEVICE_HPP
 
+#include <string>
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+
 #include "core/referencecounted.hpp"
 
 #include "gfx/drivertype.hpp"
@@ -13,16 +18,13 @@ namespace core {
         protected:
             gfx::DRIVER_TYPE driverType; //what type of driver this device will use
             gfx::WINDOW_TYPE windowType; //what type of window this device will use
-
-            //gfx::Driver* pdriver; //pointer to active driver
-            gfx::Window* pwindow; //pointer to active window
         public:
             Device(gfx::DRIVER_TYPE);
             ~Device();
 
             gfx::DRIVER_TYPE getDriverType();
     
-            gfx::Window* createWindow(gfx::WINDOW_TYPE);
+            gfx::Window* createWindow(gfx::WINDOW_TYPE, const std::string&, const glm::vec2&);
     };
 }
 

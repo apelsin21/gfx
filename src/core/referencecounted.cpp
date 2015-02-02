@@ -13,7 +13,9 @@ void core::ReferenceCounted::grab() {
 }
 
 bool core::ReferenceCounted::drop() {
-    this->_nReferences--;
+    if(this->_nReferences > 0) {
+        this->_nReferences--;
+    }
 
     if(!this->_nReferences) {
         delete this;

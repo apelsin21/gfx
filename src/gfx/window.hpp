@@ -23,7 +23,8 @@ namespace gfx {
             Window();
             virtual ~Window();
 
-            virtual void initialize() = 0;
+            //Not meant for direct use. Use through device
+            virtual bool initialize(const std::string&, const glm::vec2&) = 0;
             virtual bool isInitialized() = 0;
             
             virtual std::string getTitle() = 0;
@@ -36,7 +37,7 @@ namespace gfx {
             virtual bool setPosition(const glm::vec2&) = 0;
             
             virtual bool isOpen() = 0;
-            virtual bool setOpen(bool) = 0;
+            virtual bool close() = 0;
 
             virtual bool isFullscreen() = 0;
             virtual bool setFullscreen(bool) = 0;

@@ -1,17 +1,24 @@
 #ifndef SDL2_WINDOW_HPP
 #define SDL2_WINDOW_HPP
 
-#include "gfx/window.hpp"
+#include <string>
+
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
 
 #include <SDL2/SDL.h>
 
+#include "gfx/window.hpp"
+
 namespace gfx {
     class SDL2Window : public Window {
+        private:
+            SDL_Window* _pSdlWindow;
         public:
             SDL2Window();
             ~SDL2Window();
     
-            void initialize();
+            bool initialize(const std::string&, const glm::vec2&);
             bool isInitialized();
 
             std::string getTitle();
@@ -24,7 +31,7 @@ namespace gfx {
             bool setPosition(const glm::vec2&);
 
             bool isOpen();
-            bool setOpen(bool);
+            bool close(); 
 
             bool isFullscreen();
             bool setFullscreen(bool);
