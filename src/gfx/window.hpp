@@ -9,6 +9,7 @@
 #include "core/referencecounted.hpp"
 
 #include "gfx/windowtype.hpp"
+#include "gfx/windowevent.hpp"
 
 namespace gfx {
     class Window : public core::ReferenceCounted {  
@@ -50,7 +51,9 @@ namespace gfx {
             
             virtual bool isFocused() = 0;
             virtual bool setFocused(bool) = 0;
-    
+   
+            virtual WINDOW_EVENT pollEvents() = 0;
+
             virtual void swapBuffers() = 0;
     };
 }

@@ -9,12 +9,16 @@
 #include <SDL2/SDL.h>
 
 #include "gfx/window.hpp"
+#include "gfx/windowevent.hpp"
 
 namespace gfx {
     class SDL2Window : public Window {
         private:
             SDL_Window* _pSdlWindow;
             SDL_GLContext _sdlContext;
+            SDL_Event _sdlEvent;
+
+            unsigned int _sdlWindowID;
         public:
             SDL2Window();
             ~SDL2Window();
@@ -46,7 +50,9 @@ namespace gfx {
 
             bool isFocused();
             bool setFocused(bool);
-    
+   
+            WINDOW_EVENT pollEvents();
+
             void swapBuffers();
     };
 }

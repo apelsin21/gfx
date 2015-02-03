@@ -3,6 +3,7 @@
 
 namespace gfx {
     enum WINDOW_EVENT {
+        WINDOW_EVENT_NONE,
         WINDOW_EVENT_SHOWN,
         WINDOW_EVENT_HIDDEN,
         WINDOW_EVENT_EXPOSED,
@@ -13,7 +14,7 @@ namespace gfx {
         WINDOW_EVENT_RESTORED,
         WINDOW_EVENT_ENTER,
         WINDOW_EVENT_LEAVE,
-        WINDOW_EVENT_FOCUS_GAIND,
+        WINDOW_EVENT_FOCUS_GAINED,
         WINDOW_EVENT_FOCUS_LOST,
         WINDOW_EVENT_CLOSE
     };

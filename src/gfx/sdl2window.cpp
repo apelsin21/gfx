@@ -1,6 +1,7 @@
 #include "sdl2window.hpp"
 
 gfx::SDL2Window::SDL2Window() {
+    this->_sdlWindowID = 0;
 }
 gfx::SDL2Window::~SDL2Window() {
     if(this->initialized)  { //deinitialize sdl2
@@ -50,7 +51,8 @@ bool gfx::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
 
     this->open = true;
     this->initialized = true;
-    
+    this->_sdlWindowID = SDL_GetWindowID(this->_pSdlWindow);
+
     return true;
 }
 bool gfx::SDL2Window::isInitialized() {
@@ -253,6 +255,60 @@ bool gfx::SDL2Window::setFocused(bool f) {
     }
 
     return true;
+}
+
+gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
+    if(!this->initialized) {
+        return gfx::WINDOW_EVENT::WINDOW_EVENT_NONE;
+    }
+
+    while(SDL_PollEvent(&this->_sdlEvent)) {
+        if(!this->_sdlEvent.type == SDL_WINDOWEVENT
+                || !this->_sdlEvent.window.windowID == this->_sdlWindowID) {
+            break;
+        }
+
+        switch(this->_sdlEvent.window.event) {
+            case SDL_WINDOWEVENT_SHOWN:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_SHOWN;
+                break;
+            case SDL_WINDOWEVENT_HIDDEN:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_HIDDEN;
+                break;
+            case SDL_WINDOWEVENT_EXPOSED:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_MOVED;
+                break;
+            case SDL_WINDOWEVENT_RESIZED:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
+                break;
+            case SDL_WINDOWEVENT_MINIMIZED:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_MINIMIZED;
+                break;
+            case SDL_WINDOWEVENT_MAXIMIZED:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_MAXIMIZED;
+                break;
+            case SDL_WINDOWEVENT_RESTORED:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_RESTORED;
+                break;
+            case SDL_WINDOWEVENT_ENTER:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_ENTER;
+                break;
+            case SDL_WINDOWEVENT_LEAVE:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_LEAVE;
+                break;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_GAINED;
+                break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_LOST;
+                break;
+            case SDL_WINDOWEVENT_CLOSE:
+                return gfx::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
+                break;
+        }
+    }
+    
+    return gfx::WINDOW_EVENT::WINDOW_EVENT_NONE;
 }
 
 void gfx::SDL2Window::swapBuffers() {
