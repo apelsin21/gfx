@@ -10,6 +10,7 @@
 
 #include "gfx/windowtype.hpp"
 #include "gfx/windowevent.hpp"
+#include "gfx/keyboardkeys.hpp"
 
 namespace gfx {
     class Window : public core::ReferenceCounted {  
@@ -48,10 +49,12 @@ namespace gfx {
             
             virtual bool isHidden() = 0;
             virtual bool setHidden(bool) = 0;
-            
+
             virtual bool isFocused() = 0;
             virtual bool setFocused(bool) = 0;
    
+            virtual bool isKeyPressed(gfx::KEYBOARD_KEY) = 0;
+            
             virtual WINDOW_EVENT pollEvents() = 0;
 
             virtual void swapBuffers() = 0;

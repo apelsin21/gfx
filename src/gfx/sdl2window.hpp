@@ -10,6 +10,7 @@
 
 #include "gfx/window.hpp"
 #include "gfx/windowevent.hpp"
+#include "gfx/keyboardkeys.hpp"
 
 namespace gfx {
     class SDL2Window : public Window {
@@ -19,6 +20,7 @@ namespace gfx {
             SDL_Event _sdlEvent;
 
             unsigned int _sdlWindowID;
+            const unsigned char* _pSdlKeyboardState;
         public:
             SDL2Window();
             ~SDL2Window();
@@ -50,7 +52,10 @@ namespace gfx {
 
             bool isFocused();
             bool setFocused(bool);
-   
+ 
+            //not all keys are garantueed to be checked for
+            bool isKeyPressed(gfx::KEYBOARD_KEY);
+
             WINDOW_EVENT pollEvents();
 
             void swapBuffers();

@@ -52,6 +52,7 @@ bool gfx::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
     this->open = true;
     this->initialized = true;
     this->_sdlWindowID = SDL_GetWindowID(this->_pSdlWindow);
+    this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
 
     return true;
 }
@@ -257,10 +258,30 @@ bool gfx::SDL2Window::setFocused(bool f) {
     return true;
 }
 
+bool gfx::SDL2Window::isKeyPressed(gfx::KEYBOARD_KEY key) {
+    if(!this->initialized) {
+        return false;
+    }
+
+    bool isPressed = false;
+
+    switch(key) {
+        case gfx::KEYBOARD_KEY::KEY_ESCAPE:
+            isPressed = this->_pSdlKeyboardState[SDL_SCANCODE_ESCAPE];
+            break;
+        default:
+            break;
+    }
+
+    return isPressed;
+}
+
 gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
     if(!this->initialized) {
         return gfx::WINDOW_EVENT::WINDOW_EVENT_NONE;
     }
+
+    gfx::WINDOW_EVENT returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_NONE;
 
     while(SDL_PollEvent(&this->_sdlEvent)) {
         if(!this->_sdlEvent.type == SDL_WINDOWEVENT
@@ -270,45 +291,45 @@ gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
 
         switch(this->_sdlEvent.window.event) {
             case SDL_WINDOWEVENT_SHOWN:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_SHOWN;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_SHOWN;
                 break;
             case SDL_WINDOWEVENT_HIDDEN:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_HIDDEN;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_HIDDEN;
                 break;
             case SDL_WINDOWEVENT_EXPOSED:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_MOVED;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MOVED;
                 break;
             case SDL_WINDOWEVENT_RESIZED:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
                 break;
             case SDL_WINDOWEVENT_MINIMIZED:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_MINIMIZED;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MINIMIZED;
                 break;
             case SDL_WINDOWEVENT_MAXIMIZED:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_MAXIMIZED;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MAXIMIZED;
                 break;
             case SDL_WINDOWEVENT_RESTORED:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_RESTORED;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_RESTORED;
                 break;
             case SDL_WINDOWEVENT_ENTER:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_ENTER;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_ENTER;
                 break;
             case SDL_WINDOWEVENT_LEAVE:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_LEAVE;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_LEAVE;
                 break;
             case SDL_WINDOWEVENT_FOCUS_GAINED:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_GAINED;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_GAINED;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_LOST;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_LOST;
                 break;
             case SDL_WINDOWEVENT_CLOSE:
-                return gfx::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
                 break;
         }
     }
     
-    return gfx::WINDOW_EVENT::WINDOW_EVENT_NONE;
+    return returnEvent;
 }
 
 void gfx::SDL2Window::swapBuffers() {

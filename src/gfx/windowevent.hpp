@@ -16,7 +16,9 @@ namespace gfx {
         WINDOW_EVENT_LEAVE,
         WINDOW_EVENT_FOCUS_GAINED,
         WINDOW_EVENT_FOCUS_LOST,
-        WINDOW_EVENT_CLOSE
+        WINDOW_EVENT_CLOSE,
+        
+        WINDOW_EVENT_COUNT //for bounds checking
     };
 }
 
