@@ -23,7 +23,8 @@ namespace core {
             ~Device();
 
             gfx::DRIVER_TYPE getDriverType();
-    
+   
+            //get a window that was supported when building
             gfx::Window* createWindow(gfx::WINDOW_TYPE, const std::string&, const glm::vec2&);
     };
 }

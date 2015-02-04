@@ -29,6 +29,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/window.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/windowevent.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/keyboardkeys.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/mousekeys.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sdl2window.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sdl2keys.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/driver.hpp

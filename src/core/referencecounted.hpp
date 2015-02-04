@@ -12,8 +12,8 @@ namespace core {
             virtual ~ReferenceCounted();
 
             void grab();
-            // returns true if nothing is referencing it,
-            // otheriwse returns false
+            //returns true if nothing is referencing it,
+            //otheriwse returns false
             bool drop();
 
             int getReferenceCount();

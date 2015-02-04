@@ -18,7 +18,7 @@ gfx::SDL2Window::~SDL2Window() {
 
 bool gfx::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
     if(this->initialized) {
-        //Do nothing if already initialized
+        //do nothing if already initialized
         return false;
     }
 

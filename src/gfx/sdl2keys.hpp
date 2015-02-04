@@ -6,6 +6,8 @@
 #include "gfx/keyboardkeys.hpp"
 
 namespace gfx {
+    //a function that specifically converts a KEYBOARD_KEY to a SDL_Scancode, and returns the result.
+    //if no direct match is available, result is SDL_SCANCODE_UNKNOWN.
     SDL_Scancode convertKeyToSDLScancode(gfx::KEYBOARD_KEY gfxKey);
 }
 

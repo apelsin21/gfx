@@ -25,7 +25,7 @@ namespace gfx {
             Window();
             virtual ~Window();
 
-            //Not meant for direct use. Use through device
+            //not meant for direct use. Use through device
             virtual bool initialize(const std::string&, const glm::vec2&) = 0;
             virtual bool isInitialized() = 0;
             
