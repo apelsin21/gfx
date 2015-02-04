@@ -64,6 +64,8 @@ std::string gfx::SDL2Window::getTitle() {
     if(!this->initialized) {
         return this->title;
     }
+    
+    SDL_PumpEvents();
 
     this->title = std::string(SDL_GetWindowTitle(this->_pSdlWindow));
 
@@ -85,7 +87,8 @@ glm::vec2 gfx::SDL2Window::getResolution() {
     if(!this->initialized) {
         return this->resolution;
     }
-    
+
+    SDL_PumpEvents();
 
     int w = 0, h = 0;
     SDL_GetWindowSize(this->_pSdlWindow, &w, &h);
@@ -110,6 +113,8 @@ glm::vec2 gfx::SDL2Window::getPosition() {
     if(!this->initialized) {
         return this->position;
     }
+    
+    SDL_PumpEvents();
 
     int x = 0, y = 0;
     SDL_GetWindowPosition(this->_pSdlWindow, &x, &y);
@@ -235,6 +240,8 @@ bool gfx::SDL2Window::isFocused() {
     if(!this->initialized) {
         return this->focused;
     }
+    
+    SDL_PumpEvents();
 
     if(SDL_GetWindowGrab(this->_pSdlWindow) == SDL_TRUE) {
         return true;
@@ -262,6 +269,8 @@ bool gfx::SDL2Window::isKeyPressed(gfx::KEYBOARD_KEY key) {
     if(!this->initialized) {
         return false;
     }
+    
+    SDL_PumpEvents();
 
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
@@ -280,6 +289,9 @@ gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
         }
 
         switch(this->_sdlEvent.window.event) {
+            case SDL_WINDOWEVENT_MOVED:
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MOVED;
+                break;
             case SDL_WINDOWEVENT_SHOWN:
                 this->hidden = false;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_SHOWN;

@@ -6,7 +6,8 @@ namespace gfx {
         DRIVER_TYPE_NONE, //no driver at all
         DRIVER_TYPE_MODERN_OPENGL, //for opengl >= 3.0
         DRIVER_TYPE_LEGACY_OPENGL, //for opengl < 3.0
-        DRIVER_TYPE_COUNT //for bounds checking
+
+        DRIVER_TYPE_COUNT //for bounds checking purposes
     };
 }
 

@@ -2,6 +2,7 @@
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #include "core/device.hpp"
 
@@ -19,10 +20,7 @@ int main(void) {
         if(window->isKeyPressed(gfx::KEYBOARD_KEY::KEY_ESCAPE)) {
             window->close();
         }
-        if(window->isKeyPressed(gfx::KEYBOARD_KEY::KEY_E)) {
-            std::cout << "E\n";
-        }
-       
+
         window->pollEvents();
         window->swapBuffers();
     }
