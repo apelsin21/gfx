@@ -19,6 +19,9 @@ int main(void) {
         if(window->isKeyPressed(gfx::KEYBOARD_KEY::KEY_ESCAPE)) {
             window->close();
         }
+        if(window->isKeyPressed(gfx::KEYBOARD_KEY::KEY_E)) {
+            std::cout << "E\n";
+        }
        
         window->pollEvents();
         window->swapBuffers();

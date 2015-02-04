@@ -13,7 +13,7 @@
 #include "gfx/keyboardkeys.hpp"
 
 namespace gfx {
-    class Window : public core::ReferenceCounted {  
+    class Window : public virtual core::ReferenceCounted {  
         protected:
             std::string title; //window caption
             

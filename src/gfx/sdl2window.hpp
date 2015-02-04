@@ -11,6 +11,7 @@
 #include "gfx/window.hpp"
 #include "gfx/windowevent.hpp"
 #include "gfx/keyboardkeys.hpp"
+#include "gfx/sdl2keys.hpp"
 
 namespace gfx {
     class SDL2Window : public Window {

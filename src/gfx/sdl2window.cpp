@@ -263,17 +263,7 @@ bool gfx::SDL2Window::isKeyPressed(gfx::KEYBOARD_KEY key) {
         return false;
     }
 
-    bool isPressed = false;
-
-    switch(key) {
-        case gfx::KEYBOARD_KEY::KEY_ESCAPE:
-            isPressed = this->_pSdlKeyboardState[SDL_SCANCODE_ESCAPE];
-            break;
-        default:
-            break;
-    }
-
-    return isPressed;
+    return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
 
 gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
@@ -291,21 +281,25 @@ gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
 
         switch(this->_sdlEvent.window.event) {
             case SDL_WINDOWEVENT_SHOWN:
+                this->hidden = false;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_SHOWN;
                 break;
             case SDL_WINDOWEVENT_HIDDEN:
+                this->hidden = true;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_HIDDEN;
                 break;
             case SDL_WINDOWEVENT_EXPOSED:
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MOVED;
+                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_EXPOSED;
                 break;
             case SDL_WINDOWEVENT_RESIZED:
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
                 break;
             case SDL_WINDOWEVENT_MINIMIZED:
+                this->maximized = false;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MINIMIZED;
                 break;
             case SDL_WINDOWEVENT_MAXIMIZED:
+                this->maximized = true;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MAXIMIZED;
                 break;
             case SDL_WINDOWEVENT_RESTORED:
@@ -318,12 +312,15 @@ gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_LEAVE;
                 break;
             case SDL_WINDOWEVENT_FOCUS_GAINED:
+                this->focused = true;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_GAINED;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
+                this->focused = false;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_LOST;
                 break;
             case SDL_WINDOWEVENT_CLOSE:
+                this->open = false;
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
                 break;
         }
