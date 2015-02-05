@@ -332,7 +332,7 @@ gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_LOST;
                 break;
             case SDL_WINDOWEVENT_CLOSE:
-                this->open = false;
+                this->close();
                 returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
                 break;
         }

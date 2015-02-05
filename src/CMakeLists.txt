@@ -2,7 +2,6 @@ set(SOURCES
     ${SOURCES}
 
 	#core	
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/referencecounted.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core/device.cpp
 
     #gfx
@@ -21,7 +20,6 @@ set(HEADERS
    	${HEADERS}
 	
     #core	
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/referencecounted.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core/device.hpp
 
 	#gfx

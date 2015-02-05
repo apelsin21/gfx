@@ -4,6 +4,10 @@ project(gfx)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
+set(CMAKE_CXX_FLAGS " -std=c++11")
+
+add_definitions(-DTEST)
+
 if(WIN32)
     #as this is windows, you'll have to provide
     #the path to these libraries
@@ -12,8 +16,6 @@ if(WIN32)
         freeimage
         assimp
     )
-    
-    set(CMAKE_CXX_FLAGS " -std=c++11")
 
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
     
@@ -37,8 +39,6 @@ if(UNIX)
     
     PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
     find_package(Freetype REQUIRED)
-    
-    set(CMAKE_CXX_FLAGS " -std=c++11")
     
     include_directories(${SDL2_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src)
     

@@ -6,14 +6,12 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-#include "core/referencecounted.hpp"
-
 #include "gfx/windowtype.hpp"
 #include "gfx/windowevent.hpp"
 #include "gfx/keyboardkeys.hpp"
 
 namespace gfx {
-    class Window : public virtual core::ReferenceCounted {  
+    class Window {  
         protected:
             std::string title; //window caption
             

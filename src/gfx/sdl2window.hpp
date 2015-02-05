@@ -1,6 +1,7 @@
 #ifndef SDL2_WINDOW_HPP
 #define SDL2_WINDOW_HPP
 
+#include <iostream>
 #include <string>
 
 #define GLM_FORCE_RADIANS

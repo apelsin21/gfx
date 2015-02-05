@@ -1,10 +1,8 @@
 #ifndef DRIVER_HPP
 #define DRIVER_HPP
 
-#include "core/referencecounted.hpp"
-
 namespace gfx {
-    class Driver : public core::ReferenceCounted {
+    class Driver {
         protected:
         public:
             Driver();
