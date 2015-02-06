@@ -6,11 +6,11 @@
 #include <glm/ext.hpp>
 
 #include "core/device.hpp"
+#include "core/windowtype.hpp"
+#include "core/windowevent.hpp"
+#include "core/keyboardkeys.hpp"
 
 #include "gfx/drivertype.hpp"
-#include "gfx/windowtype.hpp"
-#include "gfx/windowevent.hpp"
-#include "gfx/keyboardkeys.hpp"
 
 using namespace core;
 using namespace gfx;
@@ -30,6 +30,6 @@ int main(void) {
         window->pollEvents();
         window->swapBuffers();
     }
-
+    
     return 0;
 }

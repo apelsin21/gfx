@@ -10,12 +10,12 @@ gfx::DRIVER_TYPE core::Device::getDriverType() {
     return this->driverType;
 }
 
-std::shared_ptr<gfx::Window> core::Device::createWindow(gfx::WINDOW_TYPE type, const std::string& title, const glm::vec2& res) {
+std::shared_ptr<core::Window> core::Device::createWindow(core::WINDOW_TYPE type, const std::string& title, const glm::vec2& res) {
     this->windowType = type;
 
     switch(this->windowType) {
-        case gfx::WINDOW_TYPE::WINDOW_TYPE_SDL2:
-            this->pWindow = std::make_shared<gfx::SDL2Window>();
+        case core::WINDOW_TYPE::WINDOW_TYPE_SDL2:
+            this->pWindow = std::make_shared<core::SDL2Window>();
             break;
         default:
             break;
@@ -25,5 +25,8 @@ std::shared_ptr<gfx::Window> core::Device::createWindow(gfx::WINDOW_TYPE type, c
         std::cout << "window failed to initialize\n";
     }
 
+    return this->pWindow;
+}
+std::shared_ptr<core::Window> core::Device::getWindow() {
     return this->pWindow;
 }

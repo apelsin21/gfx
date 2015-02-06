@@ -1,6 +1,6 @@
-#include "gfx/window.hpp"
+#include "core/window.hpp"
 
-gfx::Window::Window() {
+core::Window::Window() {
     this->open = false;
     this->fullscreen = false;
     this->maximized = false;
@@ -8,5 +8,5 @@ gfx::Window::Window() {
     this->focused = false;
     this->initialized = false;
 }
-gfx::Window::~Window() {
+core::Window::~Window() {
 }

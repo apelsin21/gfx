@@ -1,9 +1,9 @@
 #include "sdl2window.hpp"
 
-gfx::SDL2Window::SDL2Window() {
+core::SDL2Window::SDL2Window() {
     this->_sdlWindowID = 0;
 }
-gfx::SDL2Window::~SDL2Window() {
+core::SDL2Window::~SDL2Window() {
     if(this->initialized)  { //deinitialize sdl2
         
         SDL_GL_DeleteContext(this->_sdlContext);
@@ -16,7 +16,7 @@ gfx::SDL2Window::~SDL2Window() {
     }
 }
 
-bool gfx::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
+bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
     if(this->initialized) {
         //do nothing if already initialized
         return false;
@@ -56,11 +56,11 @@ bool gfx::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
 
     return true;
 }
-bool gfx::SDL2Window::isInitialized() {
+bool core::SDL2Window::isInitialized() {
     return this->initialized;
 }
 
-std::string gfx::SDL2Window::getTitle() {
+std::string core::SDL2Window::getTitle() {
     if(!this->initialized) {
         return this->title;
     }
@@ -71,7 +71,7 @@ std::string gfx::SDL2Window::getTitle() {
 
     return this->title;
 }
-bool gfx::SDL2Window::setTitle(const std::string& t) {
+bool core::SDL2Window::setTitle(const std::string& t) {
     if(!this->initialized) {
         return false;
     }
@@ -83,7 +83,7 @@ bool gfx::SDL2Window::setTitle(const std::string& t) {
     return true;
 }
 
-glm::vec2 gfx::SDL2Window::getResolution() {
+glm::vec2 core::SDL2Window::getResolution() {
     if(!this->initialized) {
         return this->resolution;
     }
@@ -97,7 +97,7 @@ glm::vec2 gfx::SDL2Window::getResolution() {
     
     return this->resolution;
 }
-bool gfx::SDL2Window::setResolution(const glm::vec2& r) {
+bool core::SDL2Window::setResolution(const glm::vec2& r) {
     if(!this->initialized) {
         return false;
     }
@@ -109,7 +109,7 @@ bool gfx::SDL2Window::setResolution(const glm::vec2& r) {
     return true;
 }
 
-glm::vec2 gfx::SDL2Window::getPosition() {
+glm::vec2 core::SDL2Window::getPosition() {
     if(!this->initialized) {
         return this->position;
     }
@@ -123,7 +123,7 @@ glm::vec2 gfx::SDL2Window::getPosition() {
 
     return this->position;
 }
-bool gfx::SDL2Window::setPosition(const glm::vec2& p) {
+bool core::SDL2Window::setPosition(const glm::vec2& p) {
     if(!this->initialized) {
         return false;
     }
@@ -133,10 +133,10 @@ bool gfx::SDL2Window::setPosition(const glm::vec2& p) {
     return true;
 }
 
-bool gfx::SDL2Window::isOpen() {
+bool core::SDL2Window::isOpen() {
     return this->open;
 }
-bool gfx::SDL2Window::close() {
+bool core::SDL2Window::close() {
     if(this->initialized) {
         this->open = false;
         return false;
@@ -148,10 +148,10 @@ bool gfx::SDL2Window::close() {
     return true;
 }
 
-bool gfx::SDL2Window::isFullscreen() {
+bool core::SDL2Window::isFullscreen() {
     return this->fullscreen;
 }
-bool gfx::SDL2Window::setFullscreen(bool f) {
+bool core::SDL2Window::setFullscreen(bool f) {
     if(!this->initialized) {
         return false;
     }
@@ -172,7 +172,7 @@ bool gfx::SDL2Window::setFullscreen(bool f) {
 
     return true;
 }
-bool gfx::SDL2Window::setBorderlessFullscreen(bool f) {
+bool core::SDL2Window::setBorderlessFullscreen(bool f) {
     if(!this->initialized) {
         return false;
     }
@@ -194,10 +194,10 @@ bool gfx::SDL2Window::setBorderlessFullscreen(bool f) {
     return true;
 }
 
-bool gfx::SDL2Window::isMaximized() {
+bool core::SDL2Window::isMaximized() {
     return this->maximized;
 }
-bool gfx::SDL2Window::setMaximized(bool m) {
+bool core::SDL2Window::setMaximized(bool m) {
     if(!this->initialized) {
         return false;
     }
@@ -215,10 +215,10 @@ bool gfx::SDL2Window::setMaximized(bool m) {
     return true;
 }
 
-bool gfx::SDL2Window::isHidden() {
+bool core::SDL2Window::isHidden() {
     return this->hidden;
 }
-bool gfx::SDL2Window::setHidden(bool h) {
+bool core::SDL2Window::setHidden(bool h) {
     if(!this->initialized) {
         return false;
     }
@@ -236,7 +236,7 @@ bool gfx::SDL2Window::setHidden(bool h) {
     return true;
 }
 
-bool gfx::SDL2Window::isFocused() {
+bool core::SDL2Window::isFocused() {
     if(!this->initialized) {
         return this->focused;
     }
@@ -249,7 +249,7 @@ bool gfx::SDL2Window::isFocused() {
         return false;
     }
 }
-bool gfx::SDL2Window::setFocused(bool f) {
+bool core::SDL2Window::setFocused(bool f) {
     if(!this->initialized) {
         return false;
     }
@@ -265,7 +265,7 @@ bool gfx::SDL2Window::setFocused(bool f) {
     return true;
 }
 
-bool gfx::SDL2Window::isKeyPressed(gfx::KEYBOARD_KEY key) {
+bool core::SDL2Window::isKeyPressed(core::KEYBOARD_KEY key) {
     if(!this->initialized) {
         return false;
     }
@@ -275,12 +275,12 @@ bool gfx::SDL2Window::isKeyPressed(gfx::KEYBOARD_KEY key) {
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
 
-gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
+core::WINDOW_EVENT core::SDL2Window::pollEvents() {
     if(!this->initialized) {
-        return gfx::WINDOW_EVENT::WINDOW_EVENT_NONE;
+        return core::WINDOW_EVENT::WINDOW_EVENT_NONE;
     }
 
-    gfx::WINDOW_EVENT returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_NONE;
+    core::WINDOW_EVENT returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_NONE;
 
     while(SDL_PollEvent(&this->_sdlEvent)) {
         if(!this->_sdlEvent.type == SDL_WINDOWEVENT
@@ -290,50 +290,50 @@ gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
 
         switch(this->_sdlEvent.window.event) {
             case SDL_WINDOWEVENT_MOVED:
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MOVED;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_MOVED;
                 break;
             case SDL_WINDOWEVENT_SHOWN:
                 this->hidden = false;
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_SHOWN;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_SHOWN;
                 break;
             case SDL_WINDOWEVENT_HIDDEN:
                 this->hidden = true;
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_HIDDEN;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_HIDDEN;
                 break;
             case SDL_WINDOWEVENT_EXPOSED:
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_EXPOSED;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_EXPOSED;
                 break;
             case SDL_WINDOWEVENT_RESIZED:
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
                 break;
             case SDL_WINDOWEVENT_MINIMIZED:
                 this->maximized = false;
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MINIMIZED;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_MINIMIZED;
                 break;
             case SDL_WINDOWEVENT_MAXIMIZED:
                 this->maximized = true;
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_MAXIMIZED;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_MAXIMIZED;
                 break;
             case SDL_WINDOWEVENT_RESTORED:
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_RESTORED;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_RESTORED;
                 break;
             case SDL_WINDOWEVENT_ENTER:
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_ENTER;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_ENTER;
                 break;
             case SDL_WINDOWEVENT_LEAVE:
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_LEAVE;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_LEAVE;
                 break;
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 this->focused = true;
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_GAINED;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_FOCUS_GAINED;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
                 this->focused = false;
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_FOCUS_LOST;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_FOCUS_LOST;
                 break;
             case SDL_WINDOWEVENT_CLOSE:
                 this->close();
-                returnEvent = gfx::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
                 break;
         }
     }
@@ -341,7 +341,7 @@ gfx::WINDOW_EVENT gfx::SDL2Window::pollEvents() {
     return returnEvent;
 }
 
-void gfx::SDL2Window::swapBuffers() {
+void core::SDL2Window::swapBuffers() {
     if(!this->initialized) {
         return;
     }

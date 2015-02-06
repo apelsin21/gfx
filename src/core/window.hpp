@@ -6,11 +6,11 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-#include "gfx/windowtype.hpp"
-#include "gfx/windowevent.hpp"
-#include "gfx/keyboardkeys.hpp"
+#include "core/windowtype.hpp"
+#include "core/windowevent.hpp"
+#include "core/keyboardkeys.hpp"
 
-namespace gfx {
+namespace core {
     class Window {  
         protected:
             std::string title; //window caption
@@ -51,7 +51,7 @@ namespace gfx {
             virtual bool isFocused() = 0;
             virtual bool setFocused(bool) = 0;
    
-            virtual bool isKeyPressed(gfx::KEYBOARD_KEY) = 0;
+            virtual bool isKeyPressed(core::KEYBOARD_KEY) = 0;
             
             virtual WINDOW_EVENT pollEvents() = 0;
 

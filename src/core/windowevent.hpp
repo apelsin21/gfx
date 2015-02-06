@@ -1,7 +1,7 @@
 #ifndef WINDOW_EVENT_HPP
 #define WINDOW_EVENT_HPP
 
-namespace gfx {
+namespace core {
     enum WINDOW_EVENT {
         WINDOW_EVENT_NONE,
         WINDOW_EVENT_SHOWN,

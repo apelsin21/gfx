@@ -9,12 +9,12 @@
 
 #include <SDL2/SDL.h>
 
-#include "gfx/window.hpp"
-#include "gfx/windowevent.hpp"
-#include "gfx/keyboardkeys.hpp"
-#include "gfx/sdl2keys.hpp"
+#include "core/window.hpp"
+#include "core/windowevent.hpp"
+#include "core/keyboardkeys.hpp"
+#include "core/sdl2keys.hpp"
 
-namespace gfx {
+namespace core {
     class SDL2Window : public Window {
         private:
             SDL_Window* _pSdlWindow;
@@ -56,7 +56,7 @@ namespace gfx {
             bool setFocused(bool);
  
             //not all keys are garantueed to be checked for
-            bool isKeyPressed(gfx::KEYBOARD_KEY);
+            bool isKeyPressed(core::KEYBOARD_KEY);
 
             WINDOW_EVENT pollEvents();
 
