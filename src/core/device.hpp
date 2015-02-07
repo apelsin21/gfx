@@ -12,24 +12,29 @@
 #include "core/sdl2window.hpp"
 #include "core/window.hpp"
 
-#include "gfx/drivertype.hpp"
+#include "gfx/renderertype.hpp"
+#include "gfx/renderer.hpp"
+#include "gfx/modernopenglrenderer.hpp"
 
 namespace core {
     class Device{
         protected:
-            gfx::DRIVER_TYPE driverType; //what type of driver this device will use
-            core::WINDOW_TYPE windowType; //what type of window this device will use
+            gfx::RENDERER_TYPE rendererType; //what type of renderer this device will use
+            WINDOW_TYPE windowType; //what type of window this device will use
         
             std::shared_ptr<Window> pWindow;
+            std::shared_ptr<gfx::Renderer> pRenderer;
         public:
-            Device(gfx::DRIVER_TYPE);
+            Device();
             ~Device();
 
-            gfx::DRIVER_TYPE getDriverType();
-   
-            //get a window that was supported when building
-            std::shared_ptr<Window> createWindow(WINDOW_TYPE, const std::string&, const glm::vec2&);
-            std::shared_ptr<Window> getWindow(); //gets a created window
+            std::shared_ptr<Window> createWindow(WINDOW_TYPE);
+            std::shared_ptr<Window> getWindow(); //gets an already created window
+            WINDOW_TYPE getWindowType();
+           
+            std::shared_ptr<gfx::Renderer> createRenderer(gfx::RENDERER_TYPE);
+            std::shared_ptr<gfx::Renderer> getRenderer();
+            gfx::RENDERER_TYPE getRendererType();
     };
 }
 

@@ -1,16 +1,11 @@
 #include "core/device.hpp"
 
-core::Device::Device(gfx::DRIVER_TYPE type) {
-    this->driverType = type;
+core::Device::Device() {
 }
 core::Device::~Device() { 
 }
 
-gfx::DRIVER_TYPE core::Device::getDriverType() {
-    return this->driverType;
-}
-
-std::shared_ptr<core::Window> core::Device::createWindow(core::WINDOW_TYPE type, const std::string& title, const glm::vec2& res) {
+std::shared_ptr<core::Window> core::Device::createWindow(core::WINDOW_TYPE type) {
     this->windowType = type;
 
     switch(this->windowType) {
@@ -21,12 +16,28 @@ std::shared_ptr<core::Window> core::Device::createWindow(core::WINDOW_TYPE type,
             break;
     }
 
-    if(!this->pWindow->initialize(title, res)) {
-        std::cout << "window failed to initialize\n";
-    }
-
     return this->pWindow;
 }
 std::shared_ptr<core::Window> core::Device::getWindow() {
     return this->pWindow;
+}
+core::WINDOW_TYPE core::Device::getWindowType() {
+    return this->windowType;
+}
+
+std::shared_ptr<gfx::Renderer> core::Device::createRenderer(gfx::RENDERER_TYPE type) {
+    this->rendererType = type;
+
+    switch(this->rendererType) {
+        case gfx::RENDERER_TYPE::RENDERER_TYPE_MODERN_OPENGL:
+            this->pRenderer = std::make_shared<gfx::ModernOpenGLRenderer>();
+            break;
+        default:
+            break;
+    }
+
+    return this->pRenderer;
+}
+gfx::RENDERER_TYPE core::Device::getRendererType() {
+    return this->rendererType;
 }

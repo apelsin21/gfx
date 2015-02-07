@@ -8,7 +8,8 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/core/window.cpp
 
     #gfx
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/driver.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/modernopenglrenderer.cpp
 	
     #gui
 	#scene
@@ -29,9 +30,9 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/core/sdl2keys.hpp
 
 	#gfx
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/drivertype.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/driver.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/modernopengldriver.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderertype.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/modernopenglrenderer.hpp
 
 	#gui
 	#scene
