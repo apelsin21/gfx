@@ -27,8 +27,6 @@ int main(void) {
         return -1;
     }
 
-    window->close();
-
     if(!window->initialize("test window", glm::vec2(800, 600))) {
         std::cerr << "failed to initialize window!\n";
         return -1;
