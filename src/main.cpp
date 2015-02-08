@@ -21,11 +21,13 @@ int main(void) {
     shared_ptr<Device> device(make_shared<Device>());
 
     shared_ptr<Window> window = device->createWindow(WINDOW_TYPE::WINDOW_TYPE_SDL2);
-    
+
     if(!window) {
         std::cerr << "failed to create window!\n";
         return -1;
     }
+
+    window->close();
 
     if(!window->initialize("test window", glm::vec2(800, 600))) {
         std::cerr << "failed to initialize window!\n";
@@ -37,13 +39,15 @@ int main(void) {
         << "\nresolution: " << window->getResolution().x << "x" << window->getResolution().y
         << "\ntitle: " << window->getTitle()
         << "\n";
-
+	
     shared_ptr<Renderer> renderer = device->createRenderer(RENDERER_TYPE::RENDERER_TYPE_MODERN_OPENGL);
     
     if(!renderer) {
         std::cerr << "failed to create renderer!\n";
         return -1;
     }
+
+    std::cout << "created a renderer\n";
 
     while(window->isOpen()) {
         if(window->isKeyPressed(KEYBOARD_KEY::KEY_ESCAPE)) {

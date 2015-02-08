@@ -33,6 +33,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderertype.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/modernopenglrenderer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shadertype.hpp
 
 	#gui
 	#scene
