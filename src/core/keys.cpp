@@ -1,4 +1,4 @@
-#include "core/sdl2keys.hpp"
+#include "core/keys.hpp"
 
 SDL_Scancode core::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
     SDL_Scancode sdlKey = SDL_SCANCODE_UNKNOWN;

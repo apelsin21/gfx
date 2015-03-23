@@ -1,5 +1,5 @@
-#ifndef SDL2_KEYS_HPP
-#define SDL2_KEYS_HPP
+#ifndef KEYS_HPP
+#define KEYS_HPP
 
 #include <SDL2/SDL.h>
 
@@ -11,4 +11,4 @@ namespace core {
     SDL_Scancode convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey);
 }
 
-#endif //SDL2_KEYS_HPP
+#endif //KEYS_HPP

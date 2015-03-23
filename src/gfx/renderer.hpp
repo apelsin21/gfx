@@ -6,7 +6,7 @@ namespace gfx {
         protected:
         public:
             Renderer();
-            virtual ~Renderer();
+            ~Renderer();
     };
 }
 
