@@ -12,7 +12,6 @@
 #include "core/window.hpp"
 #include "core/windowevent.hpp"
 #include "core/keyboardkeys.hpp"
-#include "core/keys.hpp"
 
 namespace core {
     class Window {
@@ -57,10 +56,11 @@ namespace core {
             bool isFocused();
             bool setFocused(bool);
  
-            //not all keys are garantueed to be checked for
             bool isKeyPressed(core::KEYBOARD_KEY);
 
             WINDOW_EVENT pollEvents();
+            
+            SDL_Scancode convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey);
 
             void swapBuffers();
     };

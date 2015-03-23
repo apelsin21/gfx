@@ -2,7 +2,6 @@
 #define KEYBOARD_KEYS_HPP
 
 namespace core {
-    //these are modeled after sdl2's SDL_Scancode enum, because it's the most spec compliant
     enum KEYBOARD_KEY {
         KEY_NONE,
         KEY_A,
