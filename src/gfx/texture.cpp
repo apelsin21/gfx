@@ -33,7 +33,7 @@ bool gfx::Texture::load(const std::string& path) {
     if(!bitmap) {
         return false;
     }
-    
+   
     if(FreeImage_GetBPP(bitmap) != 32) {
         FIBITMAP* temp = FreeImage_ConvertTo32Bits(bitmap);
         

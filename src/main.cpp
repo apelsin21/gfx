@@ -10,11 +10,8 @@
 #include "core/keyboardkeys.hpp"
 
 #include "gfx/renderer.hpp"
+#include "gfx/texture.hpp"
 
-using namespace core;
-using namespace gfx;
-using namespace std;
-using namespace glm;
 
 int main(void) {
     core::Window window("test window", glm::vec2(800, 600));
