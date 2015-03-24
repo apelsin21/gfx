@@ -9,8 +9,6 @@ set(CMAKE_CXX_FLAGS " -std=c++11")
 add_definitions(-DTEST)
 
 if(WIN32)
-    #as this is windows, you'll have to provide
-    #the path to these libraries
     set(LIBRARIES
         GLEW
         freeimage
