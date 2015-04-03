@@ -7,62 +7,50 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 
-#include <SDL2/SDL.h>
-
 #include "core/window.hpp"
-#include "core/windowevent.hpp"
-#include "core/keyboardkeys.hpp"
+#include "core/window_event.hpp"
+#include "core/keyboard_keys.hpp"
 
 namespace core {
     class Window {
-        private:
-            SDL_Window* _pSdlWindow;
-            SDL_GLContext _sdlContext;
-            SDL_Event _sdlEvent;
-
+        public:
             std::string title;
             glm::vec2 resolution;
             glm::vec2 position;
             bool open, fullscreen, maximized, hidden, focused;
 
-            unsigned int _sdlWindowID;
-            const unsigned char* _pSdlKeyboardState;
-        public:
-            Window(const std::string&, const glm::vec2&);
-            ~Window();
-    
-            std::string getTitle();
-            bool setTitle(const std::string&);
+            virtual bool initialize(const std::string&, const glm::vec2&) = 0;
 
-            glm::vec2 getResolution();
-            bool setResolution(const glm::vec2&);
-            
-            glm::vec2 getPosition();
-            bool setPosition(const glm::vec2&);
+            virtual std::string getTitle() = 0;
+            virtual bool setTitle(const std::string&) = 0;
 
-            bool isOpen();
-            bool close(); 
+            virtual glm::vec2 getResolution() = 0;
+            virtual bool setResolution(const glm::vec2&) = 0;
 
-            bool isFullscreen();
-            bool setFullscreen(bool);
-            bool setBorderlessFullscreen(bool);
+            virtual glm::vec2 getPosition() = 0;
+            virtual bool setPosition(const glm::vec2&) = 0;
 
-            bool isMaximized();
-            bool setMaximized(bool);
+            virtual bool isOpen() = 0;
+            virtual bool close() = 0; 
 
-            bool isHidden();
-            bool setHidden(bool);
+            virtual bool isFullscreen() = 0;
+            virtual bool setFullscreen(bool) = 0;
+            virtual bool setBorderlessFullscreen(bool) = 0;
 
-            bool isFocused();
-            bool setFocused(bool);
+            virtual bool isMaximized() = 0;
+            virtual bool setMaximized(bool) = 0;
+
+            virtual bool isHidden() = 0;
+            virtual bool setHidden(bool) = 0;
+
+            virtual bool isFocused() = 0;
+            virtual bool setFocused(bool) = 0;
  
-            bool isKeyPressed(core::KEYBOARD_KEY);
+            virtual bool isKeyPressed(core::KEYBOARD_KEY) = 0;
 
-            WINDOW_EVENT pollEvents();
-            
-            SDL_Scancode convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey);
+            virtual WINDOW_EVENT pollEvents() = 0;
 
-            void swapBuffers();
+            virtual void swapBuffers() = 0;
     };
 }
 

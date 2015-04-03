@@ -1,11 +1,31 @@
-#include "window.hpp"
+#include "sdl2_window.hpp"
 
-core::Window::Window(const std::string& t, const glm::vec2& r) {
+core::SDL2Window::SDL2Window() {
+    this->open = false;
+    this->fullscreen = false;
+    this->_sdlWindowID = 0;
+    this->_sdlContext = NULL;
+    this->_pSdlWindow = nullptr;
+}
+core::SDL2Window::~SDL2Window() {
+    if(this->_sdlContext) {
+        SDL_GL_DeleteContext(this->_sdlContext);
+    }
+    
+    if(this->_pSdlWindow) {
+        SDL_DestroyWindow(this->_pSdlWindow);
+    }
+    
+    SDL_Quit();
+}
+
+bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
     this->title = t;
     this->resolution = r;
     
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "Unable to initialize SDL:\n" << SDL_GetError() << "\n";
+        return false;
     }
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -20,6 +40,7 @@ core::Window::Window(const std::string& t, const glm::vec2& r) {
 
     if(!this->_pSdlWindow) {
         std::cout << "Could not create SDL2 window:\n" << SDL_GetError() << "\n";
+        return false;
     }
 
     this->_sdlContext = SDL_GL_CreateContext(this->_pSdlWindow);
@@ -27,27 +48,18 @@ core::Window::Window(const std::string& t, const glm::vec2& r) {
     this->open = true;
     this->_sdlWindowID = SDL_GetWindowID(this->_pSdlWindow);
     this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
-    this->_sdlWindowID = 0;
-}
-core::Window::~Window() {
-    
-    SDL_GL_DeleteContext(this->_sdlContext);
-    
-    if(this->_pSdlWindow != nullptr) {
-        SDL_DestroyWindow(this->_pSdlWindow);
-    }
-    
-    SDL_Quit();
+
+    return true;
 }
 
-std::string core::Window::getTitle() {
+std::string core::SDL2Window::getTitle() {
     SDL_PumpEvents();
 
     this->title = std::string(SDL_GetWindowTitle(this->_pSdlWindow));
 
     return this->title;
 }
-bool core::Window::setTitle(const std::string& t) {
+bool core::SDL2Window::setTitle(const std::string& t) {
     this->title = t;
 
     SDL_SetWindowTitle(this->_pSdlWindow, this->title.c_str());
@@ -55,7 +67,7 @@ bool core::Window::setTitle(const std::string& t) {
     return true;
 }
 
-glm::vec2 core::Window::getResolution() {
+glm::vec2 core::SDL2Window::getResolution() {
     SDL_PumpEvents();
 
     int w = 0, h = 0;
@@ -65,7 +77,7 @@ glm::vec2 core::Window::getResolution() {
     
     return this->resolution;
 }
-bool core::Window::setResolution(const glm::vec2& r) {
+bool core::SDL2Window::setResolution(const glm::vec2& r) {
     this->resolution = r;
 
     SDL_SetWindowSize(this->_pSdlWindow, (int)this->resolution.x, (int)this->resolution.y);
@@ -73,7 +85,7 @@ bool core::Window::setResolution(const glm::vec2& r) {
     return true;
 }
 
-glm::vec2 core::Window::getPosition() {
+glm::vec2 core::SDL2Window::getPosition() {
     SDL_PumpEvents();
 
     int x = 0, y = 0;
@@ -83,26 +95,26 @@ glm::vec2 core::Window::getPosition() {
 
     return this->position;
 }
-bool core::Window::setPosition(const glm::vec2& p) {
+bool core::SDL2Window::setPosition(const glm::vec2& p) {
     SDL_SetWindowPosition(this->_pSdlWindow, (int)this->position.x, (int)this->position.y);
 
     return true;
 }
 
-bool core::Window::isOpen() {
+bool core::SDL2Window::isOpen() {
     return this->open;
 }
-bool core::Window::close() {
+bool core::SDL2Window::close() {
     SDL_DestroyWindow(this->_pSdlWindow);
 
     this->open = false;
     return true;
 }
 
-bool core::Window::isFullscreen() {
+bool core::SDL2Window::isFullscreen() {
     return this->fullscreen;
 }
-bool core::Window::setFullscreen(bool f) {
+bool core::SDL2Window::setFullscreen(bool f) {
     this->fullscreen = f;
 
     if(this->fullscreen) {
@@ -119,7 +131,7 @@ bool core::Window::setFullscreen(bool f) {
 
     return true;
 }
-bool core::Window::setBorderlessFullscreen(bool f) {
+bool core::SDL2Window::setBorderlessFullscreen(bool f) {
     this->fullscreen = f;
 
     if(this->fullscreen) {
@@ -137,10 +149,10 @@ bool core::Window::setBorderlessFullscreen(bool f) {
     return true;
 }
 
-bool core::Window::isMaximized() {
+bool core::SDL2Window::isMaximized() {
     return this->maximized;
 }
-bool core::Window::setMaximized(bool m) {
+bool core::SDL2Window::setMaximized(bool m) {
     this->maximized = m;
 
     if(this->maximized) {
@@ -154,10 +166,10 @@ bool core::Window::setMaximized(bool m) {
     return true;
 }
 
-bool core::Window::isHidden() {
+bool core::SDL2Window::isHidden() {
     return this->hidden;
 }
-bool core::Window::setHidden(bool h) {
+bool core::SDL2Window::setHidden(bool h) {
     this->hidden = h;
 
     if(this->hidden) {
@@ -171,7 +183,7 @@ bool core::Window::setHidden(bool h) {
     return true;
 }
 
-bool core::Window::isFocused() {
+bool core::SDL2Window::isFocused() {
     SDL_PumpEvents();
 
     if(SDL_GetWindowGrab(this->_pSdlWindow) == SDL_TRUE) {
@@ -180,7 +192,7 @@ bool core::Window::isFocused() {
         return false;
     }
 }
-bool core::Window::setFocused(bool f) {
+bool core::SDL2Window::setFocused(bool f) {
     this->focused = f;
 
     if(this->focused) {
@@ -192,13 +204,11 @@ bool core::Window::setFocused(bool f) {
     return true;
 }
 
-bool core::Window::isKeyPressed(core::KEYBOARD_KEY key) {
-    SDL_PumpEvents();
-
+bool core::SDL2Window::isKeyPressed(core::KEYBOARD_KEY key) {
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
 
-core::WINDOW_EVENT core::Window::pollEvents() {
+core::WINDOW_EVENT core::SDL2Window::pollEvents() {
     core::WINDOW_EVENT returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_NONE;
 
     while(SDL_PollEvent(&this->_sdlEvent)) {
@@ -260,7 +270,7 @@ core::WINDOW_EVENT core::Window::pollEvents() {
     return returnEvent;
 }
 
-SDL_Scancode core::Window::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
+SDL_Scancode core::SDL2Window::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
     SDL_Scancode sdlKey = SDL_SCANCODE_UNKNOWN;
 
     switch(gfxKey) {
@@ -353,6 +363,6 @@ SDL_Scancode core::Window::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
     return sdlKey;
 }
 
-void core::Window::swapBuffers() {
+void core::SDL2Window::swapBuffers() {
     SDL_GL_SwapWindow(this->_pSdlWindow);
 }

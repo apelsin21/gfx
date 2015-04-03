@@ -1,24 +1,37 @@
 #include <iostream>
 #include <memory>
+#include <stdlib.h>
+#include <stdio.h>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include "core/window.hpp"
-#include "core/windowevent.hpp"
-#include "core/keyboardkeys.hpp"
+#include "core/sdl2_window.hpp"
+#include "core/window_event.hpp"
+#include "core/keyboard_keys.hpp"
 
-#include "gfx/renderer.hpp"
-#include "gfx/texture.hpp"
-
+#include "gfx/free_image_texture.hpp"
 
 int main(void) {
-    core::Window window("test window", glm::vec2(800, 600));
-    gfx::Renderer renderer();
+    core::SDL2Window window;
+
+    if(!window.initialize("Test Window", glm::vec2(800, 600))) {
+            return EXIT_FAILURE;
+    }
+
+    gfx::FreeImageTexture tex;
     
+    if(!tex.load("test.png")) {
+            std::cout << "failed to load tex\n";
+            return EXIT_FAILURE;
+    }
+
+    printf("loaded %s, res:{%dx%d}, bpp:%d\n", tex.path.c_str(), tex.width, tex.height, tex.bpp);
+    
+
     while(window.isOpen()) {
-        if(window.isKeyPressed(KEYBOARD_KEY::KEY_ESCAPE)) {
+        if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             window.close();
         }
 
@@ -26,5 +39,5 @@ int main(void) {
         window.swapBuffers();
     }
     
-    return 0;
+    return EXIT_SUCCESS;
 }

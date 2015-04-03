@@ -1,14 +1,27 @@
-#include "gfx/texture.hpp"
+#include "gfx/free_image_texture.hpp"
 
-gfx::Texture::Texture() {
+gfx::FreeImageTexture::FreeImageTexture() {
     this->width = 0;
     this->height = 0;
     this->bpp = 0;
 }
-gfx::Texture::~Texture() {
+gfx::FreeImageTexture::~FreeImageTexture() {
 }
 
-FREE_IMAGE_FORMAT gfx::Texture::getFreeImageFormatFromPath(const std::string& path) {
+int gfx::FreeImageTexture::getWidth() {
+    return this->width;
+}
+int gfx::FreeImageTexture::getHeight() {
+    return this->height;
+}
+int gfx::FreeImageTexture::getBPP() {
+    return this->bpp;
+}
+std::string gfx::FreeImageTexture::getPath() {
+    return this->path;
+}
+
+FREE_IMAGE_FORMAT gfx::FreeImageTexture::getFreeImageFormatFromPath(const std::string& path) {
    FREE_IMAGE_FORMAT format = FreeImage_GetFileType(path.c_str(), 0);
    
    if(format == FIF_UNKNOWN) {
@@ -16,7 +29,7 @@ FREE_IMAGE_FORMAT gfx::Texture::getFreeImageFormatFromPath(const std::string& pa
    }
 }
 
-bool gfx::Texture::load(const std::string& path) {
+bool gfx::FreeImageTexture::load(const std::string& path) {
     if(path.empty()) {
         return false;
     }

@@ -3,19 +3,19 @@
 
 #include <string>
 
-#include <FreeImage.h>
-
 namespace gfx {
     class Texture {
-        private:
+        public:
             int width, height, bpp;
             std::string path;
-        public:
-            Texture();
-            ~Texture();
 
-            FREE_IMAGE_FORMAT getFreeImageFormatFromPath(const std::string&);
-            bool load(const std::string&);
+            virtual int getWidth() = 0;
+            virtual int getHeight() = 0;
+            virtual int getBPP() = 0;
+
+            virtual std::string getPath() = 0;
+
+            virtual bool load(const std::string&) = 0;
     };
 }
 
