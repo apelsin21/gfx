@@ -6,6 +6,9 @@ set(SOURCES
 
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.cpp
+    
+    #net
+    ${CMAKE_CURRENT_SOURCE_DIR}/net/address.cpp
 	
     PARENT_SCOPE
 )
@@ -23,6 +26,11 @@ set(HEADERS
 	#gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
+
+    #net
+    ${CMAKE_CURRENT_SOURCE_DIR}/net/client.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/net/server.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/net/address.hpp
 
     PARENT_SCOPE
 )

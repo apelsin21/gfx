@@ -13,7 +13,17 @@
 
 #include "gfx/free_image_texture.hpp"
 
-int main(void) {
+#include "net/address.hpp"
+
+int main() {
+    net::Address addr("mugg.is", 2300);
+
+    std::cout << "ip as string:\n"
+              << addr.getHostAsString() << ":" << addr.port << "\n"
+              << addr.a << "." << addr.b << "." << addr.c << "." << addr.d << ":" << addr.port << "\n"
+              << addr.host << ":" << addr.port << "\n"
+              << "\n";
+
     core::SDL2Window window;
 
     if(!window.initialize("Test Window", glm::vec2(800, 600))) {
