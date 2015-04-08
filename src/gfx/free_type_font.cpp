@@ -23,7 +23,7 @@ bool gfx::FreeTypeFont::load(const std::string& path, unsigned int size) {
         std::cout << "failed to open font " << path << ", unsupported format\n";
         return false;
     } else {
-        std::cout << "failed to open font " << path << ", damaged file or insufficient priviliges to read\n";
+        std::cout << "failed to open font " << path << ", non-existent, damaged or insufficient priviliges\n";
         return false;
     }
 

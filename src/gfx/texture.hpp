@@ -12,8 +12,6 @@ namespace gfx {
             glm::vec2 res;
             std::string path;
 
-            virtual std::string getPath() = 0;
-
             virtual bool load(const std::string&) = 0;
     };
 }

@@ -6,10 +6,6 @@ gfx::FreeImageTexture::FreeImageTexture() {
 gfx::FreeImageTexture::~FreeImageTexture() {
 }
 
-std::string gfx::FreeImageTexture::getPath() {
-    return this->path;
-}
-
 FREE_IMAGE_FORMAT gfx::FreeImageTexture::getFreeImageFormatFromPath(const std::string& path) {
    FREE_IMAGE_FORMAT format = FreeImage_GetFileType(path.c_str(), 0);
    
