@@ -6,6 +6,7 @@ set(SOURCES
 
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.cpp
     
     #net
     ${CMAKE_CURRENT_SOURCE_DIR}/net/address.cpp
@@ -25,7 +26,9 @@ set(HEADERS
 
 	#gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
 
     #net
     ${CMAKE_CURRENT_SOURCE_DIR}/net/client.hpp

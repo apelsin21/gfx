@@ -3,15 +3,14 @@
 
 #include <string>
 
+#include <glm/glm.hpp>
+
 namespace gfx {
     class Texture {
         public:
-            int width, height, bpp;
+            int bpp;
+            glm::vec2 res;
             std::string path;
-
-            virtual int getWidth() = 0;
-            virtual int getHeight() = 0;
-            virtual int getBPP() = 0;
 
             virtual std::string getPath() = 0;
 

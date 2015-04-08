@@ -11,10 +11,6 @@ namespace gfx {
             FreeImageTexture();
             ~FreeImageTexture();
 
-            int getWidth();
-            int getHeight();
-            int getBPP();
-
             std::string getPath();
 
             FREE_IMAGE_FORMAT getFreeImageFormatFromPath(const std::string&);
