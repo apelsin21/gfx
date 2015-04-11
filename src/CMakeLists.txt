@@ -7,6 +7,7 @@ set(SOURCES
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/opengl_renderer.cpp
     
     #net
     ${CMAKE_CURRENT_SOURCE_DIR}/net/address.cpp
@@ -29,6 +30,9 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/opengl_renderer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.hpp
 
     #net
     ${CMAKE_CURRENT_SOURCE_DIR}/net/client.hpp

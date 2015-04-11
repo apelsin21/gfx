@@ -13,6 +13,7 @@
 
 #include "gfx/free_image_texture.hpp"
 #include "gfx/free_type_font.hpp"
+#include "gfx/opengl_renderer.hpp"
 
 int main() {
     core::SDL2Window window;
@@ -23,22 +24,35 @@ int main() {
 
     gfx::FreeImageTexture tex;
     
+    //loads texture from file
     if(!tex.load("test.png")) {
             std::cout << "failed to load texture " << tex.path << "\n";
-            return EXIT_FAILURE;
     }
 
     gfx::FreeTypeFont font;
     
+    //Loads the font from file, generates a texture using the pixelsize specified
     if(!font.load("./test.ttf", 12)) {
         std::cout << "failed to load font " << font.path << "\n";
-        return EXIT_FAILURE;
+    }
+
+    gfx::OpenGLRenderer renderer;
+    
+    //Loads default shaders, creates opengl context, checks if version parameters are supported on the machine
+    if(!renderer.initialize(3, 3, true)) {
+        std::cout << "failed to create opengl [" << renderer.majorVersion << "." << renderer.minorVersion << ", " << renderer.coreProfile << "] renderer\n";
     }
 
     while(window.isOpen()) {
         if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             window.close();
         }
+
+        //Clears color buffer, depth buffer (stencil buffer?)
+        renderer.begin();
+        //draws text using provided font using the default font shader, at coordinates specified
+        renderer.drawText(font, "bajs", window.resolution / 2.0f);
+        renderer.end();
 
         window.pollEvents();
         window.swapBuffers();

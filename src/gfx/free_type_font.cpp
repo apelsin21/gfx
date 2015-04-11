@@ -17,9 +17,7 @@ bool gfx::FreeTypeFont::load(const std::string& path, unsigned int size) {
         return false;
     }
 
-    int error = FT_New_Face(fl, path.c_str(), 0, &ff);
-
-    if(error == FT_Err_Unknown_File_Format) {
+    if(FT_New_Face(fl, path.c_str(), 0, &ff) == FT_Err_Unknown_File_Format) {
         std::cout << "failed to open font " << path << ", unsupported format\n";
         return false;
     } else {
