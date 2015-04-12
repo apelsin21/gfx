@@ -23,8 +23,8 @@ namespace gfx {
             GLRenderer();
             ~GLRenderer();
 
-            void setColor(const Color&);
-            Color getColor();
+            void setClearColor(const Color&);
+            Color getClearColor();
 
             std::tuple<GLint, GLint> getSupportedGLVersion();
             bool isGLVersionSupported(unsigned int, unsigned int);

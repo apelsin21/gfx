@@ -5,6 +5,7 @@ gfx::GLRenderer::GLRenderer() {
     this->minorVersion = 0;
     this->coreProfile = false;
     this->isDrawing = false;
+    this->clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
 }
 gfx::GLRenderer::~GLRenderer() {
 }
@@ -49,21 +50,36 @@ bool gfx::GLRenderer::initialize(unsigned int major, unsigned int minor, bool co
     this->minorVersion = minor;
     this->coreProfile = core;
 
+    glEnable(GL_BLEND | GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     return true;
 }
 
+void gfx::GLRenderer::setClearColor(const gfx::Color& c) {
+    this->clearColor = c;
+    glClearColor(this->clearColor.r,
+                 this->clearColor.g,
+                 this->clearColor.b,
+                 this->clearColor.a);
+}
+gfx::Color gfx::GLRenderer::getClearColor() {
+    return this->clearColor;
+}
+
 void gfx::GLRenderer::begin() {
-    //If it's already drawing, we won't do it again!
+    //We'll only draw if there's no other drawing going on. Don't want to mess with the state machine
     if(this->isDrawing) {
         return;
     }
 
     this->isDrawing = true;
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void gfx::GLRenderer::end() {
     this->isDrawing = false;
 }
 
 void gfx::GLRenderer::drawText(const Font& f, const std::string& s, const glm::vec2& p) {
-    //Nothing
 }
