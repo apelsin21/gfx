@@ -50,13 +50,20 @@ int main() {
             window.close();
         }
 
+        switch(window.pollEvents()) {
+            case core::WINDOW_EVENT::WINDOW_EVENT_RESIZED:
+                window.setResolution(window.getResolution());
+                break;
+            default:
+                break;
+        }
+
         //Clears color buffer, depth buffer (stencil buffer?)
         renderer.begin();
         //draws text using provided font using the default font shader, at coordinates specified
         renderer.drawText(font, "bajs", window.resolution / 2.0f);
         renderer.end();
 
-        window.pollEvents();
         window.swapBuffers();
     }
     

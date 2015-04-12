@@ -53,8 +53,6 @@ bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
 }
 
 std::string core::SDL2Window::getTitle() {
-    SDL_PumpEvents();
-
     this->title = std::string(SDL_GetWindowTitle(this->_pSdlWindow));
 
     return this->title;
@@ -68,8 +66,6 @@ bool core::SDL2Window::setTitle(const std::string& t) {
 }
 
 glm::vec2 core::SDL2Window::getResolution() {
-    SDL_PumpEvents();
-
     int w = 0, h = 0;
     SDL_GetWindowSize(this->_pSdlWindow, &w, &h);
 
@@ -86,8 +82,6 @@ bool core::SDL2Window::setResolution(const glm::vec2& r) {
 }
 
 glm::vec2 core::SDL2Window::getPosition() {
-    SDL_PumpEvents();
-
     int x = 0, y = 0;
     SDL_GetWindowPosition(this->_pSdlWindow, &x, &y);
 
@@ -184,8 +178,6 @@ bool core::SDL2Window::setHidden(bool h) {
 }
 
 bool core::SDL2Window::isFocused() {
-    SDL_PumpEvents();
-
     if(SDL_GetWindowGrab(this->_pSdlWindow) == SDL_TRUE) {
         return true;
     } else {
@@ -212,8 +204,7 @@ core::WINDOW_EVENT core::SDL2Window::pollEvents() {
     core::WINDOW_EVENT returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_NONE;
 
     while(SDL_PollEvent(&this->_sdlEvent)) {
-        if(!this->_sdlEvent.type == SDL_WINDOWEVENT
-                || !this->_sdlEvent.window.windowID == this->_sdlWindowID) {
+        if(!this->_sdlEvent.type == SDL_WINDOWEVENT || this->_sdlEvent.window.windowID != this->_sdlWindowID) {
             break;
         }
 
