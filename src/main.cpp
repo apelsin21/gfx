@@ -1,7 +1,5 @@
 #include <iostream>
-#include <memory>
-#include <stdlib.h>
-#include <stdio.h>
+#include <tuple>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -13,7 +11,7 @@
 
 #include "gfx/free_image_texture.hpp"
 #include "gfx/free_type_font.hpp"
-#include "gfx/opengl_renderer.hpp"
+#include "gfx/gl_renderer.hpp"
 
 int main() {
     core::SDL2Window window;
@@ -36,11 +34,15 @@ int main() {
         std::cout << "failed to load font " << font.path << "\n";
     }
 
-    gfx::OpenGLRenderer renderer;
-    
+    gfx::GLRenderer renderer;
+   
+    auto glVer = renderer.getSupportedGLVersion();
+    std::cout << "Supported GL version: " << std::get<0>(glVer)  << "." << std::get<1>(glVer) << "\n";
+
     //Loads default shaders, creates opengl context, checks if version parameters are supported on the machine
-    if(!renderer.initialize(3, 3, true)) {
-        std::cout << "failed to create opengl [" << renderer.majorVersion << "." << renderer.minorVersion << ", " << renderer.coreProfile << "] renderer\n";
+    if(!renderer.initialize(std::get<0>(glVer), std::get<1>(glVer), true)) {
+        std::cout << "Failed to create GL context\n";
+        return false;
     }
 
     while(window.isOpen()) {

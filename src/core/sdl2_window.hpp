@@ -9,6 +9,9 @@
 
 #include <SDL2/SDL.h>
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include "core/window.hpp"
 
 namespace core {

@@ -4,19 +4,30 @@
 #include "gfx/color.hpp"
 #include "gfx/renderer.hpp"
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
+#include <glm/glm.hpp>
+
+#include <iostream>
+#include <tuple>
+
 namespace gfx {
-    class OpenGLRenderer : public Renderer {
+    class GLRenderer : public Renderer {
         protected:
             Color clearColor;
         public:
             unsigned int majorVersion, minorVersion;
             bool coreProfile;
 
-            OpenGLRenderer();
-            ~OpenGLRenderer();
+            GLRenderer();
+            ~GLRenderer();
 
             void setColor(const Color&);
             Color getColor();
+
+            std::tuple<GLint, GLint> getSupportedGLVersion();
+            bool isGLVersionSupported(unsigned int, unsigned int);
 
             bool initialize(unsigned int, unsigned int, bool);
 
