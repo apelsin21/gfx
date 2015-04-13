@@ -29,6 +29,9 @@ bool gfx::GLRenderer::isGLVersionSupported(unsigned int major, unsigned int mino
     return true;
 }
 
+bool gfx::GLRenderer::initialize(std::tuple<unsigned int, unsigned int> glVer, bool core) {
+	return this->initialize(std::get<0>(glVer), std::get<1>(glVer), core);
+}
 bool gfx::GLRenderer::initialize(unsigned int major, unsigned int minor, bool core) {
     if(!this->isGLVersionSupported(major, minor)) {
         std::cout << "Failed to initialize GL renderer, unsupported GL version " << major << "." << minor << "\n";

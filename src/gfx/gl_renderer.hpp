@@ -30,6 +30,7 @@ namespace gfx {
             bool isGLVersionSupported(unsigned int, unsigned int);
 
             bool initialize(unsigned int, unsigned int, bool);
+            bool initialize(std::tuple<unsigned int, unsigned int>, bool);
 
             void begin();
             void drawText(const Font&, const std::string&, const glm::vec2&);

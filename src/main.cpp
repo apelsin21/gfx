@@ -17,7 +17,8 @@ int main() {
     core::SDL2Window window;
 
     if(!window.initialize("Test Window", glm::vec2(800, 600))) {
-            return EXIT_FAILURE;
+		std::cout << "failed to initialize window\n";
+        return EXIT_FAILURE;
     }
 
     gfx::FreeImageTexture tex;
@@ -36,11 +37,8 @@ int main() {
 
     gfx::GLRenderer renderer;
    
-    auto glVer = renderer.getSupportedGLVersion();
-    std::cout << "Supported GL version: " << std::get<0>(glVer)  << "." << std::get<1>(glVer) << "\n";
-
     //Loads default shaders, creates opengl context, checks if version parameters are supported on the machine
-    if(!renderer.initialize(std::get<0>(glVer), std::get<1>(glVer), true)) {
+    if(!renderer.initialize(renderer.getSupportedGLVersion(), true)) {
         std::cout << "Failed to create GL context\n";
         return false;
     }
@@ -60,7 +58,8 @@ int main() {
 
         //Clears color buffer, depth buffer (stencil buffer?)
         renderer.begin();
-        //draws text using provided font using the default font shader, at coordinates specified
+        //draws text using provided font using the default font shader
+		//since no other font shader has been specificed, at the coordinates specified
         renderer.drawText(font, "bajs", window.resolution / 2.0f);
         renderer.end();
 
