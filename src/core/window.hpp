@@ -17,7 +17,7 @@ namespace core {
             std::string title;
             glm::vec2 resolution;
             glm::vec2 position;
-            bool open, fullscreen, maximized, hidden, focused;
+            bool open, fullscreen, maximized, hidden, focused, initialized;
 
             virtual bool initialize(const std::string&, const glm::vec2&) = 0;
 

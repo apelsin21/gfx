@@ -3,6 +3,11 @@
 core::SDL2Window::SDL2Window() {
     this->open = false;
     this->fullscreen = false;
+    this->initialized = false;
+    this->maximized = false;
+    this->hidden = false;
+    this->focused = false;
+
     this->_sdlWindowID = 0;
     this->_sdlContext = NULL;
     this->_pSdlWindow = nullptr;
@@ -20,6 +25,11 @@ core::SDL2Window::~SDL2Window() {
 }
 
 bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
+    if(this->initialized) {
+        std::cout << "window is already initialized!\n";
+        return false;
+    }
+
     this->title = t;
     this->resolution = r;
     
@@ -46,6 +56,7 @@ bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
     this->_sdlContext = SDL_GL_CreateContext(this->_pSdlWindow);
 
     this->open = true;
+    this->initialized = true;
     this->_sdlWindowID = SDL_GetWindowID(this->_pSdlWindow);
     this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
 
@@ -60,39 +71,51 @@ std::string core::SDL2Window::getTitle() {
 bool core::SDL2Window::setTitle(const std::string& t) {
     this->title = t;
 
-    SDL_SetWindowTitle(this->_pSdlWindow, this->title.c_str());
+    if(this->initialized) {
+        SDL_SetWindowTitle(this->_pSdlWindow, this->title.c_str());
+        return true;
+    }
 
-    return true;
+    return false;
 }
 
 glm::vec2 core::SDL2Window::getResolution() {
-    int w = 0, h = 0;
-    SDL_GetWindowSize(this->_pSdlWindow, &w, &h);
+    if(this->initialized) {
+        int w, h = 0;
+        SDL_GetWindowSize(this->_pSdlWindow, &w, &h);
 
-    this->resolution = glm::vec2(w, h);
+        this->resolution = glm::vec2(w, h);
+    }
     
     return this->resolution;
 }
 bool core::SDL2Window::setResolution(const glm::vec2& r) {
     this->resolution = r;
 
-    SDL_SetWindowSize(this->_pSdlWindow, (int)this->resolution.x, (int)this->resolution.y);
+    if(this->initialized) {
+        SDL_SetWindowSize(this->_pSdlWindow, (int)this->resolution.x, (int)this->resolution.y);
+        return true;
+    }
 
-    return true;
+    return false;
 }
 
 glm::vec2 core::SDL2Window::getPosition() {
-    int x = 0, y = 0;
-    SDL_GetWindowPosition(this->_pSdlWindow, &x, &y);
-
-    this->position = glm::vec2(x, y);
+    if(this->initialized) {
+        int x, y = 0;
+        SDL_GetWindowPosition(this->_pSdlWindow, &x, &y);
+        return glm::vec2(x, y);
+    }
 
     return this->position;
 }
 bool core::SDL2Window::setPosition(const glm::vec2& p) {
-    SDL_SetWindowPosition(this->_pSdlWindow, (int)this->position.x, (int)this->position.y);
+    if(this->initialized) {
+        SDL_SetWindowPosition(this->_pSdlWindow, (int)this->position.x, (int)this->position.y);
+        return true;
+    }
 
-    return true;
+    return false;
 }
 
 bool core::SDL2Window::isOpen() {
@@ -111,7 +134,9 @@ bool core::SDL2Window::isFullscreen() {
 bool core::SDL2Window::setFullscreen(bool f) {
     this->fullscreen = f;
 
-    if(this->fullscreen) {
+    if(!this->initialized) {
+        return false;
+    } else if(this->fullscreen) {
         //set window fullscreen
         if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN) < 0) {
             return false;
@@ -128,7 +153,9 @@ bool core::SDL2Window::setFullscreen(bool f) {
 bool core::SDL2Window::setBorderlessFullscreen(bool f) {
     this->fullscreen = f;
 
-    if(this->fullscreen) {
+    if(!this->initialized) {
+        return false;
+    } else if(this->fullscreen) {
         //set window to borderless fullscreen
         if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP) < 0) {
             return false;
@@ -149,11 +176,11 @@ bool core::SDL2Window::isMaximized() {
 bool core::SDL2Window::setMaximized(bool m) {
     this->maximized = m;
 
-    if(this->maximized) {
-        //maximize window
+    if(!this->initialized) {
+        return false;
+    } else if(this->maximized) {
         SDL_MaximizeWindow(this->_pSdlWindow);
     } else {
-        //restore window
         SDL_RestoreWindow(this->_pSdlWindow);
     }
 
@@ -165,12 +192,12 @@ bool core::SDL2Window::isHidden() {
 }
 bool core::SDL2Window::setHidden(bool h) {
     this->hidden = h;
-
-    if(this->hidden) {
-        //hides window
+    
+    if(!this->initialized) {
+        return false; 
+    } else if(this->hidden) {
         SDL_HideWindow(this->_pSdlWindow);
     } else {
-        //shows window
         SDL_ShowWindow(this->_pSdlWindow);
     }
 
@@ -178,6 +205,10 @@ bool core::SDL2Window::setHidden(bool h) {
 }
 
 bool core::SDL2Window::isFocused() {
+    if(!this->initialized) {
+        return false;
+    }
+
     if(SDL_GetWindowGrab(this->_pSdlWindow) == SDL_TRUE) {
         return true;
     } else {
@@ -187,7 +218,9 @@ bool core::SDL2Window::isFocused() {
 bool core::SDL2Window::setFocused(bool f) {
     this->focused = f;
 
-    if(this->focused) {
+    if(!this->initialized) {
+        return false;
+    } else if(this->focused) {
         SDL_SetWindowGrab(this->_pSdlWindow, SDL_TRUE);
     } else {
         SDL_SetWindowGrab(this->_pSdlWindow, SDL_FALSE);
@@ -201,6 +234,10 @@ bool core::SDL2Window::isKeyPressed(core::KEYBOARD_KEY key) {
 }
 
 core::WINDOW_EVENT core::SDL2Window::pollEvents() {
+    if(!this->initialized) {
+        return core::WINDOW_EVENT::WINDOW_EVENT_NONE;
+    }
+
     core::WINDOW_EVENT returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_NONE;
 
     while(SDL_PollEvent(&this->_sdlEvent)) {
@@ -264,6 +301,34 @@ core::WINDOW_EVENT core::SDL2Window::pollEvents() {
     }
     
     return returnEvent;
+}
+
+std::string core::SDL2Window::getClipboardString() {
+    std::string returnval;
+
+    if(!this->initialized) {
+    } else if(SDL_HasClipboardText() == SDL_TRUE) {
+        //Because this needs to be manually freed
+        char* temp_clip = SDL_GetClipboardText();
+
+        returnval = temp_clip;
+
+        free(temp_clip);
+    }
+
+    return returnval;
+}
+bool core::SDL2Window::setClipboardString(const std::string& s) {
+    if(!this->initialized) {
+        return false;
+    } else if(SDL_SetClipboardText(s.c_str()) < 0) {
+        std::cout << "failed to set clipboard text, err:\n"; 
+        std::cout << SDL_GetError() << "\n";
+
+        return false;
+    }
+
+    return true;
 }
 
 SDL_Scancode core::SDL2Window::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
@@ -360,5 +425,9 @@ SDL_Scancode core::SDL2Window::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey
 }
 
 void core::SDL2Window::swapBuffers() {
+    if(!this->initialized) {
+        return;
+    }
+
     SDL_GL_SwapWindow(this->_pSdlWindow);
 }

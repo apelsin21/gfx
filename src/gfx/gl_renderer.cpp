@@ -10,22 +10,22 @@ gfx::GLRenderer::GLRenderer() {
 gfx::GLRenderer::~GLRenderer() {
 }
 
-std::tuple<GLint, GLint> gfx::GLRenderer::getSupportedGLVersion() {
+std::tuple<unsigned int, unsigned int> gfx::GLRenderer::getSupportedGLVersion() {
     GLint supportedMajor, supportedMinor = 0;
 
     glGetIntegerv(GL_MAJOR_VERSION, &supportedMajor);
     glGetIntegerv(GL_MINOR_VERSION, &supportedMinor);
 
-    return std::make_tuple(supportedMajor, supportedMinor);
+    return std::make_tuple((unsigned int)supportedMajor, (unsigned int)supportedMinor);
 }
 
 bool gfx::GLRenderer::isGLVersionSupported(unsigned int major, unsigned int minor) {
-    std::tuple<GLint, GLint> supportedVersion = this->getSupportedGLVersion();
+    std::tuple<unsigned int, unsigned int> supportedVersion = this->getSupportedGLVersion();
 
-    if(major < std::get<0>(supportedVersion) && minor < std::get<1>(supportedVersion)) {
+    if(major > std::get<0>(supportedVersion) || (major == std::get<0>(supportedVersion) && minor > std::get<1>(supportedVersion))) {
         return false;
     }
-    
+
     return true;
 }
 
@@ -34,7 +34,8 @@ bool gfx::GLRenderer::initialize(std::tuple<unsigned int, unsigned int> glVer, b
 }
 bool gfx::GLRenderer::initialize(unsigned int major, unsigned int minor, bool core) {
     if(!this->isGLVersionSupported(major, minor)) {
-        std::cout << "Failed to initialize GL renderer, unsupported GL version " << major << "." << minor << "\n";
+        std::cout << "Failed to initialize GL renderer, unsupported GL version " << major << "." << minor 
+                  << "\nDriver only supports OpenGL version: " << std::get<0>(this->getSupportedGLVersion()) << "." << std::get<1>(this->getSupportedGLVersion()) << "\n";
         return false;
     }
 

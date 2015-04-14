@@ -38,7 +38,7 @@ int main() {
     gfx::GLRenderer renderer;
    
     //Loads default shaders, creates opengl context, checks if version parameters are supported on the machine
-    if(!renderer.initialize(renderer.getSupportedGLVersion(), true)) {
+    if(!renderer.initialize(3, 0, true)) {
         std::cout << "Failed to create GL context\n";
         return false;
     }
@@ -47,49 +47,13 @@ int main() {
         if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             window.close();
         }
+        if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
+            std::cout << "clipboard: " << window.getClipboardString() << "\n";
+        }
 
         switch(window.pollEvents()) {
-            case core::WINDOW_EVENT_NONE:
-                break;
-            case core::WINDOW_EVENT_SHOWN:
-                std::cout << "shown event\n";
-                break;
-            case core::WINDOW_EVENT_HIDDEN:
-                std::cout << "hidden event\n";
-                break;
-            case core::WINDOW_EVENT_EXPOSED:
-                std::cout << "exposed event\n";
-                break;
-            case core::WINDOW_EVENT_MOVED:
-                std::cout << "moved event\n";
-                break;
             case core::WINDOW_EVENT_RESIZED:
-                std::cout << "resized event\n";
-                break;
-            case core::WINDOW_EVENT_MINIMIZED:
-                std::cout << "minimized event\n";
-                break;
-            case core::WINDOW_EVENT_MAXIMIZED:
-                std::cout << "maximized event\n";
-                break;
-            case core::WINDOW_EVENT_RESTORED:
-                std::cout << "restored event\n";
-                break;
-            case core::WINDOW_EVENT_ENTER:
-                std::cout << "enter event\n";
-                break;
-            case core::WINDOW_EVENT_LEAVE:
-                std::cout << "leave event\n";
-                break;
-            case core::WINDOW_EVENT_FOCUS_GAINED:
-                std::cout << "focus_gained event\n";
-                break;
-            case core::WINDOW_EVENT_FOCUS_LOST:
-                std::cout << "focus_lost event\n";
-                break;
-            case core::WINDOW_EVENT_CLOSE:
-                std::cout << "close event\n";
-                break;
+                std::cout << "resized to " << window.resolution.x << "x" << window.resolution.y << "\n";
             default:
                 break;
         }

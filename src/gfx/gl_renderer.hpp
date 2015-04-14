@@ -26,7 +26,7 @@ namespace gfx {
             void setClearColor(const Color&);
             Color getClearColor();
 
-            std::tuple<GLint, GLint> getSupportedGLVersion();
+            std::tuple<unsigned int, unsigned int> getSupportedGLVersion();
             bool isGLVersionSupported(unsigned int, unsigned int);
 
             bool initialize(unsigned int, unsigned int, bool);

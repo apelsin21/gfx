@@ -56,6 +56,9 @@ namespace core {
  
             bool isKeyPressed(core::KEYBOARD_KEY);
 
+            std::string getClipboardString();
+            bool setClipboardString(const std::string&);
+
             WINDOW_EVENT pollEvents();
 
             void swapBuffers();
