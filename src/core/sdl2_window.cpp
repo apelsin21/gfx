@@ -204,7 +204,7 @@ core::WINDOW_EVENT core::SDL2Window::pollEvents() {
     core::WINDOW_EVENT returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_NONE;
 
     while(SDL_PollEvent(&this->_sdlEvent)) {
-        if(!this->_sdlEvent.type == SDL_WINDOWEVENT || this->_sdlEvent.window.windowID != this->_sdlWindowID) {
+        if(this->_sdlEvent.type != SDL_WINDOWEVENT || this->_sdlEvent.window.windowID != this->_sdlWindowID) {
             break;
         }
 
@@ -224,6 +224,9 @@ core::WINDOW_EVENT core::SDL2Window::pollEvents() {
                 returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_EXPOSED;
                 break;
             case SDL_WINDOWEVENT_RESIZED:
+                returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
+                break;
+            case SDL_WINDOWEVENT_SIZE_CHANGED:
                 returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_RESIZED;
                 break;
             case SDL_WINDOWEVENT_MINIMIZED:
@@ -254,6 +257,8 @@ core::WINDOW_EVENT core::SDL2Window::pollEvents() {
             case SDL_WINDOWEVENT_CLOSE:
                 this->close();
                 returnEvent = core::WINDOW_EVENT::WINDOW_EVENT_CLOSE;
+                break;
+            default:
                 break;
         }
     }

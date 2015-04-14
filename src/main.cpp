@@ -49,8 +49,46 @@ int main() {
         }
 
         switch(window.pollEvents()) {
-            case core::WINDOW_EVENT::WINDOW_EVENT_RESIZED:
-                window.setResolution(window.getResolution());
+            case core::WINDOW_EVENT_NONE:
+                break;
+            case core::WINDOW_EVENT_SHOWN:
+                std::cout << "shown event\n";
+                break;
+            case core::WINDOW_EVENT_HIDDEN:
+                std::cout << "hidden event\n";
+                break;
+            case core::WINDOW_EVENT_EXPOSED:
+                std::cout << "exposed event\n";
+                break;
+            case core::WINDOW_EVENT_MOVED:
+                std::cout << "moved event\n";
+                break;
+            case core::WINDOW_EVENT_RESIZED:
+                std::cout << "resized event\n";
+                break;
+            case core::WINDOW_EVENT_MINIMIZED:
+                std::cout << "minimized event\n";
+                break;
+            case core::WINDOW_EVENT_MAXIMIZED:
+                std::cout << "maximized event\n";
+                break;
+            case core::WINDOW_EVENT_RESTORED:
+                std::cout << "restored event\n";
+                break;
+            case core::WINDOW_EVENT_ENTER:
+                std::cout << "enter event\n";
+                break;
+            case core::WINDOW_EVENT_LEAVE:
+                std::cout << "leave event\n";
+                break;
+            case core::WINDOW_EVENT_FOCUS_GAINED:
+                std::cout << "focus_gained event\n";
+                break;
+            case core::WINDOW_EVENT_FOCUS_LOST:
+                std::cout << "focus_lost event\n";
+                break;
+            case core::WINDOW_EVENT_CLOSE:
+                std::cout << "close event\n";
                 break;
             default:
                 break;
