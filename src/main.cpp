@@ -50,6 +50,10 @@ int main() {
         if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
             std::cout << "clipboard: " << window.getClipboardString() << "\n";
         }
+        if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
+            std::cout << "fullscreen\n";
+            window.setFullscreen(!window.isFullscreen());
+        }
 
         switch(window.pollEvents()) {
             case core::WINDOW_EVENT_RESIZED:

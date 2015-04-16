@@ -132,17 +132,13 @@ bool core::SDL2Window::isFullscreen() {
     return this->fullscreen;
 }
 bool core::SDL2Window::setFullscreen(bool f) {
-    this->fullscreen = f;
-
     if(!this->initialized) {
         return false;
-    } else if(this->fullscreen) {
-        //set window fullscreen
+    } else if(f) {
         if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN) < 0) {
             return false;
         }
     } else {
-        //set window to windowed mode
         if(SDL_SetWindowFullscreen(this->_pSdlWindow, 0) < 0) {
             return false;
         }
@@ -416,6 +412,43 @@ SDL_Scancode core::SDL2Window::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey
         
         case core::KEYBOARD_KEY::KEY_ESCAPE:
             sdlKey = SDL_SCANCODE_ESCAPE;
+            break;
+
+        case core::KEYBOARD_KEY::KEY_F1:
+            sdlKey = SDL_SCANCODE_F1;
+            break;
+        case core::KEYBOARD_KEY::KEY_F2:
+            sdlKey = SDL_SCANCODE_F2;
+            break;
+        case core::KEYBOARD_KEY::KEY_F3:
+            sdlKey = SDL_SCANCODE_F3;
+            break;
+        case core::KEYBOARD_KEY::KEY_F4:
+            sdlKey = SDL_SCANCODE_F4;
+            break;
+        case core::KEYBOARD_KEY::KEY_F5:
+            sdlKey = SDL_SCANCODE_F5;
+            break;
+        case core::KEYBOARD_KEY::KEY_F6:
+            sdlKey = SDL_SCANCODE_F6;
+            break;
+        case core::KEYBOARD_KEY::KEY_F7:
+            sdlKey = SDL_SCANCODE_F7;
+            break;
+        case core::KEYBOARD_KEY::KEY_F8:
+            sdlKey = SDL_SCANCODE_F8;
+            break;
+        case core::KEYBOARD_KEY::KEY_F9:
+            sdlKey = SDL_SCANCODE_F9;
+            break;
+        case core::KEYBOARD_KEY::KEY_F10:
+            sdlKey = SDL_SCANCODE_F10;
+            break;
+        case core::KEYBOARD_KEY::KEY_F11:
+            sdlKey = SDL_SCANCODE_F11;
+            break;
+        case core::KEYBOARD_KEY::KEY_F12:
+            sdlKey = SDL_SCANCODE_F12;
             break;
         default:
             break;
