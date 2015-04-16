@@ -13,15 +13,15 @@ bool gfx::FreeTypeFont::load(const std::string& path, unsigned int size) {
     FT_Face ff;
 
     if(FT_Init_FreeType(&fl)) {
-        std::cout << "failed to initialize freetype when loading font " << path << "\n";
+        printf("failed to initialize freetype when loading font %s", path.c_str());
         return false;
     }
 
     if(FT_New_Face(fl, path.c_str(), 0, &ff) == FT_Err_Unknown_File_Format) {
-        std::cout << "failed to open font " << path << ", unsupported format\n";
+        printf("failed to open font %s, unsupported format", path.c_str());
         return false;
     } else {
-        std::cout << "failed to open font " << path << ", non-existent, damaged or insufficient priviliges\n";
+        printf("failed to open font %s, non-existent, damaged or insufficient priviliges\n", path.c_str());
         return false;
     }
 
@@ -34,7 +34,7 @@ bool gfx::FreeTypeFont::load(const std::string& path, unsigned int size) {
     //cache the most common characters
     for(int i = 32; i < 127; i++) {
         if(FT_Load_Char(ff, i, FT_LOAD_RENDER)) {
-            std::cout << "failed to load character [" << (char)i << "] ( " << i << ") from font " << path << "\n";
+            printf("failed to load character %c from font %s\n", (char)i, path.c_str());
             continue;
         }
 

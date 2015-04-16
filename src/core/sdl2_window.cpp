@@ -26,7 +26,7 @@ core::SDL2Window::~SDL2Window() {
 
 bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
     if(this->initialized) {
-        std::cout << "window is already initialized!\n";
+        printf("window is already initialized!\n");
         return false;
     }
 
@@ -34,7 +34,7 @@ bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
     this->resolution = r;
     
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cout << "Unable to initialize SDL:\n" << SDL_GetError() << "\n";
+        printf("Unable to initialize SDL: %s\n", SDL_GetError());
         return false;
     }
 
@@ -49,7 +49,7 @@ bool core::SDL2Window::initialize(const std::string& t, const glm::vec2& r) {
             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if(!this->_pSdlWindow) {
-        std::cout << "Could not create SDL2 window:\n" << SDL_GetError() << "\n";
+        printf("Could not create SDL2 window: %s\n", SDL_GetError());
         return false;
     }
 

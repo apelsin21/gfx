@@ -34,8 +34,8 @@ bool gfx::GLRenderer::initialize(std::tuple<unsigned int, unsigned int> glVer, b
 }
 bool gfx::GLRenderer::initialize(unsigned int major, unsigned int minor, bool core) {
     if(!this->isGLVersionSupported(major, minor)) {
-        std::cout << "Failed to initialize GL renderer, unsupported GL version " << major << "." << minor 
-                  << "\nDriver only supports OpenGL version: " << std::get<0>(this->getSupportedGLVersion()) << "." << std::get<1>(this->getSupportedGLVersion()) << "\n";
+        printf("Failed to initialize GL renderer, unsupported GL version %d.%d\n", major, minor); 
+        printf("Driver only supports OpenGL version: %d.%d\n", std::get<0>(this->getSupportedGLVersion()), std::get<1>(this->getSupportedGLVersion()));
         return false;
     }
 
@@ -45,8 +45,8 @@ bool gfx::GLRenderer::initialize(unsigned int major, unsigned int minor, bool co
 
     GLenum err = glewInit();
     if(err != GLEW_OK) {
-        std::cout << "Err: " << glewGetErrorString(err) << "\n"; 
-        std::cout << "Failed to create a GL " << major << "." << minor << " core=" << core << " context\n";
+        printf("Err: %s", glewGetErrorString(err)); 
+        printf("Failed to create a GL %s.%s context\n", major, minor);
         return false;
     }
 

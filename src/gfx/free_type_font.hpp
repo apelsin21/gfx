@@ -3,7 +3,7 @@
 
 #include "gfx/font.hpp"
 
-#include <iostream>
+#include <stdio.h>
 #include <algorithm>
 
 #include <ft2build.h>

@@ -9,7 +9,7 @@
 
 #include <glm/glm.hpp>
 
-#include <iostream>
+#include <stdio.h>
 #include <tuple>
 
 namespace gfx {

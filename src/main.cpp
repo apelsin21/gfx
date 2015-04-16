@@ -1,4 +1,4 @@
-#include <iostream>
+#include <stdio.h>
 #include <tuple>
 
 #define GLM_FORCE_RADIANS
@@ -17,7 +17,7 @@ int main() {
     core::SDL2Window window;
 
     if(!window.initialize("Test Window", glm::vec2(800, 600))) {
-		std::cout << "failed to initialize window\n";
+		printf("failed to initialize window\n");
         return EXIT_FAILURE;
     }
 
@@ -25,21 +25,21 @@ int main() {
     
     //loads texture from file
     if(!tex.load("test.png")) {
-            std::cout << "failed to load texture " << tex.path << "\n";
+        printf("failed to load texture %s\n", tex.path.c_str());
     }
 
     gfx::FreeTypeFont font;
     
     //Loads the font from file, generates a texture using the pixelsize specified
     if(!font.load("./test.ttf", 12)) {
-        std::cout << "failed to load font " << font.path << "\n";
+        printf("failed to load font %s\n", font.path.c_str());
     }
 
     gfx::GLRenderer renderer;
    
     //Loads default shaders, creates opengl context, checks if version parameters are supported on the machine
     if(!renderer.initialize(3, 0, true)) {
-        std::cout << "Failed to create GL context\n";
+        printf("Failed to create GL context\n");
         return false;
     }
 
@@ -48,16 +48,16 @@ int main() {
             window.close();
         }
         if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
-            std::cout << "clipboard: " << window.getClipboardString() << "\n";
+            printf("clipboard: %s", window.getClipboardString().c_str());
         }
         if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
-            std::cout << "fullscreen\n";
+            printf("fullscreen\n");
             window.setFullscreen(!window.isFullscreen());
         }
 
         switch(window.pollEvents()) {
             case core::WINDOW_EVENT_RESIZED:
-                std::cout << "resized to " << window.resolution.x << "x" << window.resolution.y << "\n";
+                printf("resized to %dx%d", window.resolution.x, window.resolution.y);
             default:
                 break;
         }
