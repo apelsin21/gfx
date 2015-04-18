@@ -72,7 +72,6 @@ gfx::Color gfx::GLRenderer::getClearColor() {
 }
 
 void gfx::GLRenderer::begin() {
-    //We'll only draw if there's no other drawing going on. Don't want to mess with the state machine
     if(this->isDrawing) {
         return;
     }

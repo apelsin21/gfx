@@ -3,6 +3,8 @@
 
 #include "gfx/color.hpp"
 #include "gfx/renderer.hpp"
+#include "gfx/gl_shader.hpp"
+#include "gfx/gl_shader_program.hpp"
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -19,6 +21,7 @@ namespace gfx {
         public:
             unsigned int majorVersion, minorVersion;
             bool coreProfile;
+            GLShaderProgram textShaderProgram;
 
             GLRenderer();
             ~GLRenderer();
