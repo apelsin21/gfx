@@ -13,15 +13,24 @@ bool gfx::FreeTypeFont::loadFromFile(const std::string& path, unsigned int size)
     FT_Face ff;
 
     if(FT_Init_FreeType(&fl)) {
-        printf("failed to initialize freetype when loading font %s", path.c_str());
+        std::string errMsg("failed to initialize freetype when loading font ");
+        errMsg += path;
+        errMsg += "\n";
+        throw std::runtime_error(errMsg);
         return false;
     }
 
     if(FT_New_Face(fl, path.c_str(), 0, &ff) == FT_Err_Unknown_File_Format) {
-        printf("failed to open font %s, unsupported format", path.c_str());
+        std::string errMsg("failed to open font ");
+        errMsg += path;
+        errMsg += ", unsupported format\n";
+        throw std::runtime_error(errMsg);
         return false;
     } else {
-        printf("failed to open font %s, non-existent, damaged or insufficient priviliges\n", path.c_str());
+        std::string errMsg("failed to open font ");
+        errMsg += path;
+        errMsg += ", damaged, insufficient priviliges, or missing file\n";
+        throw std::runtime_error(errMsg);
         return false;
     }
 
@@ -49,7 +58,7 @@ bool gfx::FreeTypeFont::loadFromFile(const std::string& path, unsigned int size)
             glm::vec2(fg->advance.x >> 6, fg->advance.y >> 6), //advance
             fg->bitmap_left,
             fg->bitmap_top,
-            (float)glyph_res.x / glyph_res.y //TODO: WRONG THING ASDASDFASDFADSF
+            (float)glyph_res.x / glyph_res.y
         ));
     }
 

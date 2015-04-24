@@ -32,7 +32,7 @@ gfx::GLRenderer::~GLRenderer() {
 }
 
 std::tuple<unsigned int, unsigned int> gfx::GLRenderer::getSupportedGLVersion() {
-    GLint supportedMajor, supportedMinor = 0;
+    GLint supportedMajor, supportedMinor;
 
     glGetIntegerv(GL_MAJOR_VERSION, &supportedMajor);
     glGetIntegerv(GL_MINOR_VERSION, &supportedMinor);
@@ -52,13 +52,21 @@ bool gfx::GLRenderer::isGLVersionSupported(unsigned int major, unsigned int mino
 
 bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsigned int minor, bool core) {
     if(this->initialized) {
-        printf("renderer is already initialized!\n");
+        throw std::runtime_error("renderer is already initialized!\n");
         return false;
     }
 
     if(!this->isGLVersionSupported(major, minor)) {
-        printf("Failed to initialize GL renderer, unsupported GL version %d.%d\n", major, minor); 
-        printf("Driver only supports OpenGL version: %d.%d\n", std::get<0>(this->getSupportedGLVersion()), std::get<1>(this->getSupportedGLVersion()));
+        std::string errMsg;
+        errMsg += "Failed to initialize GL renderer, unsupported GL version: ";
+        errMsg += major;
+        errMsg += ".";
+        errMsg += minor;
+        errMsg += "\nDriver only supports GL version: ";
+        errMsg += std::get<0>(this->getSupportedGLVersion());
+        errMsg += std::get<1>(this->getSupportedGLVersion());
+        errMsg += "\n";
+        throw std::runtime_error(errMsg);
         return false;
     }
 
@@ -69,7 +77,10 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
     this->title = t;
     
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("Unable to initialize SDL: %s\n", SDL_GetError());
+        std::string errMsg("Unable to initialize SDL\n");
+        errMsg += SDL_GetError();
+        errMsg += "\n";
+        throw std::runtime_error(errMsg);
         return false;
     }
 
@@ -84,7 +95,10 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if(!this->_pSdlWindow) {
-        printf("Could not create SDL2 window: %s\n", SDL_GetError());
+        std::string errMsg("Could not create SDL2 window, error:\n");
+        errMsg += SDL_GetError();
+        errMsg += "\n";
+        throw std::runtime_error(errMsg);
         return false;
     }
 
@@ -96,8 +110,9 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
 
     GLenum err = glewInit();
     if(err != GLEW_OK) {
-        printf("Err: %s\n", glewGetErrorString(err)); 
-        printf("Failed to create a GL %d.%d context\n", major, minor);
+        std::string errMsg("failed to initialize GLEW, error:\n");
+        errMsg += (char*)glewGetErrorString(err);
+        throw std::runtime_error(errMsg);
         return false;
     }
 

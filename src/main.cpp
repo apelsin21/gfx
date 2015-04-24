@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <tuple>
+#include <exception>
 
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
@@ -24,7 +25,6 @@ int main() {
     gfx::GLShaderProgram program; //A shader program using the aforementioned shaders
     gfx::FreeTypeFont font; //A font using FreeType2 to load and cache text, load offsets, etc
    
-    //A lot of things have runtime exceptions
     try {
         renderer.initialize("Window", 3, 0, false); //Initializes specific GL version, creates SDL2 window. Fails if the requested GL version is unavailable
 
@@ -45,8 +45,8 @@ int main() {
         program.link();
 
         font.loadFromFile("data/fonts/FreeSans.ttf", 12); //Can fail for the typical reasons
-    } catch(std::runtimeexception(e) {
-        printf("error msg: %s\n", e.msg());
+    } catch(const std::runtime_error& e) {
+        printf("error msg: %s", e.what());
         return EXIT_FAILURE;
     }
 
@@ -55,7 +55,7 @@ int main() {
             renderer.close();
         }
         if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
-            renderer.setFullscreen(!renderer.getFullscreen()); //Switches between fullscreen and windowed mode on F11 keypress
+            renderer.setFullscreen(!renderer.isFullscreen()); //Switches between fullscreen and windowed mode on F11 keypress
         }
 
         renderer.begin(); //Clears the backbuffer

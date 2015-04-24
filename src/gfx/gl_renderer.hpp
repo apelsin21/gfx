@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 #include <tuple>
+#include <stdexcept>
 
 #include <SDL2/SDL.h>
 
