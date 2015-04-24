@@ -62,17 +62,9 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
         return false;
     }
 
-    if(core) {
-        glewExperimental = GL_TRUE;
-    }
-
-
     this->majorVersion = major;
     this->minorVersion = minor;
     this->coreProfile = core;
-
-    glEnable(GL_BLEND | GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     this->title = t;
     
@@ -98,6 +90,10 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
 
     this->_sdlContext = SDL_GL_CreateContext(this->_pSdlWindow);
 
+    if(this->coreProfile) {
+        glewExperimental = GL_TRUE;
+    }
+
     GLenum err = glewInit();
     if(err != GLEW_OK) {
         printf("Err: %s\n", glewGetErrorString(err)); 
@@ -109,6 +105,10 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
     this->initialized = true;
     this->_sdlWindowID = SDL_GetWindowID(this->_pSdlWindow);
     this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
+
+    glDepthFunc(GL_LESS);
+    glEnable(GL_BLEND | GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     return true;
 }

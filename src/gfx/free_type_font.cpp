@@ -5,7 +5,7 @@ gfx::FreeTypeFont::FreeTypeFont() {
 gfx::FreeTypeFont::~FreeTypeFont() {
 }
 
-bool gfx::FreeTypeFont::load(const std::string& path, unsigned int size) {
+bool gfx::FreeTypeFont::loadFromFile(const std::string& path, unsigned int size) {
     this->path = path;
 
     FT_Library fl;

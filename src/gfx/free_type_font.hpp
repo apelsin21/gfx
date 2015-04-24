@@ -18,7 +18,7 @@ namespace gfx {
             FreeTypeFont();
             ~FreeTypeFont();
 
-            bool load(const std::string&, unsigned int);
+            bool loadFromFile(const std::string&, unsigned int);
     };
 }
 
