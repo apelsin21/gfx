@@ -5,8 +5,6 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include "core/sdl2_window.hpp"
-#include "core/window_event.hpp"
 #include "core/keyboard_keys.hpp"
 
 #include "gfx/free_image_texture.hpp"
@@ -16,18 +14,12 @@
 #include "gfx/gl_shader_program.hpp"
 #include "gfx/default_gl_shaders.hpp"
 #include "gfx/shader_type.hpp"
+#include "gfx/renderer_event.hpp"
 
 int main() {
-    core::SDL2Window window;
-
-    if(!window.initialize("Test Window", glm::vec2(800, 600))) {
-		printf("failed to initialize window\n");
-        return EXIT_FAILURE;
-    }
-
     gfx::GLRenderer renderer;
    
-    if(!renderer.initialize(3, 0, true)) {
+    if(!renderer.initialize("WINDOW", 3, 0, true)) {
         printf("Failed to create GL context\n");
         return false;
     }
@@ -66,19 +58,19 @@ int main() {
         return false;
     }
 
-    while(window.isOpen()) {
-        if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
-            window.close();
+    while(renderer.isOpen()) {
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
+            renderer.close();
         }
-        if(window.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
-            window.setFullscreen(true);
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
+            renderer.setFullscreen(true);
         }
 
         renderer.begin();
         renderer.end();
 
-        window.pollEvents();
-        window.swapBuffers();
+        renderer.pollEvents();
+        renderer.swapBuffers();
     }
 
     vs.deleteID();

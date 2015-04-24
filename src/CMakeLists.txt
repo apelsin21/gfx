@@ -2,7 +2,6 @@ set(SOURCES
     ${SOURCES}
 
 	#core	
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/sdl2_window.cpp
 
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.cpp
@@ -20,9 +19,6 @@ set(HEADERS
    	${HEADERS}
 	
     #core	
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/window.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/sdl2_window.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/window_event.hpp
     
     ${CMAKE_CURRENT_SOURCE_DIR}/core/keyboard_keys.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core/mouse_keys.hpp
@@ -37,8 +33,9 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_renderer.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader_program.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer_event.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/default_gl_shaders.hpp
 
     #net
