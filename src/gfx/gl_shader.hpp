@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <stdexcept>
 
 #include <GL/glew.h>
 

@@ -52,7 +52,10 @@ bool gfx::GLShader::loadFromPath(const std::string& p) {
 
         infile.close();
     } else {
-        printf("failed to open shader file %s for reading, insufficient permissions or non-existing file\n", this->path.c_str());
+        std::string errMsg("failed to open shader file ");
+        errMsg += this->path;
+        errMsg += " for reading, insufficient permissions or non-existing file\n ";
+        throw std::runtime_error(errMsg);
         return false;
     }
 
@@ -66,9 +69,13 @@ bool gfx::GLShader::loadFromMemory(const std::string& src) {
 
 bool gfx::GLShader::compile() {
     if(!this->hasValidID()) {
-        printf("failed to compile invalid GL shader %s, of type %s\n",
-            this->path.c_str(),
-            shaderTypeToString(this->type).c_str());
+        std::string errMsg("failed to compile invalid GL shader ");
+        errMsg += this->path;
+        errMsg += ", of type ";
+        errMsg += shaderTypeToString(this->type);
+        errMsg += "\n";
+        throw std::runtime_error(errMsg);
+
         return false;
     }
 
@@ -87,10 +94,14 @@ bool gfx::GLShader::compile() {
         char errorLog[errorLogLength];
         glGetShaderInfoLog(this->id, errorLogLength, NULL, &errorLog[0]);
 
-        printf("shader %s of type %s failed to compile. Log:\n%s\n", 
-                        this->path.c_str(),
-                        shaderTypeToString(this->type).c_str(),
-                        errorLog);
+        std::string errMsg("shader ");
+        errMsg += this->path;
+        errMsg += ", of type ";
+        errMsg += shaderTypeToString(this->type);
+        errMsg +=  " failed to compile. Log: ";
+        errMsg += errorLog;
+        errMsg += "\n";
+        throw std::runtime_error(errMsg);
     }
 
     return true;

@@ -28,16 +28,22 @@ bool gfx::GLShaderProgram::hasValidID() {
 
 bool gfx::GLShaderProgram::attachShader(const gfx::GLShader& s) {
     if(!this->hasValidID()) {
-       printf("tried to attach shader %s of type %s to shaderprogram with invalid id!\n",
-           s.path.c_str(),
-           shaderTypeToString(s.type).c_str());
+        std::string errMsg("tried to attach shader ");
+        errMsg += s.path;
+        errMsg += " of type ";
+        errMsg += shaderTypeToString(s.type);
+        errMsg += " to shaderprogram with invalid id!\n";
+        throw std::runtime_error(errMsg);
         return false;
     }
     
     if(glIsShader(s.id) == GL_FALSE) {
-        printf("tried to attach shader with invalid id %s of type %s to shaderprogram!\n",
-            s.path.c_str(),
-            shaderTypeToString(s.type).c_str());
+        std::string errMsg("tried to attach shader ");
+        errMsg += s.path;
+        errMsg += " of type ";
+        errMsg += shaderTypeToString(s.type);
+        errMsg += " with invalid id, to a shaderprogram!\n";
+        throw std::runtime_error(errMsg);
         return false;
     }
 
@@ -49,9 +55,12 @@ bool gfx::GLShaderProgram::attachShader(const gfx::GLShader& s) {
                 this->fs = s;
             break;
         default:
-            printf("tried to attach shader %s of unsupported type %s to shaderprogram!\n",
-                s.path.c_str(),
-                shaderTypeToString(s.type).c_str());
+            std::string errMsg("tried to attach shader ");
+            errMsg += s.path;
+            errMsg += " of an unsupported type ";
+            errMsg += shaderTypeToString(s.type);
+            errMsg += " to shaderprogram!\n";
+            throw std::runtime_error(errMsg);
             return false;
             break;
     }

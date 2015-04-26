@@ -32,7 +32,7 @@ gfx::GLRenderer::~GLRenderer() {
 }
 
 std::tuple<unsigned int, unsigned int> gfx::GLRenderer::getSupportedGLVersion() {
-    GLint supportedMajor, supportedMinor;
+    GLint supportedMajor = 0, supportedMinor = 0;
 
     glGetIntegerv(GL_MAJOR_VERSION, &supportedMajor);
     glGetIntegerv(GL_MINOR_VERSION, &supportedMinor);
@@ -56,19 +56,6 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
         return false;
     }
 
-    if(!this->isGLVersionSupported(major, minor)) {
-        std::string errMsg;
-        errMsg += "Failed to initialize GL renderer, unsupported GL version: ";
-        errMsg += major;
-        errMsg += ".";
-        errMsg += minor;
-        errMsg += "\nDriver only supports GL version: ";
-        errMsg += std::get<0>(this->getSupportedGLVersion());
-        errMsg += std::get<1>(this->getSupportedGLVersion());
-        errMsg += "\n";
-        throw std::runtime_error(errMsg);
-        return false;
-    }
 
     this->majorVersion = major;
     this->minorVersion = minor;
@@ -83,6 +70,7 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
         throw std::runtime_error(errMsg);
         return false;
     }
+
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
@@ -112,6 +100,20 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
     if(err != GLEW_OK) {
         std::string errMsg("failed to initialize GLEW, error:\n");
         errMsg += (char*)glewGetErrorString(err);
+        throw std::runtime_error(errMsg);
+        return false;
+    }
+
+    if(!this->isGLVersionSupported(major, minor)) {
+        std::string errMsg;
+        errMsg += "Failed to initialize GL renderer, unsupported GL version: ";
+        errMsg += major;
+        errMsg += ".";
+        errMsg += minor;
+        errMsg += "\nDriver only supports GL version: ";
+        errMsg += std::get<0>(this->getSupportedGLVersion());
+        errMsg += std::get<1>(this->getSupportedGLVersion());
+        errMsg += "\n";
         throw std::runtime_error(errMsg);
         return false;
     }

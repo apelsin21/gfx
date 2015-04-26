@@ -18,35 +18,32 @@
 #include "gfx/renderer_event.hpp"
 
 int main() {
-    //Constructors are memory safe, so no exception can happen here
-    gfx::GLRenderer renderer; //"Modern" OpenGL Renderer
-    gfx::GLShader vs; //Vertex Shader
-    gfx::GLShader fs; //Fragment Shader
-    gfx::GLShaderProgram program; //A shader program using the aforementioned shaders
-    gfx::FreeTypeFont font; //A font using FreeType2 to load and cache text, load offsets, etc
-   
-    try {
-        renderer.initialize("Window", 3, 0, false); //Initializes specific GL version, creates SDL2 window. Fails if the requested GL version is unavailable
+    gfx::GLRenderer renderer;
+    gfx::GLShader vs;
+    gfx::GLShader fs;
+    gfx::GLShaderProgram program;
+    gfx::FreeTypeFont font;
 
-        vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX); //Fails if invalid GL context
+    try {
+        renderer.initialize("Window", 3, 0, false);
+
+        vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
 
-        vs.loadFromMemory(gfx::defaultFontVertexShader); //Loads a predifined shader from memory 
+        vs.loadFromMemory(gfx::defaultFontVertexShader);
         fs.loadFromMemory(gfx::defaultFontFragmentShader);
 
-        vs.compile(); //Failes if there are errors in the shader
+        vs.compile();
         fs.compile();
 
         program.createID();
 
-        program.attachShader(vs); //Fails if the shader param is invalid
+        program.attachShader(vs);
         program.attachShader(fs);
 
         program.link();
-
-        font.loadFromFile("data/fonts/FreeSans.ttf", 12); //Can fail for the typical reasons
     } catch(const std::runtime_error& e) {
-        printf("error msg: %s", e.what());
+        printf("error occurred: %s", e.what());
         return EXIT_FAILURE;
     }
 
@@ -55,19 +52,31 @@ int main() {
             renderer.close();
         }
         if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
-            renderer.setFullscreen(!renderer.isFullscreen()); //Switches between fullscreen and windowed mode on F11 keypress
+            renderer.setFullscreen(!renderer.isFullscreen());
+        }
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F3)) {
+            printf("clipboard contains: %s\n", renderer.getClipboardString().c_str());
         }
 
-        renderer.begin(); //Clears the backbuffer
-        renderer.end(); //Resets state for next draw call
+        renderer.begin();
+        renderer.end();
 
-        renderer.pollEvents(); //Events like if resolution changed, resizing of the window, close event, etc. Unhandled for now
-        renderer.swapBuffers(); //Presents the backbuffer to the window
+        switch(renderer.pollEvents()) {
+            case gfx::RENDERER_EVENT::RENDERER_EVENT_RESIZED:
+                printf("resized\n");
+            break;
+            case gfx::RENDERER_EVENT::RENDERER_EVENT_NONE:
+            break;
+            default:
+                printf("unhandled renderer event: %s\n", gfx::rendererEventToString(renderer.pollEvents()).c_str());
+                break;
+        }
+        renderer.swapBuffers();
     }
 
-    vs.deleteID(); //Cannot be handled in the destructor since they would happen silently if we passed the object as a parameter, must be manual
+    vs.deleteID();
     fs.deleteID();
     program.deleteID();
-    
+
     return EXIT_SUCCESS;
 }
