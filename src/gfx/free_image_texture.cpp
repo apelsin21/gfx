@@ -14,7 +14,7 @@ FREE_IMAGE_FORMAT gfx::FreeImageTexture::getFreeImageFormatFromPath(const std::s
    }
 }
 
-bool gfx::FreeImageTexture::load(const std::string& path) {
+bool gfx::FreeImageTexture::loadFromFile(const std::string& path) {
     if(path.empty()) {
         throw std::runtime_error("tried to load texture from empty path");
         return false;

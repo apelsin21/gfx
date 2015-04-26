@@ -1,24 +1,24 @@
-#include "gfx/gl_shader_program.hpp"
+#include "gfx/shader_program.hpp"
 
-gfx::GLShaderProgram::GLShaderProgram() {
+gfx::ShaderProgram::ShaderProgram() {
     this->loaded = false;
     this->linked = false;
     this->id = -1;
 }
-gfx::GLShaderProgram::~GLShaderProgram() {
+gfx::ShaderProgram::~ShaderProgram() {
 }
 
-void gfx::GLShaderProgram::createID() {
+void gfx::ShaderProgram::createID() {
     if(!this->hasValidID()) {
         this->id = glCreateProgram();
     }
 }
-void gfx::GLShaderProgram::deleteID() {
+void gfx::ShaderProgram::deleteID() {
     if(this->hasValidID()) {
         glDeleteProgram(this->id);
     }
 }
-bool gfx::GLShaderProgram::hasValidID() {
+bool gfx::ShaderProgram::hasValidID() {
     if(glIsProgram(this->id) == GL_TRUE) {
         return true;
     } else {
@@ -26,7 +26,7 @@ bool gfx::GLShaderProgram::hasValidID() {
     }
 }
 
-bool gfx::GLShaderProgram::attachShader(const gfx::GLShader& s) {
+bool gfx::ShaderProgram::attachShader(const gfx::Shader& s) {
     if(!this->hasValidID()) {
         std::string errMsg("tried to attach shader ");
         errMsg += s.path;
@@ -70,6 +70,6 @@ bool gfx::GLShaderProgram::attachShader(const gfx::GLShader& s) {
     return true;
 }
 
-bool gfx::GLShaderProgram::link() {
+bool gfx::ShaderProgram::link() {
     return true;
 }

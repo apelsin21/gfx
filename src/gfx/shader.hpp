@@ -13,16 +13,15 @@
 #include "gfx/shader_type.hpp"
 
 namespace gfx {
-    class GLShader {
+    class Shader {
         protected:
-            GLenum shaderTypeToGLEnum(SHADER_TYPE);
         public:
             unsigned int id;
             std::string src, path;
             SHADER_TYPE type;
             
-            GLShader();
-            ~GLShader();
+            Shader();
+            ~Shader();
 
             void createID(SHADER_TYPE);
             void deleteID();

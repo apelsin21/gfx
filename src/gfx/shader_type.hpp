@@ -34,6 +34,19 @@ namespace gfx {
 
         return returnStr;
     }
+    
+    static GLenum shaderTypeToGLEnum(SHADER_TYPE t) {
+        switch(t) {
+            case SHADER_TYPE::SHADER_TYPE_VERTEX:
+                return GL_VERTEX_SHADER;
+                break;             
+            case SHADER_TYPE::SHADER_TYPE_FRAGMENT:
+                return GL_FRAGMENT_SHADER;
+                break;             
+            default:
+                break;
+        }
+    }
 }
 
 #endif //SHADER_TYPE_HPP

@@ -1,6 +1,6 @@
-#include "gfx/gl_renderer.hpp"
+#include "gfx/renderer.hpp"
 
-gfx::GLRenderer::GLRenderer() {
+gfx::Renderer::Renderer() {
     this->majorVersion = 3;
     this->minorVersion = 0;
     this->clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
@@ -19,7 +19,7 @@ gfx::GLRenderer::GLRenderer() {
     this->_sdlContext = NULL;
     this->_pSdlWindow = nullptr;
 }
-gfx::GLRenderer::~GLRenderer() {
+gfx::Renderer::~Renderer() {
     if(this->_sdlContext) {
         SDL_GL_DeleteContext(this->_sdlContext);
     }
@@ -31,7 +31,7 @@ gfx::GLRenderer::~GLRenderer() {
     SDL_Quit();
 }
 
-std::tuple<unsigned int, unsigned int> gfx::GLRenderer::getSupportedGLVersion() {
+std::tuple<unsigned int, unsigned int> gfx::Renderer::getSupportedVersion() {
     GLint supportedMajor = 0, supportedMinor = 0;
 
     glGetIntegerv(GL_MAJOR_VERSION, &supportedMajor);
@@ -40,8 +40,8 @@ std::tuple<unsigned int, unsigned int> gfx::GLRenderer::getSupportedGLVersion() 
     return std::make_tuple((unsigned int)supportedMajor, (unsigned int)supportedMinor);
 }
 
-bool gfx::GLRenderer::isGLVersionSupported(unsigned int major, unsigned int minor) {
-    std::tuple<unsigned int, unsigned int> supportedVersion = this->getSupportedGLVersion();
+bool gfx::Renderer::isVersionSupported(unsigned int major, unsigned int minor) {
+    std::tuple<unsigned int, unsigned int> supportedVersion = this->getSupportedVersion();
 
     if(major > std::get<0>(supportedVersion) || (major == std::get<0>(supportedVersion) && minor > std::get<1>(supportedVersion))) {
         return false;
@@ -50,12 +50,11 @@ bool gfx::GLRenderer::isGLVersionSupported(unsigned int major, unsigned int mino
     return true;
 }
 
-bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsigned int minor, bool core) {
+bool gfx::Renderer::initialize(const std::string& t, unsigned int major, unsigned int minor, bool core) {
     if(this->initialized) {
         throw std::runtime_error("renderer is already initialized!\n");
         return false;
     }
-
 
     this->majorVersion = major;
     this->minorVersion = minor;
@@ -104,15 +103,15 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
         return false;
     }
 
-    if(!this->isGLVersionSupported(major, minor)) {
+    if(!this->isVersionSupported(major, minor)) {
         std::string errMsg;
         errMsg += "Failed to initialize GL renderer, unsupported GL version: ";
         errMsg += major;
         errMsg += ".";
         errMsg += minor;
         errMsg += "\nDriver only supports GL version: ";
-        errMsg += std::get<0>(this->getSupportedGLVersion());
-        errMsg += std::get<1>(this->getSupportedGLVersion());
+        errMsg += std::get<0>(this->getSupportedVersion());
+        errMsg += std::get<1>(this->getSupportedVersion());
         errMsg += "\n";
         throw std::runtime_error(errMsg);
         return false;
@@ -130,18 +129,18 @@ bool gfx::GLRenderer::initialize(const std::string& t, unsigned int major, unsig
     return true;
 }
 
-void gfx::GLRenderer::setClearColor(const gfx::Color& c) {
+void gfx::Renderer::setClearColor(const gfx::Color& c) {
     this->clearColor = c;
     glClearColor(this->clearColor.r,
                  this->clearColor.g,
                  this->clearColor.b,
                  this->clearColor.a);
 }
-gfx::Color gfx::GLRenderer::getClearColor() {
+gfx::Color gfx::Renderer::getClearColor() {
     return this->clearColor;
 }
 
-void gfx::GLRenderer::begin() {
+void gfx::Renderer::begin() {
     if(this->isDrawing) {
         return;
     }
@@ -150,17 +149,17 @@ void gfx::GLRenderer::begin() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void gfx::GLRenderer::end() {
+void gfx::Renderer::end() {
     this->isDrawing = false;
 }
 
-void gfx::GLRenderer::drawText(const Font& f, const std::string& s, const glm::vec2& p) {
+void gfx::Renderer::drawText(const Font& f, const std::string& s, const glm::vec2& p) {
 }
 
-std::string gfx::GLRenderer::getTitle() {
+std::string gfx::Renderer::getTitle() {
     return this->title;
 }
-bool gfx::GLRenderer::setTitle(const std::string& t) {
+bool gfx::Renderer::setTitle(const std::string& t) {
     this->title = t;
 
     if(this->initialized) {
@@ -171,7 +170,7 @@ bool gfx::GLRenderer::setTitle(const std::string& t) {
     return false;
 }
 
-glm::vec2 gfx::GLRenderer::getResolution() {
+glm::vec2 gfx::Renderer::getResolution() {
     if(this->initialized) {
         int w, h = 0;
         SDL_GetWindowSize(this->_pSdlWindow, &w, &h);
@@ -181,7 +180,7 @@ glm::vec2 gfx::GLRenderer::getResolution() {
     
     return this->resolution;
 }
-bool gfx::GLRenderer::setResolution(const glm::vec2& r) {
+bool gfx::Renderer::setResolution(const glm::vec2& r) {
     this->resolution = r;
 
     if(this->initialized) {
@@ -192,7 +191,7 @@ bool gfx::GLRenderer::setResolution(const glm::vec2& r) {
     return false;
 }
 
-glm::vec2 gfx::GLRenderer::getPosition() {
+glm::vec2 gfx::Renderer::getPosition() {
     if(this->initialized) {
         int x, y = 0;
         SDL_GetWindowPosition(this->_pSdlWindow, &x, &y);
@@ -201,7 +200,7 @@ glm::vec2 gfx::GLRenderer::getPosition() {
 
     return this->position;
 }
-bool gfx::GLRenderer::setPosition(const glm::vec2& p) {
+bool gfx::Renderer::setPosition(const glm::vec2& p) {
     if(this->initialized) {
         SDL_SetWindowPosition(this->_pSdlWindow, (int)this->position.x, (int)this->position.y);
         return true;
@@ -211,20 +210,20 @@ bool gfx::GLRenderer::setPosition(const glm::vec2& p) {
 }
 
 
-bool gfx::GLRenderer::isOpen() {
+bool gfx::Renderer::isOpen() {
     return this->open;
 }
-bool gfx::GLRenderer::close() {
+bool gfx::Renderer::close() {
     SDL_DestroyWindow(this->_pSdlWindow);
 
     this->open = false;
     return true;
 }
 
-bool gfx::GLRenderer::isFullscreen() {
+bool gfx::Renderer::isFullscreen() {
     return this->fullscreen;
 }
-bool gfx::GLRenderer::setFullscreen(bool f) {
+bool gfx::Renderer::setFullscreen(bool f) {
     if(!this->initialized) {
         return false;
     } else if(f) {
@@ -239,7 +238,7 @@ bool gfx::GLRenderer::setFullscreen(bool f) {
 
     return true;
 }
-bool gfx::GLRenderer::setBorderlessFullscreen(bool f) {
+bool gfx::Renderer::setBorderlessFullscreen(bool f) {
     this->fullscreen = f;
 
     if(!this->initialized) {
@@ -259,10 +258,10 @@ bool gfx::GLRenderer::setBorderlessFullscreen(bool f) {
     return true;
 }
 
-bool gfx::GLRenderer::isMaximized() {
+bool gfx::Renderer::isMaximized() {
     return this->maximized;
 }
-bool gfx::GLRenderer::setMaximized(bool m) {
+bool gfx::Renderer::setMaximized(bool m) {
     this->maximized = m;
 
     if(!this->initialized) {
@@ -276,10 +275,10 @@ bool gfx::GLRenderer::setMaximized(bool m) {
     return true;
 }
 
-bool gfx::GLRenderer::isHidden() {
+bool gfx::Renderer::isHidden() {
     return this->hidden;
 }
-bool gfx::GLRenderer::setHidden(bool h) {
+bool gfx::Renderer::setHidden(bool h) {
     this->hidden = h;
     
     if(!this->initialized) {
@@ -293,7 +292,7 @@ bool gfx::GLRenderer::setHidden(bool h) {
     return true;
 }
 
-bool gfx::GLRenderer::isFocused() {
+bool gfx::Renderer::isFocused() {
     if(!this->initialized) {
         return false;
     }
@@ -304,7 +303,7 @@ bool gfx::GLRenderer::isFocused() {
         return false;
     }
 }
-bool gfx::GLRenderer::setFocused(bool f) {
+bool gfx::Renderer::setFocused(bool f) {
     this->focused = f;
 
     if(!this->initialized) {
@@ -318,11 +317,11 @@ bool gfx::GLRenderer::setFocused(bool f) {
     return true;
 }
 
-bool gfx::GLRenderer::isKeyPressed(core::KEYBOARD_KEY key) {
+bool gfx::Renderer::isKeyPressed(core::KEYBOARD_KEY key) {
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
 
-gfx::RENDERER_EVENT gfx::GLRenderer::pollEvents() {
+gfx::RENDERER_EVENT gfx::Renderer::pollEvents() {
     if(!this->initialized) {
         return gfx::RENDERER_EVENT::RENDERER_EVENT_NONE;
     }
@@ -392,7 +391,7 @@ gfx::RENDERER_EVENT gfx::GLRenderer::pollEvents() {
     return returnEvent;
 }
 
-std::string gfx::GLRenderer::getClipboardString() {
+std::string gfx::Renderer::getClipboardString() {
     std::string returnval;
 
     if(!this->initialized) {
@@ -407,7 +406,7 @@ std::string gfx::GLRenderer::getClipboardString() {
 
     return returnval;
 }
-bool gfx::GLRenderer::setClipboardString(const std::string& s) {
+bool gfx::Renderer::setClipboardString(const std::string& s) {
     if(!this->initialized) {
         return false;
     } else if(SDL_SetClipboardText(s.c_str()) < 0) {
@@ -419,7 +418,7 @@ bool gfx::GLRenderer::setClipboardString(const std::string& s) {
     return true;
 }
 
-SDL_Scancode gfx::GLRenderer::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
+SDL_Scancode gfx::Renderer::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
     SDL_Scancode sdlKey = SDL_SCANCODE_UNKNOWN;
 
     switch(gfxKey) {
@@ -549,10 +548,13 @@ SDL_Scancode gfx::GLRenderer::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey)
     return sdlKey;
 }
 
-void gfx::GLRenderer::swapBuffers() {
+void gfx::Renderer::swapBuffers() {
     if(!this->initialized) {
         return;
     }
 
     SDL_GL_SwapWindow(this->_pSdlWindow);
+}
+
+void gfx::Renderer::drawTexture(const gfx::Texture& tex, const glm::vec2& pos) {
 }

@@ -3,16 +3,26 @@
 
 #include <string>
 
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include <glm/glm.hpp>
 
 namespace gfx {
     class Texture {
+        protected:
+            GLuint id;
         public:
             int bpp;
             glm::vec2 res;
             std::string path;
 
-            virtual bool load(const std::string&) = 0;
+            virtual bool loadFromFile(const std::string&) = 0;
+
+            virtual void createID();
+            virtual void deleteID();
+            virtual void bindID();
+            virtual bool hasValidID();
     };
 }
 

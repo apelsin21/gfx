@@ -6,9 +6,10 @@ set(SOURCES
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_renderer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader_program.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_program.cpp
     
     #net
     ${CMAKE_CURRENT_SOURCE_DIR}/net/address.cpp
@@ -29,14 +30,13 @@ set(HEADERS
 
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_renderer.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader_program.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_program.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer_event.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/default_gl_shaders.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/default_shaders.hpp
 
     #net
     ${CMAKE_CURRENT_SOURCE_DIR}/net/client.hpp

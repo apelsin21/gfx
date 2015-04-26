@@ -14,7 +14,7 @@ namespace gfx {
             ~FreeImageTexture();
 
             FREE_IMAGE_FORMAT getFreeImageFormatFromPath(const std::string&);
-            bool load(const std::string&);
+            bool loadFromFile(const std::string&);
     };
 }
 

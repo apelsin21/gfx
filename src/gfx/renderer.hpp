@@ -2,58 +2,97 @@
 #define RENDERER_HPP
 
 #include <string>
+#include <tuple>
+#include <stdexcept>
+
+#define GLEW_STATIC
+#include <GL/glew.h>
 
 #include <glm/glm.hpp>
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+
 #include "core/keyboard_keys.hpp"
 
-#include "gfx/font.hpp"
+#include "gfx/color.hpp"
 #include "gfx/renderer_event.hpp"
+#include "gfx/shader.hpp"
+#include "gfx/shader_program.hpp"
+#include "gfx/font.hpp"
+#include "gfx/texture.hpp"
 
 namespace gfx {
     class Renderer {
         protected:
-            bool isDrawing;
+            Color clearColor;
+
+            SDL_Window* _pSdlWindow;
+            SDL_GLContext _sdlContext;
+            SDL_Event _sdlEvent;
+            unsigned int _sdlWindowID;
+            const unsigned char* _pSdlKeyboardState;
+
+            SDL_Scancode convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey);
         public:
+            unsigned int majorVersion, minorVersion;
+            ShaderProgram fontShaderProgram;
+            bool isDrawing, coreProfile, open, fullscreen,
+                                 initialized, maximized, hidden, focused;
+            glm::vec2 resolution, position;
             std::string title;
-            glm::vec2 resolution;
-            glm::vec2 position;
-            bool open, fullscreen, maximized, hidden, focused, initialized;
 
-            virtual void begin() = 0;
-            virtual void drawText(const gfx::Font&, const std::string&, const glm::vec2&) = 0;
-            virtual void end() = 0;
+            Renderer();
+            ~Renderer();
 
-            virtual std::string getTitle() = 0;
-            virtual bool setTitle(const std::string&) = 0;
+            void setClearColor(const Color&);
+            Color getClearColor();
 
-            virtual glm::vec2 getResolution() = 0;
-            virtual bool setResolution(const glm::vec2&) = 0;
+            std::tuple<unsigned int, unsigned int> getSupportedVersion();
+            bool isVersionSupported(unsigned int, unsigned int);
 
-            virtual glm::vec2 getPosition() = 0;
-            virtual bool setPosition(const glm::vec2&) = 0;
+            bool initialize(const std::string&, unsigned int, unsigned int, bool);
 
-            virtual bool isOpen() = 0;
-            virtual bool close() = 0; 
 
-            virtual bool isFullscreen() = 0;
-            virtual bool setFullscreen(bool) = 0;
-            virtual bool setBorderlessFullscreen(bool) = 0;
+            std::string getTitle();
+            bool setTitle(const std::string&);
 
-            virtual bool isMaximized() = 0;
-            virtual bool setMaximized(bool) = 0;
+            glm::vec2 getResolution();
+            bool setResolution(const glm::vec2&);
 
-            virtual bool isHidden() = 0;
-            virtual bool setHidden(bool) = 0;
+            glm::vec2 getPosition();
+            bool setPosition(const glm::vec2&);
 
-            virtual bool isFocused() = 0;
-            virtual bool setFocused(bool) = 0;
+            bool isOpen();
+            bool close(); 
 
-            virtual bool isKeyPressed(core::KEYBOARD_KEY) = 0;
+            bool isFullscreen();
+            bool setFullscreen(bool);
+            bool setBorderlessFullscreen(bool);
 
-            virtual RENDERER_EVENT pollEvents() = 0;
+            bool isMaximized();
+            bool setMaximized(bool);
 
-            virtual void swapBuffers() = 0;
+            bool isHidden();
+            bool setHidden(bool);
+
+            bool isFocused();
+            bool setFocused(bool);
+ 
+            bool isKeyPressed(core::KEYBOARD_KEY);
+
+            std::string getClipboardString();
+            bool setClipboardString(const std::string&);
+
+            RENDERER_EVENT pollEvents();
+            
+            void begin();
+            void end();
+
+            void swapBuffers();
+
+            void drawText(const Font&, const std::string&, const glm::vec2&);
+            void drawTexture(const Texture&, const glm::vec2&);
     };
 }
 

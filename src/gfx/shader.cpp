@@ -1,37 +1,24 @@
-#include "gfx/gl_shader.hpp"
+#include "gfx/shader.hpp"
 
-gfx::GLShader::GLShader() {
+gfx::Shader::Shader() {
     this->id = -1;
     this->type = SHADER_TYPE::SHADER_TYPE_NONE;
 }
-gfx::GLShader::~GLShader() {
+gfx::Shader::~Shader() {
 }
 
-GLenum gfx::GLShader::shaderTypeToGLEnum(SHADER_TYPE t) {
-    switch(t) {
-        case SHADER_TYPE::SHADER_TYPE_VERTEX:
-            return GL_VERTEX_SHADER;
-            break;             
-        case SHADER_TYPE::SHADER_TYPE_FRAGMENT:
-            return GL_FRAGMENT_SHADER;
-            break;             
-        default:
-            break;
-    }
-}
-
-void gfx::GLShader::createID(SHADER_TYPE t) {
+void gfx::Shader::createID(SHADER_TYPE t) {
     if(glIsShader(this->id) == GL_FALSE) {
         this->type = t;
-        this->id = glCreateShader(this->shaderTypeToGLEnum(this->type));
+        this->id = glCreateShader(shaderTypeToGLEnum(this->type));
     }
 }
-void gfx::GLShader::deleteID() {
+void gfx::Shader::deleteID() {
     if(glIsShader(this->id) == GL_TRUE) {
         glDeleteShader(this->id);
     }
 }
-bool gfx::GLShader::hasValidID() {
+bool gfx::Shader::hasValidID() {
     if(glIsShader(this->id) == GL_TRUE) {
         return true;
     } else {
@@ -39,7 +26,7 @@ bool gfx::GLShader::hasValidID() {
     }
 }
 
-bool gfx::GLShader::loadFromPath(const std::string& p) {
+bool gfx::Shader::loadFromPath(const std::string& p) {
     std::ifstream infile(p, std::ios::in);
     std::string line;
 
@@ -61,13 +48,13 @@ bool gfx::GLShader::loadFromPath(const std::string& p) {
 
     return true;
 }
-bool gfx::GLShader::loadFromMemory(const std::string& src) {
+bool gfx::Shader::loadFromMemory(const std::string& src) {
     this->src = src;
 
     return true;
 }
 
-bool gfx::GLShader::compile() {
+bool gfx::Shader::compile() {
     if(!this->hasValidID()) {
         std::string errMsg("failed to compile invalid GL shader ");
         errMsg += this->path;
