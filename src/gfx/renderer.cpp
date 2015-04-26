@@ -123,7 +123,8 @@ bool gfx::Renderer::initialize(const std::string& t, unsigned int major, unsigne
     this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
 
     glDepthFunc(GL_LESS);
-    glEnable(GL_BLEND | GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+	glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     return true;
@@ -147,6 +148,7 @@ void gfx::Renderer::begin() {
 
     this->isDrawing = true;
 
+	this->fontShaderProgram.bindID();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void gfx::Renderer::end() {

@@ -18,6 +18,11 @@ void gfx::ShaderProgram::deleteID() {
         glDeleteProgram(this->id);
     }
 }
+void gfx::ShaderProgram::bindID() {
+	if(this->hasValidID()) {
+		glUseProgram(this->id);
+	}
+}
 bool gfx::ShaderProgram::hasValidID() {
     if(glIsProgram(this->id) == GL_TRUE) {
         return true;
@@ -49,11 +54,13 @@ bool gfx::ShaderProgram::attachShader(const gfx::Shader& s) {
 
     switch(s.type) {
         case SHADER_TYPE::SHADER_TYPE_VERTEX:
-                this->vs = s;
-            break;
+	        this->vs = s;
+   			glAttachShader(this->id, this->vs.id);
+        break;
         case SHADER_TYPE::SHADER_TYPE_FRAGMENT:
-                this->fs = s;
-            break;
+        	this->fs = s;
+   			glAttachShader(this->id, this->fs.id);
+        break;
         default:
             std::string errMsg("tried to attach shader ");
             errMsg += s.path;
@@ -62,14 +69,37 @@ bool gfx::ShaderProgram::attachShader(const gfx::Shader& s) {
             errMsg += " to shaderprogram!\n";
             throw std::runtime_error(errMsg);
             return false;
-            break;
+        break;
     }
-
-
 
     return true;
 }
 
 bool gfx::ShaderProgram::link() {
+	if(!this->hasValidID()) {
+        throw std::runtime_error("tried to link shaderprogram with invalid id!\n");
+		return false;
+	}
+
+    glLinkProgram(this->id);
+ 
+	GLint result = GL_FALSE;
+
+    glGetProgramiv(this->id, GL_LINK_STATUS, &result);
+
+	if(result == GL_FALSE) {
+        int errorLogLength = 0;
+        char errorLog[errorLogLength];
+
+        glGetProgramiv(this->id, GL_INFO_LOG_LENGTH, &errorLogLength);        
+        glGetProgramInfoLog(this->id, errorLogLength, NULL, &errorLog[0]);
+
+        std::string errMsg("shaderprogram failed to link. Log:\n");
+        errMsg += errorLog;
+        errMsg += "\n";
+        throw std::runtime_error(errMsg);
+		return false;
+	}
+ 
     return true;
 }

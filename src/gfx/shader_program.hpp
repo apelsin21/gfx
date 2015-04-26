@@ -9,22 +9,22 @@
 #include <GL/glew.h>
 
 #include "gfx/shader.hpp"
+#include "gfx/gl_object.hpp"
 
 namespace gfx {
-    class ShaderProgram {
-        protected:
+    class ShaderProgram : public GLObject {
         public:
-            unsigned int id;
             gfx::Shader vs, fs, geom, tess;
             bool loaded, linked;
 
             ShaderProgram();
             ~ShaderProgram();
-            
-            void createID();
-            void deleteID();
-            bool hasValidID();
 
+			void createID();
+			void deleteID();
+			void bindID();
+			bool hasValidID();
+            
             bool attachShader(const Shader&);
 
             bool loadFromPaths(const std::string&, const std::string&);

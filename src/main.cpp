@@ -46,6 +46,8 @@ int main() {
 
         tex.createID();
         tex.loadFromFile("data/textures/sprite.png");
+
+		renderer.fontShaderProgram = program;
     } catch(const std::runtime_error& e) {
         printf("ERR: %s", e.what());
         return EXIT_FAILURE;

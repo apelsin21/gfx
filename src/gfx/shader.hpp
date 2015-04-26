@@ -11,12 +11,11 @@
 #include <GL/glew.h>
 
 #include "gfx/shader_type.hpp"
+#include "gfx/gl_object.hpp"
 
 namespace gfx {
-    class Shader {
-        protected:
+    class Shader : public GLObject {
         public:
-            unsigned int id;
             std::string src, path;
             SHADER_TYPE type;
             

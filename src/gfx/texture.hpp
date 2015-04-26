@@ -8,10 +8,10 @@
 
 #include <glm/glm.hpp>
 
+#include "gfx/gl_object.hpp"
+
 namespace gfx {
-    class Texture {
-        protected:
-            GLuint id;
+    class Texture : public GLObject {
         public:
             int bpp;
             glm::vec2 res;
@@ -19,10 +19,10 @@ namespace gfx {
 
             virtual bool loadFromFile(const std::string&) = 0;
 
-            virtual void createID();
-            virtual void deleteID();
-            virtual void bindID();
-            virtual bool hasValidID();
+			virtual void createID();
+			virtual void deleteID();
+			virtual void bindID();
+			virtual bool hasValidID();
     };
 }
 
