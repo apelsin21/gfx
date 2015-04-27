@@ -20,28 +20,23 @@
 int main() {
     gfx::FreeTypeFont font;
     gfx::FreeImageTexture tex;
-
     gfx::Renderer renderer;
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
 
     try {
-        renderer.initialize("Window", 3, 0, false);
+        renderer.initialize("Test Window", 3, 0, false);
 
         vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
-
         vs.loadFromMemory(gfx::defaultFontVertexShader);
         fs.loadFromMemory(gfx::defaultFontFragmentShader);
-
         vs.compile();
         fs.compile();
 
         program.createID();
-
         program.attachShader(vs);
         program.attachShader(fs);
-
         program.link();
 
         tex.createID();
@@ -60,17 +55,16 @@ int main() {
 
         renderer.begin();
         renderer.drawTexture(tex, glm::vec2(400, 300));
-        renderer.drawText(font, "bajs", glm::vec2(0, 0));
         renderer.end();
 
         renderer.pollEvents();
         renderer.swapBuffers();
     }
 
-    tex.deleteID();
     vs.deleteID();
     fs.deleteID();
     program.deleteID();
+    tex.deleteID();
 
     return EXIT_SUCCESS;
 }

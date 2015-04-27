@@ -5,10 +5,10 @@ set(SOURCES
 
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_program.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_object.cpp
     
@@ -27,9 +27,9 @@ set(HEADERS
 
 	#gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.hpp
 

@@ -1,6 +1,8 @@
 #ifndef GL_OBJECT_HPP
 #define GL_OBJECT_HPP
 
+#include <stdio.h>
+
 #define GLEW_STATIC
 #include <GL/glew.h>
 
