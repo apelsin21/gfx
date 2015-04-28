@@ -15,34 +15,44 @@ FREE_IMAGE_FORMAT gfx::FreeImageTexture::getFreeImageFormatFromPath(const std::s
 }
 
 bool gfx::FreeImageTexture::loadFromFile(const std::string& path) {
-    if(path.empty()) {
-        throw std::runtime_error("tried to load texture from empty path");
-        return false;
+    std::ifstream fileCheck(path);
+    if(!fileCheck.good()) {
+        std::string errMsg("tried to load texture ");
+        errMsg += path;
+        errMsg += ", but it doesn't exist.\n";
+        throw std::runtime_error(errMsg);
+        return false; 
     }
-    
+
     FREE_IMAGE_FORMAT ff = this->getFreeImageFormatFromPath(path);
     FIBITMAP* fb = nullptr;
-    
-    if(FreeImage_FIFSupportsReading(ff)) {
+    BYTE* pImageData = nullptr;
+
+    if(ff != FIF_UNKNOWN && FreeImage_FIFSupportsReading(ff)) {
         fb = FreeImage_Load(ff, path.c_str());
     } else {
         std::string errMsg("tried to load a texture from ");
         errMsg += path;
-        errMsg += ", but FreeImage doesn't support reading that format!\n";
+        errMsg += ", but FreeImage doesn't support reading that format.\n";
         throw std::runtime_error(errMsg);
         return false;
     }
     
     if(FreeImage_GetBPP(fb) != 32) {
-        FIBITMAP* temp = FreeImage_ConvertTo32Bits(fb);
-        
-        FreeImage_Unload(fb);
-        fb = temp;
+        FIBITMAP* temp = fb;
+        fb = FreeImage_ConvertTo32Bits(temp);
+        FreeImage_Unload(temp);
     }
 
-    this->res = glm::vec2(FreeImage_GetWidth(fb), FreeImage_GetHeight(fb));
+    this->resolution = glm::vec2(FreeImage_GetWidth(fb), FreeImage_GetHeight(fb));
     this->bpp = FreeImage_GetBPP(fb);
     this->path = path;
+    pImageData = FreeImage_GetBits(fb);
+    
+    if(pImageData == nullptr) {
+        throw std::runtime_error("FreeImage texture is NULL for unknown reason\n");
+        return false;
+    }
 
     if(!this->hasValidID()) {
         printf("texture id: %u\n", this->id);
@@ -52,13 +62,13 @@ bool gfx::FreeImageTexture::loadFromFile(const std::string& path) {
 
     this->bindID();
 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->resolution.x, this->resolution.y, 0, GL_BGRA, GL_UNSIGNED_BYTE, (GLvoid*)pImageData);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, this->textureFilterToGLEnum(this->minFilter));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, this->textureFilterToGLEnum(this->magFilter));
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, this->textureWrapToGLEnum(this->sWrap));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, this->textureWrapToGLEnum(this->tWrap));
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->res.x, this->res.y, 0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(fb));
 
     if(this->mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);

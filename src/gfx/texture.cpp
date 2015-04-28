@@ -3,8 +3,8 @@
 gfx::Texture::Texture() {
     this->mipmaps = true;
 
-    this->minFilter = TEXTURE_FILTER::TEXTURE_FILTER_LINEAR;
-    this->magFilter = TEXTURE_FILTER::TEXTURE_FILTER_LINEAR;
+    this->minFilter = TEXTURE_FILTER::TEXTURE_FILTER_NEAREST;
+    this->magFilter = TEXTURE_FILTER::TEXTURE_FILTER_NEAREST;
     this->sWrap = TEXTURE_WRAP::TEXTURE_WRAP_REPEAT;
     this->tWrap = TEXTURE_WRAP::TEXTURE_WRAP_REPEAT;
 }

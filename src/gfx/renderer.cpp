@@ -192,6 +192,15 @@ bool gfx::Renderer::setResolution(const glm::vec2& r) {
 
     return false;
 }
+glm::vec2 gfx::Renderer::getFramebufferSize() {
+    return this->getResolution();
+}
+bool gfx::Renderer::setFramebufferSize(const glm::vec2& s) {
+    bool returnVal = this->setResolution(s);
+    glViewport(0, 0, (int)this->resolution.x, (int)this->resolution.y);
+
+    return returnVal;
+}
 
 glm::vec2 gfx::Renderer::getPosition() {
     if(this->initialized) {
@@ -216,7 +225,6 @@ bool gfx::Renderer::isOpen() {
     return this->open;
 }
 bool gfx::Renderer::close() {
-    SDL_DestroyWindow(this->_pSdlWindow);
 
     this->open = false;
     return true;
@@ -352,6 +360,7 @@ gfx::RENDERER_EVENT gfx::Renderer::pollEvents() {
                 break;
             case SDL_WINDOWEVENT_RESIZED:
                 returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_RESIZED;
+                this->setFramebufferSize(glm::vec2(this->_sdlEvent.window.data1, this->_sdlEvent.window.data2));
                 break;
             case SDL_WINDOWEVENT_SIZE_CHANGED:
                 returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_RESIZED;

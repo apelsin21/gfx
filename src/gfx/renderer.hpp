@@ -59,6 +59,9 @@ namespace gfx {
 
             glm::vec2 getResolution();
             bool setResolution(const glm::vec2&);
+            
+            glm::vec2 getFramebufferSize();
+            bool setFramebufferSize(const glm::vec2&);
 
             glm::vec2 getPosition();
             bool setPosition(const glm::vec2&);

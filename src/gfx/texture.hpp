@@ -29,7 +29,7 @@ namespace gfx {
             TEXTURE_WRAP sWrap, tWrap;
             int bpp;
             bool mipmaps;
-            glm::vec2 res;
+            glm::vec2 resolution;
             std::string path;
 
             Texture();

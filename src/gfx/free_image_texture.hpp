@@ -6,6 +6,7 @@
 #include <FreeImage.h>
 
 #include <stdexcept>
+#include <fstream>
 
 namespace gfx {
     class FreeImageTexture : public Texture {
