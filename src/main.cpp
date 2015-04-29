@@ -19,6 +19,7 @@
 #include "gfx/default_shaders.hpp"
 #include "gfx/shader_type.hpp"
 #include "gfx/renderer_event.hpp"
+#include "gfx/context_settings.hpp"
 
 int main() {
     gfx::FreeTypeFont font;
@@ -26,9 +27,10 @@ int main() {
     gfx::Renderer renderer;
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
+    gfx::ContextSettings settings(3, 0, false);
 
     try {
-        renderer.initialize("Test Window", 3, 0, false);
+        renderer.initialize("Test Window", glm::vec2(800, 600), settings);
 
         vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
@@ -44,6 +46,8 @@ int main() {
 
         tex.createID();
         tex.loadFromFile("test.png");
+
+        font.loadFromFile("test.ttf", 12);
 
 		renderer.fontShaderProgram = program;
     } catch(const std::runtime_error& e) {
@@ -117,6 +121,11 @@ int main() {
         if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             renderer.close();
             break;
+        }
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
+            renderer.setFullscreen();
+        } else if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F12)) {
+            renderer.setWindowed();
         }
 
         renderer.begin();

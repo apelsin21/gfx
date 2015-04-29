@@ -1,12 +1,9 @@
 #include "gfx/renderer.hpp"
 
 gfx::Renderer::Renderer() {
-    this->majorVersion = 3;
-    this->minorVersion = 0;
     this->clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
     this->resolution = glm::vec2(800, 600);
 
-    this->coreProfile = false;
     this->isDrawing = false;
     this->open = false;
     this->fullscreen = false;
@@ -31,35 +28,14 @@ gfx::Renderer::~Renderer() {
     SDL_Quit();
 }
 
-std::tuple<unsigned int, unsigned int> gfx::Renderer::getSupportedVersion() {
-    GLint supportedMajor = 0, supportedMinor = 0;
-
-    glGetIntegerv(GL_MAJOR_VERSION, &supportedMajor);
-    glGetIntegerv(GL_MINOR_VERSION, &supportedMinor);
-
-    return std::make_tuple((unsigned int)supportedMajor, (unsigned int)supportedMinor);
-}
-
-bool gfx::Renderer::isVersionSupported(unsigned int major, unsigned int minor) {
-    std::tuple<unsigned int, unsigned int> supportedVersion = this->getSupportedVersion();
-
-    if(major > std::get<0>(supportedVersion) || (major == std::get<0>(supportedVersion) && minor > std::get<1>(supportedVersion))) {
-        return false;
-    }
-
-    return true;
-}
-
-bool gfx::Renderer::initialize(const std::string& t, unsigned int major, unsigned int minor, bool core) {
+bool gfx::Renderer::initialize(const std::string& t, const glm::vec2& res, ContextSettings& context) {
     if(this->initialized) {
         throw std::runtime_error("renderer is already initialized!\n");
         return false;
     }
 
-    this->majorVersion = major;
-    this->minorVersion = minor;
-    this->coreProfile = core;
-
+    this->contextSettings = context;
+    this->resolution = res;
     this->title = t;
     
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -70,15 +46,18 @@ bool gfx::Renderer::initialize(const std::string& t, unsigned int major, unsigne
         return false;
     }
 
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, major);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minor);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, this->contextSettings.major);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, this->contextSettings.minor);
+    if(this->contextSettings.doubleBuffered) {
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    } else {
+        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
+    }
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, this->contextSettings.depthBits);
 
     this->_pSdlWindow = SDL_CreateWindow(this->title.c_str(),
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            (int)this->resolution.x, (int)this->resolution.y,
+            res.x, res.y,
             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
     if(!this->_pSdlWindow) {
@@ -91,7 +70,7 @@ bool gfx::Renderer::initialize(const std::string& t, unsigned int major, unsigne
 
     this->_sdlContext = SDL_GL_CreateContext(this->_pSdlWindow);
 
-    if(this->coreProfile) {
+    if(this->contextSettings.useCoreProfile) {
         glewExperimental = GL_TRUE;
     }
 
@@ -99,20 +78,6 @@ bool gfx::Renderer::initialize(const std::string& t, unsigned int major, unsigne
     if(err != GLEW_OK) {
         std::string errMsg("failed to initialize GLEW, error:\n");
         errMsg += (char*)glewGetErrorString(err);
-        throw std::runtime_error(errMsg);
-        return false;
-    }
-
-    if(!this->isVersionSupported(major, minor)) {
-        std::string errMsg;
-        errMsg += "Failed to initialize GL renderer, unsupported GL version: ";
-        errMsg += major;
-        errMsg += ".";
-        errMsg += minor;
-        errMsg += "\nDriver only supports GL version: ";
-        errMsg += std::get<0>(this->getSupportedVersion());
-        errMsg += std::get<1>(this->getSupportedVersion());
-        errMsg += "\n";
         throw std::runtime_error(errMsg);
         return false;
     }
@@ -141,22 +106,6 @@ gfx::Color gfx::Renderer::getClearColor() {
     return this->clearColor;
 }
 
-void gfx::Renderer::begin() {
-    if(this->isDrawing) {
-        return;
-    }
-
-    this->isDrawing = true;
-
-	this->fontShaderProgram.bindID();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-void gfx::Renderer::end() {
-    this->isDrawing = false;
-}
-
-void gfx::Renderer::drawText(const Font& f, const std::string& s, const glm::vec2& p) {
-}
 
 std::string gfx::Renderer::getTitle() {
     return this->title;
@@ -233,39 +182,38 @@ bool gfx::Renderer::close() {
 bool gfx::Renderer::isFullscreen() {
     return this->fullscreen;
 }
-bool gfx::Renderer::setFullscreen(bool f) {
+void gfx::Renderer::setFullscreen() {
     if(!this->initialized) {
-        return false;
-    } else if(f) {
-        if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN) < 0) {
-            return false;
-        }
-    } else {
-        if(SDL_SetWindowFullscreen(this->_pSdlWindow, 0) < 0) {
-            return false;
-        }
+        throw std::runtime_error("tried to set uninitialized renderer to fullscreen.\n");
     }
 
-    return true;
+    if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN) < 0) {
+        throw std::runtime_error("failed to set renderer to fullscreen.\n");
+    } else {
+        this->fullscreen = true;
+    }
 }
-bool gfx::Renderer::setBorderlessFullscreen(bool f) {
-    this->fullscreen = f;
-
+void gfx::Renderer::setBorderlessFullscreen() {
     if(!this->initialized) {
-        return false;
-    } else if(this->fullscreen) {
-        //set window to borderless fullscreen
-        if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP) < 0) {
-            return false;
-        }
-    } else {
-        //set window to windowed mode
-        if(SDL_SetWindowFullscreen(this->_pSdlWindow, 0) < 0) {
-            return false;
-        }
+        throw std::runtime_error("tried to set uninitialized renderer to borderless fullscreen!\n");
     }
 
-    return true;
+    if(SDL_SetWindowFullscreen(this->_pSdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP) < 0) {
+        throw std::runtime_error("failed to set renderer to borderless fullscreen!\n");
+    } else {
+        this->fullscreen = true;
+    }
+}
+void gfx::Renderer::setWindowed() {
+    if(!this->initialized) {
+        throw std::runtime_error("tried to set uninitialized renderer to windowed mode.\n");
+    }    
+
+    if(SDL_SetWindowFullscreen(this->_pSdlWindow, 0) < 0) {
+        throw std::runtime_error("failed to set renderer to windowed mode.\n");
+    } else {
+        this->fullscreen = false;
+    }
 }
 
 bool gfx::Renderer::isMaximized() {
@@ -360,7 +308,6 @@ gfx::RENDERER_EVENT gfx::Renderer::pollEvents() {
                 break;
             case SDL_WINDOWEVENT_RESIZED:
                 returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_RESIZED;
-                this->setFramebufferSize(glm::vec2(this->_sdlEvent.window.data1, this->_sdlEvent.window.data2));
                 break;
             case SDL_WINDOWEVENT_SIZE_CHANGED:
                 returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_RESIZED;
@@ -566,6 +513,29 @@ void gfx::Renderer::swapBuffers() {
 
     SDL_GL_SwapWindow(this->_pSdlWindow);
 }
+void gfx::Renderer::begin() {
+    if(this->isDrawing) {
+        return;
+    }
 
-void gfx::Renderer::drawTexture(const gfx::Texture& tex, const glm::vec2& pos) {
+    this->isDrawing = true;
+
+	this->fontShaderProgram.bindID();
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+void gfx::Renderer::end() {
+    this->isDrawing = false;
+}
+
+void gfx::Renderer::drawSprite(gfx::Texture& tex, const glm::vec2& pos) {
+    if(!this->isDrawing) {
+        printf("DRAW CALLS ARE BETWEEN RENDERER.BEGIN() and RENDERER.END()\n");
+        return;
+    }
+}
+void gfx::Renderer::drawText(gfx::Font&, const glm::vec2& pos, const std::string& text) {
+    if(!this->isDrawing) {
+        printf("DRAW CALLS ARE BETWEEN RENDERER.BEGIN() and RENDERER.END()\n");
+        return;
+    }
 }

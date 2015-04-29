@@ -23,13 +23,13 @@ bool gfx::FreeTypeFont::loadFromFile(const std::string& path, unsigned int size)
     if(FT_New_Face(fl, path.c_str(), 0, &ff) == FT_Err_Unknown_File_Format) {
         std::string errMsg("failed to open font ");
         errMsg += path;
-        errMsg += ", unsupported format\n";
+        errMsg += ". Unsupported format\n";
         throw std::runtime_error(errMsg);
         return false;
     } else {
         std::string errMsg("failed to open font ");
         errMsg += path;
-        errMsg += ", damaged, insufficient priviliges, or missing file\n";
+        errMsg += ". Damaged, insufficient priviliges, or missing file\n";
         throw std::runtime_error(errMsg);
         return false;
     }
@@ -40,7 +40,6 @@ bool gfx::FreeTypeFont::loadFromFile(const std::string& path, unsigned int size)
 
     glm::vec2 glyph_res;
 
-    //cache the most common characters
     for(int i = 32; i < 127; i++) {
         if(FT_Load_Char(ff, i, FT_LOAD_RENDER)) {
             printf("failed to load character %c from font %s\n", (char)i, path.c_str());

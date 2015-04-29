@@ -21,6 +21,7 @@
 #include "gfx/shader_program.hpp"
 #include "gfx/font.hpp"
 #include "gfx/texture.hpp"
+#include "gfx/context_settings.hpp"
 
 namespace gfx {
     class Renderer {
@@ -35,10 +36,9 @@ namespace gfx {
 
             SDL_Scancode convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey);
         public:
-            unsigned int majorVersion, minorVersion;
             ShaderProgram fontShaderProgram;
-            bool isDrawing, coreProfile, open, fullscreen,
-                                 initialized, maximized, hidden, focused;
+            bool isDrawing, open, fullscreen, initialized, maximized, hidden, focused;
+            gfx::ContextSettings contextSettings;
             glm::vec2 resolution, position;
             std::string title;
 
@@ -48,11 +48,7 @@ namespace gfx {
             void setClearColor(const Color&);
             Color getClearColor();
 
-            std::tuple<unsigned int, unsigned int> getSupportedVersion();
-            bool isVersionSupported(unsigned int, unsigned int);
-
-            bool initialize(const std::string&, unsigned int, unsigned int, bool);
-
+            bool initialize(const std::string&, const glm::vec2&, ContextSettings&);
 
             std::string getTitle();
             bool setTitle(const std::string&);
@@ -70,8 +66,9 @@ namespace gfx {
             bool close(); 
 
             bool isFullscreen();
-            bool setFullscreen(bool);
-            bool setBorderlessFullscreen(bool);
+            void setFullscreen();
+            void setBorderlessFullscreen();
+            void setWindowed();
 
             bool isMaximized();
             bool setMaximized(bool);
@@ -94,8 +91,10 @@ namespace gfx {
 
             void swapBuffers();
 
-            void drawText(const Font&, const std::string&, const glm::vec2&);
-            void drawTexture(const Texture&, const glm::vec2&);
+            void drawText(Font&, const glm::vec2&, const std::string&);
+            void drawText(Font&, const glm::vec2&, const std::string&, const Color&);
+            void drawSprite(Texture&, const glm::vec2&);
+            void drawSprite(Texture&, const glm::vec2&, const Color&);
     };
 }
 

@@ -11,6 +11,7 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_program.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_object.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/context_settings.cpp
     
     #net
     ${CMAKE_CURRENT_SOURCE_DIR}/net/address.cpp
@@ -38,6 +39,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_program.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer_event.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/default_shaders.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/context_settings.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_object.hpp
 
