@@ -11,6 +11,8 @@ gfx::Renderer::Renderer() {
     this->maximized = false;
     this->hidden = false;
     this->focused = false;
+	this->boundTextureID = 0;
+	this->boundShaderProgramID = 0;
 
     this->_sdlWindowID = 0;
     this->_sdlContext = NULL;
@@ -48,11 +50,23 @@ bool gfx::Renderer::initialize(const std::string& t, const glm::vec2& res, Conte
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, this->contextSettings.major);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, this->contextSettings.minor);
+
     if(this->contextSettings.doubleBuffered) {
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     } else {
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
     }
+
+    if(this->contextSettings.coreProfile) {
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);                                                                                                          
+	}
+
+	if(this->contextSettings.vsync) {
+		SDL_GL_SetSwapInterval(1);
+	} else {
+		SDL_GL_SetSwapInterval(0);
+	}
+
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, this->contextSettings.depthBits);
 
     this->_pSdlWindow = SDL_CreateWindow(this->title.c_str(),
@@ -70,7 +84,7 @@ bool gfx::Renderer::initialize(const std::string& t, const glm::vec2& res, Conte
 
     this->_sdlContext = SDL_GL_CreateContext(this->_pSdlWindow);
 
-    if(this->contextSettings.useCoreProfile) {
+    if(this->contextSettings.coreProfile) {
         glewExperimental = GL_TRUE;
     }
 
@@ -520,22 +534,21 @@ void gfx::Renderer::begin() {
 
     this->isDrawing = true;
 
-	this->fontShaderProgram.bindID();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void gfx::Renderer::end() {
     this->isDrawing = false;
 }
 
-void gfx::Renderer::drawSprite(gfx::Texture& tex, const glm::vec2& pos) {
+void gfx::Renderer::drawSpriteManager(const gfx::SpriteManager& mgr) {
     if(!this->isDrawing) {
         printf("DRAW CALLS ARE BETWEEN RENDERER.BEGIN() and RENDERER.END()\n");
         return;
     }
-}
-void gfx::Renderer::drawText(gfx::Font&, const glm::vec2& pos, const std::string& text) {
-    if(!this->isDrawing) {
-        printf("DRAW CALLS ARE BETWEEN RENDERER.BEGIN() and RENDERER.END()\n");
-        return;
-    }
+
+	if(this->spriteShaderProgram.id != this->boundShaderProgramID) {
+		this->spriteShaderProgram.bindID();
+	}
+	glBindVertexArray(mgr.vao);
+	glDrawArrays(GL_TRIANGLES, 0, 6*mgr.numSprites);
 }

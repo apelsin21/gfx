@@ -31,6 +31,10 @@ bool gfx::ShaderProgram::hasValidID() {
     }
 }
 
+int gfx::ShaderProgram::getAttribLocation(const std::string& name) {
+	return glGetAttribLocation(this->id, name.c_str());
+}
+
 bool gfx::ShaderProgram::attachShader(const gfx::Shader& s) {
     if(!this->hasValidID()) {
         std::string errMsg("tried to attach shader ");

@@ -22,6 +22,7 @@
 #include "gfx/font.hpp"
 #include "gfx/texture.hpp"
 #include "gfx/context_settings.hpp"
+#include "gfx/sprite_manager.hpp"
 
 namespace gfx {
     class Renderer {
@@ -36,11 +37,12 @@ namespace gfx {
 
             SDL_Scancode convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey);
         public:
-            ShaderProgram fontShaderProgram;
+            ShaderProgram spriteShaderProgram;
             bool isDrawing, open, fullscreen, initialized, maximized, hidden, focused;
             gfx::ContextSettings contextSettings;
             glm::vec2 resolution, position;
             std::string title;
+			unsigned int boundTextureID, boundShaderProgramID;
 
             Renderer();
             ~Renderer();
@@ -91,10 +93,7 @@ namespace gfx {
 
             void swapBuffers();
 
-            void drawText(Font&, const glm::vec2&, const std::string&);
-            void drawText(Font&, const glm::vec2&, const std::string&, const Color&);
-            void drawSprite(Texture&, const glm::vec2&);
-            void drawSprite(Texture&, const glm::vec2&, const Color&);
+            void drawSpriteManager(const SpriteManager&);
     };
 }
 

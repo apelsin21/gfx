@@ -3,22 +3,25 @@
 gfx::ContextSettings::ContextSettings(int ma, int mi, bool core) {
     this->major = ma;
     this->minor = mi;
-    this->useCoreProfile = core;
+    this->coreProfile = core;
     this->doubleBuffered = true;
+	this->vsync = true;
     this->depthBits = 24;
 }
-gfx::ContextSettings::ContextSettings(int ma, int mi, int db, bool buffers, bool core) {
-    this->major = major;
-    this->minor = minor;
-    this->useCoreProfile = core;
-    this->doubleBuffered = buffers;
+gfx::ContextSettings::ContextSettings(int ma, int mi, int db, bool core, bool buffers, bool vsync_) {
+    this->major = ma;
+    this->minor = mi;
     this->depthBits = db;
+    this->coreProfile = core;
+    this->doubleBuffered = buffers;
+	this->vsync = vsync_;
 }
 gfx::ContextSettings::ContextSettings() {
     this->major = 3;
     this->minor = 0;
-    this->useCoreProfile = false;
+    this->coreProfile = false;
     this->doubleBuffered = true;
+    this->vsync = true;
     this->depthBits = 24;
 }
 gfx::ContextSettings::~ContextSettings() {

@@ -6,7 +6,7 @@
 namespace gfx {
     #define GLSL(src) "#version 130\n" #src
     
-    static const std::string defaultFontVertexShader = GLSL(
+    static const std::string defaultSpriteVertexShader = GLSL(
         in vec2 v_pos;
         in vec2 v_uv;
         in vec3 v_color;
@@ -22,7 +22,7 @@ namespace gfx {
         }
     );
 
-    static const std::string defaultFontFragmentShader = GLSL(
+    static const std::string defaultSpriteFragmentShader = GLSL(
         in vec2 f_uv;
         in vec3 f_color;
 

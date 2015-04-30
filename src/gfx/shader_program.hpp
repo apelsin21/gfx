@@ -30,6 +30,8 @@ namespace gfx {
             bool loadFromPaths(const std::string&, const std::string&);
             bool loadFromMemory(const std::string&, const std::string&);
 
+			int getAttribLocation(const std::string&);
+
             bool link();
     };
 }

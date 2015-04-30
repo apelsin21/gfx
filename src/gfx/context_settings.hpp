@@ -6,10 +6,10 @@ namespace gfx {
         protected:
         public:
             int major, minor, depthBits;
-            bool doubleBuffered, useCoreProfile;
+            bool doubleBuffered, coreProfile, vsync;
 
             ContextSettings(int, int, bool);
-            ContextSettings(int, int, int, bool, bool);
+            ContextSettings(int, int, int, bool, bool, bool);
             ContextSettings();
             ~ContextSettings();
 

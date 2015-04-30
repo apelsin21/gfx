@@ -20,6 +20,8 @@
 #include "gfx/shader_type.hpp"
 #include "gfx/renderer_event.hpp"
 #include "gfx/context_settings.hpp"
+#include "gfx/sprite_manager.hpp"
+#include "gfx/sprite.hpp"
 
 int main() {
     gfx::FreeTypeFont font;
@@ -27,15 +29,16 @@ int main() {
     gfx::Renderer renderer;
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
-    gfx::ContextSettings settings(3, 0, false);
+    gfx::ContextSettings settings(3, 0, 24, false, true, true);
+	gfx::SpriteManager spriteManager;
 
     try {
         renderer.initialize("Test Window", glm::vec2(800, 600), settings);
 
         vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
-        vs.loadFromMemory(gfx::defaultFontVertexShader);
-        fs.loadFromMemory(gfx::defaultFontFragmentShader);
+        vs.loadFromMemory(gfx::defaultSpriteVertexShader);
+        fs.loadFromMemory(gfx::defaultSpriteFragmentShader);
         vs.compile();
         fs.compile();
 
@@ -47,75 +50,20 @@ int main() {
         tex.createID();
         tex.loadFromFile("test.png");
 
-        font.loadFromFile("test.ttf", 12);
+		renderer.spriteShaderProgram = program;
 
-		renderer.fontShaderProgram = program;
+		spriteManager.initialize(program.getAttribLocation("v_pos"), 
+				program.getAttribLocation("v_uv"),
+			   	program.getAttribLocation("v_color"));
+
     } catch(const std::runtime_error& e) {
         printf("ERR: %s", e.what());
         return EXIT_FAILURE;
     }
 
-    GLint vertexShaderPos = glGetAttribLocation(program.id, "v_pos");
-    GLint uvShaderPos = glGetAttribLocation(program.id, "v_uv");
-    GLint colorShaderPos = glGetAttribLocation(program.id, "v_color");
-    GLuint vao, vertex_vbo, uv_vbo, color_vbo;
-    glGenBuffers(1, &vertex_vbo);
-    glGenBuffers(1, &uv_vbo);
-    glGenBuffers(1, &color_vbo);
-    glGenVertexArrays(1, &vao);
-
-    static const GLfloat vertices[] = {
-        -1.0f, -1.0f, //Bottom left
-         1.0f, -1.0f, //Bottom right
-        -1.0f,  1.0f, //Top left
-
-         1.0f, -1.0f, //Bottom right
-         1.0f,  1.0f, //Top right
-        -1.0f,  1.0f, //Top left
-    };
-    static const GLfloat uvs[] = {
-         0.0f,  0.0f, //Bottom left
-         1.0f,  0.0f, //Bottom right
-         0.0f,  1.0f, //Top left
-
-         1.0f,  0.0f, //Bottom right
-         1.0f,  1.0f, //Top right
-         0.0f,  1.0f, //Top left
-    };
-    static const GLfloat colors[] = {
-         1.0f,  1.0f, 1.0f, //Bottom left
-         1.0f,  1.0f, 1.0f, //Bottom right
-         1.0f,  1.0f, 1.0f, //Top left
-
-         1.0f,  1.0f, 1.0f, //Bottom left
-         1.0f,  1.0f, 1.0f, //Bottom right
-         1.0f,  1.0f, 1.0f, //Top right
-    };
-
-    glBindVertexArray(vao);
-
-    // VERTICES
-    glBindBuffer(GL_ARRAY_BUFFER, vertex_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(vertexShaderPos);
-    glVertexAttribPointer(vertexShaderPos, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-
-    // UVS
-    glBindBuffer(GL_ARRAY_BUFFER, uv_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(uvs), uvs, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(uvShaderPos);
-    glVertexAttribPointer(uvShaderPos, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-
-    // COLORS
-    glBindBuffer(GL_ARRAY_BUFFER, color_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(colorShaderPos);
-    glVertexAttribPointer(colorShaderPos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-
     renderer.setClearColor(gfx::Color(0.0f, 1.0f, 1.0f, 1.0f));
+
+	spriteManager.addSprite();
 
     while(renderer.isOpen()) {
         if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
@@ -130,7 +78,7 @@ int main() {
 
         renderer.begin();
         tex.bindID();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+		renderer.drawSpriteManager(spriteManager);
         renderer.end();
 
         renderer.pollEvents();
@@ -141,10 +89,6 @@ int main() {
     fs.deleteID();
     program.deleteID();
     tex.deleteID();
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vertex_vbo);
-    glDeleteBuffers(1, &uv_vbo);
-    glDeleteBuffers(1, &color_vbo);
 
     return EXIT_SUCCESS;
 }
