@@ -9,6 +9,7 @@
 #include <GL/glew.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtx/type_aligned.hpp>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
@@ -22,7 +23,7 @@
 #include "gfx/font.hpp"
 #include "gfx/texture.hpp"
 #include "gfx/context_settings.hpp"
-#include "gfx/sprite_manager.hpp"
+#include "gfx/sprite_batch.hpp"
 
 namespace gfx {
     class Renderer {
@@ -40,7 +41,7 @@ namespace gfx {
             ShaderProgram spriteShaderProgram;
             bool isDrawing, open, fullscreen, initialized, maximized, hidden, focused;
             gfx::ContextSettings contextSettings;
-            glm::vec2 resolution, position;
+            glm::i32vec2 resolution, position;
             std::string title;
 			unsigned int boundTextureID, boundShaderProgramID;
 
@@ -50,22 +51,22 @@ namespace gfx {
             void setClearColor(const Color&);
             Color getClearColor();
 
-            bool initialize(const std::string&, const glm::vec2&, ContextSettings&);
+            bool initialize(const std::string&, const glm::i32vec2&, ContextSettings&);
 
             std::string getTitle();
             bool setTitle(const std::string&);
 
-            glm::vec2 getResolution();
-            bool setResolution(const glm::vec2&);
+            glm::i32vec2 getResolution();
+            bool setResolution(const glm::i32vec2&);
             
-            glm::vec2 getFramebufferSize();
-            bool setFramebufferSize(const glm::vec2&);
+            glm::i32vec2 getFramebufferSize();
+            bool setFramebufferSize(const glm::i32vec2&);
 
-            glm::vec2 getPosition();
-            bool setPosition(const glm::vec2&);
+            glm::i32vec2 getPosition();
+            bool setPosition(const glm::i32vec2&);
 
             bool isOpen();
-            bool close(); 
+            void close(); 
 
             bool isFullscreen();
             void setFullscreen();
@@ -86,14 +87,14 @@ namespace gfx {
             std::string getClipboardString();
             bool setClipboardString(const std::string&);
 
-            RENDERER_EVENT pollEvents();
+            void pollEvents();
             
             void begin();
             void end();
 
             void swapBuffers();
 
-            void drawSpriteManager(const SpriteManager&);
+            void draw(const SpriteBatch&);
     };
 }
 

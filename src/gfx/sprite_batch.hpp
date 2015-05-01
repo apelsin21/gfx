@@ -1,5 +1,5 @@
-#ifndef SPRITE_MANAGER_HPP
-#define SPRITE_MANAGER_HPP
+#ifndef SPRITE_BATCH_HPP
+#define SPRITE_BATCH_HPP
 
 #include <GL/glew.h>
 
@@ -7,14 +7,14 @@
 #include "gfx/free_image_texture.hpp"
 
 namespace gfx {
-	class SpriteManager {
+	class SpriteBatch {
 		public:
 			GLuint pos_vbo, uv_vbo, color_vbo, vao;
 			unsigned int maxSprites, numSprites;
 
-			SpriteManager();
-			SpriteManager(unsigned int);
-			~SpriteManager();
+			SpriteBatch();
+			SpriteBatch(unsigned int);
+			~SpriteBatch();
 
 			void initialize(int, int, int);
 
@@ -23,4 +23,4 @@ namespace gfx {
 	};
 }
 
-#endif //SPRITE_MANAGER_HPP
+#endif //SPRITE_BATCH_HPP

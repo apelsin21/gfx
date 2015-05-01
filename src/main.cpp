@@ -2,9 +2,6 @@
 #include <tuple>
 #include <exception>
 
-#define GLEW_STATIC
-#include <GL/glew.h>
-
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
@@ -20,17 +17,16 @@
 #include "gfx/shader_type.hpp"
 #include "gfx/renderer_event.hpp"
 #include "gfx/context_settings.hpp"
-#include "gfx/sprite_manager.hpp"
+#include "gfx/sprite_batch.hpp"
 #include "gfx/sprite.hpp"
 
 int main() {
-    gfx::FreeTypeFont font;
     gfx::FreeImageTexture tex;
     gfx::Renderer renderer;
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 0, 24, false, true, true);
-	gfx::SpriteManager spriteManager;
+	gfx::SpriteBatch batch;
 
     try {
         renderer.initialize("Test Window", glm::vec2(800, 600), settings);
@@ -52,7 +48,7 @@ int main() {
 
 		renderer.spriteShaderProgram = program;
 
-		spriteManager.initialize(program.getAttribLocation("v_pos"), 
+		batch.initialize(program.getAttribLocation("v_pos"), 
 				program.getAttribLocation("v_uv"),
 			   	program.getAttribLocation("v_color"));
 
@@ -61,28 +57,17 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    renderer.setClearColor(gfx::Color(0.0f, 1.0f, 1.0f, 1.0f));
-
-	spriteManager.addSprite();
+	batch.addSprite();
 
     while(renderer.isOpen()) {
         if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             renderer.close();
             break;
         }
-        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F11)) {
-            renderer.setFullscreen();
-        } else if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_F12)) {
-            renderer.setWindowed();
-        }
 
         renderer.begin();
-        tex.bindID();
-		renderer.drawSpriteManager(spriteManager);
+		renderer.draw(batch);
         renderer.end();
-
-        renderer.pollEvents();
-        renderer.swapBuffers();
     }
 
     vs.deleteID();

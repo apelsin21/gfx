@@ -2,7 +2,7 @@
 
 gfx::Renderer::Renderer() {
     this->clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
-    this->resolution = glm::vec2(800, 600);
+    this->resolution = glm::i32vec2(800, 600);
 
     this->isDrawing = false;
     this->open = false;
@@ -30,7 +30,7 @@ gfx::Renderer::~Renderer() {
     SDL_Quit();
 }
 
-bool gfx::Renderer::initialize(const std::string& t, const glm::vec2& res, ContextSettings& context) {
+bool gfx::Renderer::initialize(const std::string& t, const glm::i32vec2& res, ContextSettings& context) {
     if(this->initialized) {
         throw std::runtime_error("renderer is already initialized!\n");
         return false;
@@ -110,24 +110,27 @@ bool gfx::Renderer::initialize(const std::string& t, const glm::vec2& res, Conte
 }
 
 void gfx::Renderer::setClearColor(const gfx::Color& c) {
+	if(!this->initialized) {
+		printf("tried to set clearcolor of uninitialized renderer.\n");
+		return;
+	}
+
     this->clearColor = c;
-    glClearColor(this->clearColor.r,
-                 this->clearColor.g,
-                 this->clearColor.b,
-                 this->clearColor.a);
+    glClearColor(c.r,
+                 c.g,
+                 c.b,
+                 c.a);
 }
 gfx::Color gfx::Renderer::getClearColor() {
     return this->clearColor;
 }
 
-
 std::string gfx::Renderer::getTitle() {
     return this->title;
 }
 bool gfx::Renderer::setTitle(const std::string& t) {
-    this->title = t;
-
     if(this->initialized) {
+    	this->title = t;
         SDL_SetWindowTitle(this->_pSdlWindow, this->title.c_str());
         return true;
     }
@@ -135,62 +138,37 @@ bool gfx::Renderer::setTitle(const std::string& t) {
     return false;
 }
 
-glm::vec2 gfx::Renderer::getResolution() {
-    if(this->initialized) {
-        int w, h = 0;
-        SDL_GetWindowSize(this->_pSdlWindow, &w, &h);
-
-        this->resolution = glm::vec2(w, h);
-    }
-    
+glm::i32vec2 gfx::Renderer::getResolution() {
     return this->resolution;
 }
-bool gfx::Renderer::setResolution(const glm::vec2& r) {
-    this->resolution = r;
-
+bool gfx::Renderer::setResolution(const glm::i32vec2& r) {
     if(this->initialized) {
-        SDL_SetWindowSize(this->_pSdlWindow, (int)this->resolution.x, (int)this->resolution.y);
+		this->resolution = r;
+        SDL_SetWindowSize(this->_pSdlWindow, this->resolution.x, this->resolution.y);
         return true;
     }
 
     return false;
 }
-glm::vec2 gfx::Renderer::getFramebufferSize() {
-    return this->getResolution();
-}
-bool gfx::Renderer::setFramebufferSize(const glm::vec2& s) {
-    bool returnVal = this->setResolution(s);
-    glViewport(0, 0, (int)this->resolution.x, (int)this->resolution.y);
 
-    return returnVal;
-}
-
-glm::vec2 gfx::Renderer::getPosition() {
-    if(this->initialized) {
-        int x, y = 0;
-        SDL_GetWindowPosition(this->_pSdlWindow, &x, &y);
-        return glm::vec2(x, y);
-    }
-
+glm::i32vec2 gfx::Renderer::getPosition() {
     return this->position;
 }
-bool gfx::Renderer::setPosition(const glm::vec2& p) {
+bool gfx::Renderer::setPosition(const glm::i32vec2& p) {
     if(this->initialized) {
-        SDL_SetWindowPosition(this->_pSdlWindow, (int)this->position.x, (int)this->position.y);
+		this->position = p;
+        SDL_SetWindowPosition(this->_pSdlWindow, p.x, p.y);
         return true;
     }
 
     return false;
 }
-
 
 bool gfx::Renderer::isOpen() {
     return this->open;
 }
-bool gfx::Renderer::close() {
-
+void gfx::Renderer::close() {
     this->open = false;
-    return true;
 }
 
 bool gfx::Renderer::isFullscreen() {
@@ -265,23 +243,16 @@ bool gfx::Renderer::setHidden(bool h) {
 }
 
 bool gfx::Renderer::isFocused() {
-    if(!this->initialized) {
-        return false;
-    }
-
-    if(SDL_GetWindowGrab(this->_pSdlWindow) == SDL_TRUE) {
-        return true;
-    } else {
-        return false;
-    }
+	return this->focused;
 }
 bool gfx::Renderer::setFocused(bool f) {
-    this->focused = f;
-
     if(!this->initialized) {
         return false;
-    } else if(this->focused) {
+    }
+
+	if(f) {
         SDL_SetWindowGrab(this->_pSdlWindow, SDL_TRUE);
+    	this->focused = true;
     } else {
         SDL_SetWindowGrab(this->_pSdlWindow, SDL_FALSE);
     }
@@ -293,81 +264,67 @@ bool gfx::Renderer::isKeyPressed(core::KEYBOARD_KEY key) {
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
 
-gfx::RENDERER_EVENT gfx::Renderer::pollEvents() {
-    if(!this->initialized) {
-        return gfx::RENDERER_EVENT::RENDERER_EVENT_NONE;
-    }
-
-    gfx::RENDERER_EVENT returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_NONE;
-
-    while(SDL_PollEvent(&this->_sdlEvent)) {
-        if(this->_sdlEvent.type != SDL_WINDOWEVENT || this->_sdlEvent.window.windowID != this->_sdlWindowID) {
-            break;
-        }
-
+void gfx::Renderer::pollEvents() {
+    while(SDL_PollEvent(&this->_sdlEvent) && this->_sdlEvent.type == SDL_WINDOWEVENT && this->_sdlEvent.window.windowID == this->_sdlWindowID) {
         switch(this->_sdlEvent.window.event) {
             case SDL_WINDOWEVENT_MOVED:
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_MOVED;
                 break;
+
             case SDL_WINDOWEVENT_SHOWN:
                 this->hidden = false;
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_SHOWN;
                 break;
+
             case SDL_WINDOWEVENT_HIDDEN:
                 this->hidden = true;
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_HIDDEN;
                 break;
+				 
             case SDL_WINDOWEVENT_EXPOSED:
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_EXPOSED;
                 break;
+
             case SDL_WINDOWEVENT_RESIZED:
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_RESIZED;
+				this->resolution = glm::i32vec2(this->_sdlEvent.window.data1, this->_sdlEvent.window.data2);
+				glViewport(0, 0, this->_sdlEvent.window.data1, this->_sdlEvent.window.data2);
                 break;
-            case SDL_WINDOWEVENT_SIZE_CHANGED:
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_RESIZED;
-                break;
+
             case SDL_WINDOWEVENT_MINIMIZED:
                 this->maximized = false;
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_MINIMIZED;
                 break;
+
             case SDL_WINDOWEVENT_MAXIMIZED:
                 this->maximized = true;
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_MAXIMIZED;
                 break;
+				 
             case SDL_WINDOWEVENT_RESTORED:
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_RESTORED;
                 break;
+
             case SDL_WINDOWEVENT_ENTER:
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_ENTER;
                 break;
+
             case SDL_WINDOWEVENT_LEAVE:
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_LEAVE;
                 break;
+
             case SDL_WINDOWEVENT_FOCUS_GAINED:
                 this->focused = true;
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_FOCUS_GAINED;
                 break;
+
             case SDL_WINDOWEVENT_FOCUS_LOST:
                 this->focused = false;
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_FOCUS_LOST;
                 break;
+
             case SDL_WINDOWEVENT_CLOSE:
                 this->close();
-                returnEvent = gfx::RENDERER_EVENT::RENDERER_EVENT_CLOSE;
                 break;
+
             default:
                 break;
         }
     }
-    
-    return returnEvent;
 }
 
 std::string gfx::Renderer::getClipboardString() {
     std::string returnval;
 
-    if(!this->initialized) {
-    } else if(SDL_HasClipboardText() == SDL_TRUE) {
+    if(this->initialized && SDL_HasClipboardText() == SDL_TRUE) {
         //Because this needs to be manually freed
         char* temp_clip = SDL_GetClipboardText();
 
@@ -472,11 +429,9 @@ SDL_Scancode gfx::Renderer::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
         case core::KEYBOARD_KEY::KEY_Z:
             sdlKey = SDL_SCANCODE_Z;
             break;
-        
         case core::KEYBOARD_KEY::KEY_ESCAPE:
             sdlKey = SDL_SCANCODE_ESCAPE;
             break;
-
         case core::KEYBOARD_KEY::KEY_F1:
             sdlKey = SDL_SCANCODE_F1;
             break;
@@ -538,9 +493,12 @@ void gfx::Renderer::begin() {
 }
 void gfx::Renderer::end() {
     this->isDrawing = false;
+
+	this->pollEvents();
+	this->swapBuffers();
 }
 
-void gfx::Renderer::drawSpriteManager(const gfx::SpriteManager& mgr) {
+void gfx::Renderer::draw(const gfx::SpriteBatch& batch) {
     if(!this->isDrawing) {
         printf("DRAW CALLS ARE BETWEEN RENDERER.BEGIN() and RENDERER.END()\n");
         return;
@@ -549,6 +507,6 @@ void gfx::Renderer::drawSpriteManager(const gfx::SpriteManager& mgr) {
 	if(this->spriteShaderProgram.id != this->boundShaderProgramID) {
 		this->spriteShaderProgram.bindID();
 	}
-	glBindVertexArray(mgr.vao);
-	glDrawArrays(GL_TRIANGLES, 0, 6*mgr.numSprites);
+	glBindVertexArray(batch.vao);
+	glDrawArrays(GL_TRIANGLES, 0, 6*batch.numSprites);
 }

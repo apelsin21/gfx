@@ -1,6 +1,6 @@
-#include "gfx/sprite_manager.hpp"
+#include "gfx/sprite_batch.hpp"
 
-gfx::SpriteManager::SpriteManager() {
+gfx::SpriteBatch::SpriteBatch() {
 	this->maxSprites = 10000;
 	this->numSprites = 0;
 
@@ -9,7 +9,7 @@ gfx::SpriteManager::SpriteManager() {
 	this->color_vbo = 0;
 	this->vao = 0;
 }
-gfx::SpriteManager::SpriteManager(unsigned int max) {
+gfx::SpriteBatch::SpriteBatch(unsigned int max) {
 	this->maxSprites = max;
 	this->numSprites = 0;
 
@@ -18,7 +18,7 @@ gfx::SpriteManager::SpriteManager(unsigned int max) {
 	this->color_vbo = 0;
 	this->vao = 0;
 }
-gfx::SpriteManager::~SpriteManager() {
+gfx::SpriteBatch::~SpriteBatch() {
 	if(glIsVertexArray(this->vao) == GL_TRUE) {
     	glDeleteVertexArrays(1, &this->vao);
 	}
@@ -33,7 +33,7 @@ gfx::SpriteManager::~SpriteManager() {
 	}
 }
 
-void gfx::SpriteManager::initialize(int v_pos, int v_uv, int v_color) {
+void gfx::SpriteBatch::initialize(int v_pos, int v_uv, int v_color) {
     glGenBuffers(1, &this->pos_vbo);
     glGenBuffers(1, &this->uv_vbo);
     glGenBuffers(1, &this->color_vbo);
@@ -57,7 +57,7 @@ void gfx::SpriteManager::initialize(int v_pos, int v_uv, int v_color) {
     glVertexAttribPointer(v_color, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 }
 
-gfx::Sprite gfx::SpriteManager::getSprite() {
+gfx::Sprite gfx::SpriteBatch::getSprite() {
 	gfx::Sprite sprite;
 
 	if(this->numSprites >= this->maxSprites) {
@@ -81,7 +81,7 @@ gfx::Sprite gfx::SpriteManager::getSprite() {
 	return sprite;
 }
 
-void gfx::SpriteManager::addSprite() {
+void gfx::SpriteBatch::addSprite() {
 	gfx::Sprite sprite;
 
 	if(this->numSprites >= this->maxSprites) {
