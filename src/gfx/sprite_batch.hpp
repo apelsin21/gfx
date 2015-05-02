@@ -6,20 +6,25 @@
 #include "gfx/sprite.hpp"
 #include "gfx/free_image_texture.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace gfx {
 	class SpriteBatch {
 		public:
-			GLuint pos_vbo, uv_vbo, color_vbo, vao;
-			unsigned int maxSprites, numSprites;
+			GLuint pos_vbo, uv_vbo, vao;
+			unsigned int max, current;
 
 			SpriteBatch();
 			SpriteBatch(unsigned int);
 			~SpriteBatch();
 
-			void initialize(int, int, int);
+			void initialize(int, int);
 
-			Sprite getSprite();
-			void addSprite();
+			void draw(gfx::Texture&, const glm::vec2&);
+			void draw(gfx::Texture&, const glm::vec2&, float);
+
+			void drawAll();
 	};
 }
 

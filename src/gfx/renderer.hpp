@@ -93,8 +93,6 @@ namespace gfx {
             void end();
 
             void swapBuffers();
-
-            void draw(const SpriteBatch&);
     };
 }
 

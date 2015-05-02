@@ -26,7 +26,7 @@ namespace gfx {
             void deleteID();
             bool hasValidID();
 
-            bool loadFromPath(const std::string&);
+            bool loadFromFile(const std::string&);
             bool loadFromMemory(const std::string&);
 
             bool compile();            

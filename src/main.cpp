@@ -25,16 +25,17 @@ int main() {
     gfx::Renderer renderer;
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
-    gfx::ContextSettings settings(3, 0, 24, false, true, true);
+    gfx::ContextSettings settings(3, 3, 24, true, true, true);
 	gfx::SpriteBatch batch;
+	gfx::Sprite* sprite;
 
     try {
         renderer.initialize("Test Window", glm::vec2(800, 600), settings);
 
         vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
-        vs.loadFromMemory(gfx::defaultSpriteVertexShader);
-        fs.loadFromMemory(gfx::defaultSpriteFragmentShader);
+        vs.loadFromFile("data/shaders/vertex.glsl");
+        fs.loadFromFile("data/shaders/fragment.glsl");
         vs.compile();
         fs.compile();
 
@@ -46,27 +47,42 @@ int main() {
         tex.createID();
         tex.loadFromFile("test.png");
 
-		renderer.spriteShaderProgram = program;
-
-		batch.initialize(program.getAttribLocation("v_pos"), 
-				program.getAttribLocation("v_uv"),
-			   	program.getAttribLocation("v_color"));
+		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv"));
 
     } catch(const std::runtime_error& e) {
         printf("ERR: %s", e.what());
         return EXIT_FAILURE;
     }
 
-	batch.addSprite();
+	glm::vec2 pos;
 
     while(renderer.isOpen()) {
         if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             renderer.close();
-            break;
         }
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_W)) {
+			pos.y += 0.01f;
+		}
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_S)) {
+			pos.y -= 0.01f;
+		}
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
+			pos.x -= 0.01f;
+		}
+        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_D)) {
+			pos.x += 0.01f;
+		}
 
         renderer.begin();
-		renderer.draw(batch);
+
+		tex.bindID();
+		program.bindID();
+
+		batch.draw(tex, pos, 0.5f);
+		batch.draw(tex, glm::vec2(0.5f, 0.5f), 0.2f);
+
+		batch.drawAll();
+
         renderer.end();
     }
 

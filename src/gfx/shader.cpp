@@ -26,7 +26,7 @@ bool gfx::Shader::hasValidID() {
     }
 }
 
-bool gfx::Shader::loadFromPath(const std::string& p) {
+bool gfx::Shader::loadFromFile(const std::string& p) {
     std::ifstream infile(p, std::ios::in);
     std::string line;
 
@@ -81,11 +81,16 @@ bool gfx::Shader::compile() {
         char errorLog[errorLogLength];
         glGetShaderInfoLog(this->id, errorLogLength, NULL, &errorLog[0]);
 
-        std::string errMsg("shader ");
-        errMsg += this->path;
-        errMsg += ", of type ";
+        std::string errMsg;
+		if(this->path.empty()) {
+			errMsg += "shader of type ";
+		} else {
+			errMsg += "shader ";
+        	errMsg += this->path;
+        	errMsg += ", of type ";
+		}
         errMsg += shaderTypeToString(this->type);
-        errMsg +=  " failed to compile. Log: ";
+        errMsg +=  " failed to compile. Log:\n";
         errMsg += errorLog;
         errMsg += "\n";
         throw std::runtime_error(errMsg);

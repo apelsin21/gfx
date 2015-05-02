@@ -497,16 +497,3 @@ void gfx::Renderer::end() {
 	this->pollEvents();
 	this->swapBuffers();
 }
-
-void gfx::Renderer::draw(const gfx::SpriteBatch& batch) {
-    if(!this->isDrawing) {
-        printf("DRAW CALLS ARE BETWEEN RENDERER.BEGIN() and RENDERER.END()\n");
-        return;
-    }
-
-	if(this->spriteShaderProgram.id != this->boundShaderProgramID) {
-		this->spriteShaderProgram.bindID();
-	}
-	glBindVertexArray(batch.vao);
-	glDrawArrays(GL_TRIANGLES, 0, 6*batch.numSprites);
-}

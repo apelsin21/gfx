@@ -3,18 +3,27 @@
 
 #include <cstring>
 
+#include <GL/glew.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtx/type_aligned.hpp>
+
 #include "gfx/vertex.hpp"
+#include "gfx/color.hpp"
+#include "gfx/free_image_texture.hpp"
 
 namespace gfx {
     class Sprite {
-		protected:
 		public:
-			float positions[12];
-			float uvs[12];
-			float colors[24];
+			gfx::Color color;
+			gfx::FreeImageTexture texture;
+			glm::vec2 position;
+			GLuint vbo, vao;
 
-			Sprite();
+			Sprite(int, int);
 			~Sprite();
+
+			void draw();
     };
 }
 
