@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <tuple>
 #include <exception>
 
@@ -20,6 +22,10 @@
 #include "gfx/sprite_batch.hpp"
 #include "gfx/sprite.hpp"
 
+float rand(float LO, float HI) {
+	return(LO + (float)rand() / ((float)RAND_MAX/(HI-LO)));
+}
+
 int main() {
     gfx::FreeImageTexture tex;
     gfx::Renderer renderer;
@@ -28,6 +34,8 @@ int main() {
     gfx::ContextSettings settings(3, 3, 24, true, true, true);
 	gfx::SpriteBatch batch;
 	gfx::Sprite* sprite;
+
+	std::srand(time(NULL));
 
     try {
         renderer.initialize("Test Window", glm::vec2(800, 600), settings);
@@ -56,7 +64,7 @@ int main() {
 
 	glm::vec2 pos;
 
-    while(renderer.isOpen()) {
+	while(renderer.isOpen()) {
         if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             renderer.close();
         }
@@ -79,7 +87,10 @@ int main() {
 		program.bindID();
 
 		batch.draw(tex, pos, 0.5f);
-		batch.draw(tex, glm::vec2(0.5f, 0.5f), 0.2f);
+
+		for(unsigned int i = 0; i < 100; i++) {
+			batch.draw(tex, glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f)), rand(0.0f, 1.0f));
+		}
 
 		batch.drawAll();
 
