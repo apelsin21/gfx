@@ -8,33 +8,30 @@ out vec2 f_uv;
 void main() {
     f_uv = v_uv;
 
-	vec2 corner;
+	vec2 corner = v_pos.xy;
 	switch(gl_VertexID) {
 		case 0:
-			corner = vec2(v_pos.x-(1*v_pos.z), v_pos.y-(1*v_pos.z)); //bl
+			corner += vec2(-1*v_pos.z, -1*v_pos.z); //bl
 		break;
 
 		case 1:
-			corner = vec2(v_pos.x+(1*v_pos.z), v_pos.y-(1*v_pos.z)); //br
+			corner += vec2(1*v_pos.z, -1*v_pos.z); //br
 		break;
 
 		case 2:
-			corner = vec2(v_pos.x-(1*v_pos.z), v_pos.y+(1*v_pos.z)); //tl
+			corner += vec2(-1*v_pos.z, 1*v_pos.z); //tl
 		break;
 
 		case 3:
-			corner = vec2(v_pos.x+(1*v_pos.z), v_pos.y-(1*v_pos.z)); //br
+			corner += vec2(1*v_pos.z, -1*v_pos.z); //br
 		break;
 
 		case 4:
-			corner = vec2(v_pos.x+(1*v_pos.z), v_pos.y+(1*v_pos.z)); //tr
+			corner += vec2(1*v_pos.z, 1*v_pos.z); //tr
 		break;
 
 		case 5:
-			corner = vec2(v_pos.x-(1*v_pos.z), v_pos.y+(1*v_pos.z)); //tl
-		break;
-		case 6:
-			corner = vec2(v_pos.x-(1*v_pos.z), v_pos.y-(1*v_pos.z)); //bl
+			corner += vec2(-1*v_pos.z, 1*v_pos.z); //tl
 		break;
 	}
 	
