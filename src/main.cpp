@@ -57,13 +57,13 @@ class Ball {
 
 		void nextFrame() {
 			if(this->timerIsBetween(0.0f, 0.5f)) {
-				this->uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f);
+				this->uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f); //shows the first quarter of the texture
 			} else if(this->timerIsBetween(0.5f, 1.0f)) {
-				this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f);
+				this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f); //shows the second quarter of the texture
 			} else if(this->timerIsBetween(1.0f, 1.5f)) {
-				this->uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f);
+				this->uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f); //shows the third quarter of the texture
 			} else if(this->timerIsBetween(1.5f, 2.0f)) {
-				this->uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f);
+				this->uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f); //shows the fourth quarter of the texture
 			} else if(this->timer > 2.0f) {
 				this->resetTimer();
 			}
@@ -89,17 +89,17 @@ class Ball {
 
 int main() {
     gfx::FreeImageTexture tex;
-    gfx::GraphicsDevice graphicsDevice;
+    gfx::GraphicsDevice graphicsDevice; //initializes opengl and sdl2
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
-    gfx::ContextSettings settings(3, 3, 24, true, true, true);
+    gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
 	gfx::SpriteBatch batch;
 	gfx::Sprite* sprite;
 
-	std::srand(time(NULL));
+	std::srand(time(NULL)); //seeds random number generator
 
     try {
-        graphicsDevice.initialize("Test Window", glm::vec2(800, 600), settings);
+        graphicsDevice.initialize("Test Window", glm::vec2(800, 600), settings); //title, resolution, context settings
 
         vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
@@ -116,40 +116,38 @@ int main() {
         tex.createID();
         tex.loadFromFile("test.png");
 
-		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv"));
+		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
 
     } catch(const std::runtime_error& e) {
         printf("ERR: %s", e.what());
         return EXIT_FAILURE;
     }
 
-	graphicsDevice.setClearColor(gfx::Color(0.0f, 1.0f, 1.0f, 1.0f));
+	graphicsDevice.setClearColor(gfx::CYAN); //"background" color
 
 	int numBalls = 10000;
 	Ball ballArray[numBalls];
 	for(unsigned int i = 0; i < numBalls; i++) {
 		ballArray[i] = Ball();
 	}
+	program.bindID(); //use the program and the attached shaders
+	tex.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
 	while(graphicsDevice.open) {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
 
-		tex.bindID();
-        graphicsDevice.begin();
-
-		program.bindID();
-
+        graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
 		for(unsigned int i = 0; i < numBalls; i++) {
-			ballArray[i].render(batch, graphicsDevice.deltaTime);
+			ballArray[i].render(batch, graphicsDevice.deltaTime); //this doesn't actually draw anything, but updates the buffer in the SpriteBatch 
 		}
 
-		printf("dt: %f\n", graphicsDevice.deltaTime);
+		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		printf("fps: %u\n", graphicsDevice.fps);
 
-		batch.drawAll();
+		batch.drawAll(); //this draws every sprite
 
-        graphicsDevice.end();
+        graphicsDevice.end(); //swaps backbuffer with frontbuffer
     }
 
     vs.deleteID();

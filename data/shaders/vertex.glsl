@@ -8,32 +8,32 @@ out vec2 f_uv;
 void main() {
 	vec2 corner = v_pos.xy;
 	switch(gl_VertexID) {
-		case 0: //bl
+		case 0: //bottom left
 			corner += vec2(-1*v_pos.z, -1*v_pos.z);
 			f_uv = vec2(v_uv.xy);
 		break;
 
-		case 1: //br
+		case 1: //bottom right
 			corner += vec2(1*v_pos.z, -1*v_pos.z);
 			f_uv = vec2(v_uv.z, v_uv.y);
 		break;
 
-		case 2: //tl
+		case 2: //top left
 			corner += vec2(-1*v_pos.z, 1*v_pos.z);
 			f_uv = vec2(v_uv.x, v_uv.w);
 		break;
 
-		case 3: //br
+		case 3: //bottom right AGAIN. some vertices are duplicated.
 			corner += vec2(1*v_pos.z, -1*v_pos.z);
 			f_uv = vec2(v_uv.z, v_uv.y);
 		break;
 
-		case 4: //tr
+		case 4: //top right
 			corner += vec2(1*v_pos.z, 1*v_pos.z);
 			f_uv = vec2(v_uv.z, v_uv.w);
 		break;
 
-		case 5: //tl
+		case 5: //top left
 			corner += vec2(-1*v_pos.z, 1*v_pos.z);
 			f_uv = vec2(v_uv.x, v_uv.w);
 		break;
