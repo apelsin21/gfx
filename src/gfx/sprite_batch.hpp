@@ -14,6 +14,7 @@ namespace gfx {
 		public:
 			GLuint pos_vbo, uv_vbo, vao;
 			unsigned int max, current;
+			glm::vec4 defaultUV;
 
 			SpriteBatch();
 			SpriteBatch(unsigned int);
@@ -21,9 +22,9 @@ namespace gfx {
 
 			void initialize(int, int);
 
-			void draw(gfx::Texture&, const glm::vec2&);
-			void draw(gfx::Texture&, const glm::vec2&, float);
-			void draw(gfx::Texture&, const glm::vec2&, float, const glm::vec4&);
+			void draw(const glm::vec2&);
+			void draw(const glm::vec2&, float);
+			void draw(const glm::vec2&, float, const glm::vec4&);
 
 			void drawAll();
 	};

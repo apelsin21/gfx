@@ -7,7 +7,7 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_type_font.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/graphics_device.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_program.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_object.cpp
@@ -37,10 +37,10 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/graphics_device.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_program.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/renderer_event.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/graphics_device_event.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/default_shaders.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/context_settings.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/vertex.hpp

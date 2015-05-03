@@ -1,9 +1,10 @@
-#ifndef RENDERER_HPP
-#define RENDERER_HPP
+#ifndef GRAPHICS_DEVICE_HPP
+#define GRAPHICS_DEVICE_HPP
 
 #include <string>
 #include <tuple>
 #include <stdexcept>
+#include <chrono>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -17,7 +18,7 @@
 #include "core/keyboard_keys.hpp"
 
 #include "gfx/color.hpp"
-#include "gfx/renderer_event.hpp"
+#include "gfx/graphics_device_event.hpp"
 #include "gfx/shader.hpp"
 #include "gfx/shader_program.hpp"
 #include "gfx/font.hpp"
@@ -26,7 +27,7 @@
 #include "gfx/sprite_batch.hpp"
 
 namespace gfx {
-    class Renderer {
+    class GraphicsDevice {
         protected:
             Color clearColor;
 
@@ -43,10 +44,11 @@ namespace gfx {
             gfx::ContextSettings contextSettings;
             glm::i32vec2 resolution, position;
             std::string title;
-			unsigned int boundTextureID, boundShaderProgramID;
+			unsigned int boundTextureID, boundShaderProgramID, lastFrameTime, currentFrameTime;
+			float deltaTime;
 
-            Renderer();
-            ~Renderer();
+            GraphicsDevice();
+            ~GraphicsDevice();
 
             void setClearColor(const Color&);
             Color getClearColor();
@@ -96,4 +98,4 @@ namespace gfx {
     };
 }
 
-#endif //RENDERER_HPP
+#endif //GRAPHICS_DEVICE_HPP

@@ -7,6 +7,7 @@ gfx::SpriteBatch::SpriteBatch() {
 	this->pos_vbo = 0;
 	this->uv_vbo = 0;
 	this->vao = 0;
+	this->defaultUV = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 }
 gfx::SpriteBatch::SpriteBatch(unsigned int max) {
 	this->max = max;
@@ -15,6 +16,7 @@ gfx::SpriteBatch::SpriteBatch(unsigned int max) {
 	this->pos_vbo = 0;
 	this->uv_vbo = 0;
 	this->vao = 0;
+	this->defaultUV = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 }
 gfx::SpriteBatch::~SpriteBatch() {
 	if(glIsVertexArray(this->vao) == GL_TRUE) {
@@ -52,7 +54,7 @@ void gfx::SpriteBatch::initialize(int v_pos, int v_uv) {
 	glVertexAttribDivisor(v_uv, 1);
 }
 
-void gfx::SpriteBatch::draw(gfx::Texture& tex, const glm::vec2& pos) {
+void gfx::SpriteBatch::draw(const glm::vec2& pos) {
 	if(this->current >= this->max) {
 		printf("spritebatch can't render more than %u sprites\n", this->max);
 		return;
@@ -61,14 +63,12 @@ void gfx::SpriteBatch::draw(gfx::Texture& tex, const glm::vec2& pos) {
 	glBindBuffer(GL_ARRAY_BUFFER, this->pos_vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, this->current*sizeof(float)*3, sizeof(float)*3, glm::value_ptr(glm::vec3(pos.x, pos.y, 1.0f)));
 
-	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
-
 	glBindBuffer(GL_ARRAY_BUFFER, this->uv_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, this->current*sizeof(float)*4, sizeof(float)*4, glm::value_ptr(uv));
+	glBufferSubData(GL_ARRAY_BUFFER, this->current*sizeof(float)*4, sizeof(float)*4, glm::value_ptr(this->defaultUV));
 
 	this->current++;
 }
-void gfx::SpriteBatch::draw(gfx::Texture& tex, const glm::vec2& pos, float scale) {
+void gfx::SpriteBatch::draw(const glm::vec2& pos, float scale) {
 	if(this->current >= this->max) {
 		printf("spritebatch can't render more than %u sprites\n", this->max);
 		return;
@@ -77,14 +77,12 @@ void gfx::SpriteBatch::draw(gfx::Texture& tex, const glm::vec2& pos, float scale
 	glBindBuffer(GL_ARRAY_BUFFER, this->pos_vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, this->current*(sizeof(float)*3), sizeof(float)*3, glm::value_ptr(glm::vec3(pos.x, pos.y, scale)));
 
-	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
-
 	glBindBuffer(GL_ARRAY_BUFFER, this->uv_vbo);
-	glBufferSubData(GL_ARRAY_BUFFER, this->current*sizeof(float)*4, sizeof(float)*4, glm::value_ptr(uv));
+	glBufferSubData(GL_ARRAY_BUFFER, this->current*sizeof(float)*4, sizeof(float)*4, glm::value_ptr(this->defaultUV));
 
 	this->current++;
 }
-void gfx::SpriteBatch::draw(gfx::Texture& tex, const glm::vec2& pos, float scale, const glm::vec4& uv) {
+void gfx::SpriteBatch::draw(const glm::vec2& pos, float scale, const glm::vec4& uv) {
 	if(this->current >= this->max) {
 		printf("spritebatch can't render more than %u sprites\n", this->max);
 		return;

@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include <ctime>
 #include <tuple>
 #include <exception>
 
@@ -12,12 +12,12 @@
 
 #include "gfx/free_image_texture.hpp"
 #include "gfx/free_type_font.hpp"
-#include "gfx/renderer.hpp"
+#include "gfx/graphics_device.hpp"
 #include "gfx/shader.hpp"
 #include "gfx/shader_program.hpp"
 #include "gfx/default_shaders.hpp"
 #include "gfx/shader_type.hpp"
-#include "gfx/renderer_event.hpp"
+#include "gfx/graphics_device_event.hpp"
 #include "gfx/context_settings.hpp"
 #include "gfx/sprite_batch.hpp"
 #include "gfx/sprite.hpp"
@@ -26,9 +26,70 @@ float rand(float LO, float HI) {
 	return(LO + (float)rand() / ((float)RAND_MAX/(HI-LO)));
 }
 
+class Ball {
+	protected:
+	public:
+		glm::vec2 pos;
+		glm::vec4 uv;
+		glm::vec2 velocity;
+		float scale, timer;
+
+		Ball() {
+			this->pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
+			this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 0.0f);
+			this->scale = 0.01f;
+			this->velocity = glm::vec2(rand(-3.0f, 3.0f), rand(-3.0f, 3.0f));
+
+			this->timer = 0.0f;
+		}
+		~Ball() {
+		}
+
+		bool timerIsBetween(float low, float high) {
+			if(this->timer >= low && this->timer <= high) {
+				return true;
+			}
+			return false;
+		}
+		void resetTimer() {
+			this->timer = 0.0f;
+		}
+
+		void nextFrame() {
+			if(this->timerIsBetween(0.0f, 0.5f)) {
+				this->uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f);
+			} else if(this->timerIsBetween(0.5f, 1.0f)) {
+				this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f);
+			} else if(this->timerIsBetween(1.0f, 1.5f)) {
+				this->uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f);
+			} else if(this->timerIsBetween(1.5f, 2.0f)) {
+				this->uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f);
+			} else if(this->timer > 2.0f) {
+				this->resetTimer();
+			}
+
+		}
+
+		void render(gfx::SpriteBatch& batch, float dt) {
+			this->timer += dt;
+
+			this->nextFrame();
+
+			if(this->pos.x >= 1.0f || this->pos.x <= -1.0f) {
+				this->velocity.x *= -1;
+			}
+			if(this->pos.y >= 1.0f || this->pos.y <= -1.0f) {
+				this->velocity.y *= -1;
+			}
+
+			this->pos += this->velocity * dt;
+			batch.draw(this->pos, this->scale, this->uv);
+		}
+};
+
 int main() {
     gfx::FreeImageTexture tex;
-    gfx::Renderer renderer;
+    gfx::GraphicsDevice graphicsDevice;
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 3, 24, true, true, true);
@@ -38,7 +99,7 @@ int main() {
 	std::srand(time(NULL));
 
     try {
-        renderer.initialize("Test Window", glm::vec2(800, 600), settings);
+        graphicsDevice.initialize("Test Window", glm::vec2(800, 600), settings);
 
         vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
@@ -62,37 +123,30 @@ int main() {
         return EXIT_FAILURE;
     }
 
-	glm::vec2 pos;
+	graphicsDevice.setClearColor(gfx::Color(0.0f, 1.0f, 1.0f, 1.0f));
 
-	while(renderer.isOpen()) {
-        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
-            renderer.close();
+	int numBalls = 10000;
+	Ball ballArray[numBalls];
+	for(unsigned int i = 0; i < numBalls; i++) {
+		ballArray[i] = Ball();
+	}
+	while(graphicsDevice.open) {
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
+            graphicsDevice.open = false;
         }
-        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_W)) {
-			pos.y += 0.01f;
-		}
-        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_S)) {
-			pos.y -= 0.01f;
-		}
-        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
-			pos.x -= 0.01f;
-		}
-        if(renderer.isKeyPressed(core::KEYBOARD_KEY::KEY_D)) {
-			pos.x += 0.01f;
-		}
-
-        renderer.begin();
 
 		tex.bindID();
+        graphicsDevice.begin();
+
 		program.bindID();
 
-
-		glm::vec4 uv(0.5f, 0.5f, 1.0f, 1.0f);
-		batch.draw(tex, pos, 1.0f, uv);
+		for(unsigned int i = 0; i < numBalls; i++) {
+			ballArray[i].render(batch, graphicsDevice.deltaTime);
+		}
 
 		batch.drawAll();
 
-        renderer.end();
+        graphicsDevice.end();
     }
 
     vs.deleteID();

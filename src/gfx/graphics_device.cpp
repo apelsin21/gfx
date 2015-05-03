@@ -1,6 +1,6 @@
-#include "gfx/renderer.hpp"
+#include "gfx/graphics_device.hpp"
 
-gfx::Renderer::Renderer() {
+gfx::GraphicsDevice::GraphicsDevice() {
     this->clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
     this->resolution = glm::i32vec2(800, 600);
 
@@ -14,11 +14,16 @@ gfx::Renderer::Renderer() {
 	this->boundTextureID = 0;
 	this->boundShaderProgramID = 0;
 
+	//Time
+	this->deltaTime = 0.0f;
+	this->currentFrameTime = 0;
+	this->lastFrameTime = 0;
+
     this->_sdlWindowID = 0;
     this->_sdlContext = NULL;
     this->_pSdlWindow = nullptr;
 }
-gfx::Renderer::~Renderer() {
+gfx::GraphicsDevice::~GraphicsDevice() {
     if(this->_sdlContext) {
         SDL_GL_DeleteContext(this->_sdlContext);
     }
@@ -30,7 +35,7 @@ gfx::Renderer::~Renderer() {
     SDL_Quit();
 }
 
-bool gfx::Renderer::initialize(const std::string& t, const glm::i32vec2& res, ContextSettings& context) {
+bool gfx::GraphicsDevice::initialize(const std::string& t, const glm::i32vec2& res, ContextSettings& context) {
     if(this->initialized) {
         throw std::runtime_error("renderer is already initialized!\n");
         return false;
@@ -100,6 +105,7 @@ bool gfx::Renderer::initialize(const std::string& t, const glm::i32vec2& res, Co
     this->initialized = true;
     this->_sdlWindowID = SDL_GetWindowID(this->_pSdlWindow);
     this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
+	this->currentFrameTime = SDL_GetTicks();
 
     glDepthFunc(GL_LESS);
     glEnable(GL_BLEND);
@@ -109,7 +115,7 @@ bool gfx::Renderer::initialize(const std::string& t, const glm::i32vec2& res, Co
     return true;
 }
 
-void gfx::Renderer::setClearColor(const gfx::Color& c) {
+void gfx::GraphicsDevice::setClearColor(const gfx::Color& c) {
 	if(!this->initialized) {
 		printf("tried to set clearcolor of uninitialized renderer.\n");
 		return;
@@ -121,14 +127,14 @@ void gfx::Renderer::setClearColor(const gfx::Color& c) {
                  c.b,
                  c.a);
 }
-gfx::Color gfx::Renderer::getClearColor() {
+gfx::Color gfx::GraphicsDevice::getClearColor() {
     return this->clearColor;
 }
 
-std::string gfx::Renderer::getTitle() {
+std::string gfx::GraphicsDevice::getTitle() {
     return this->title;
 }
-bool gfx::Renderer::setTitle(const std::string& t) {
+bool gfx::GraphicsDevice::setTitle(const std::string& t) {
     if(this->initialized) {
     	this->title = t;
         SDL_SetWindowTitle(this->_pSdlWindow, this->title.c_str());
@@ -138,10 +144,10 @@ bool gfx::Renderer::setTitle(const std::string& t) {
     return false;
 }
 
-glm::i32vec2 gfx::Renderer::getResolution() {
+glm::i32vec2 gfx::GraphicsDevice::getResolution() {
     return this->resolution;
 }
-bool gfx::Renderer::setResolution(const glm::i32vec2& r) {
+bool gfx::GraphicsDevice::setResolution(const glm::i32vec2& r) {
     if(this->initialized) {
 		this->resolution = r;
         SDL_SetWindowSize(this->_pSdlWindow, this->resolution.x, this->resolution.y);
@@ -151,10 +157,10 @@ bool gfx::Renderer::setResolution(const glm::i32vec2& r) {
     return false;
 }
 
-glm::i32vec2 gfx::Renderer::getPosition() {
+glm::i32vec2 gfx::GraphicsDevice::getPosition() {
     return this->position;
 }
-bool gfx::Renderer::setPosition(const glm::i32vec2& p) {
+bool gfx::GraphicsDevice::setPosition(const glm::i32vec2& p) {
     if(this->initialized) {
 		this->position = p;
         SDL_SetWindowPosition(this->_pSdlWindow, p.x, p.y);
@@ -164,17 +170,17 @@ bool gfx::Renderer::setPosition(const glm::i32vec2& p) {
     return false;
 }
 
-bool gfx::Renderer::isOpen() {
+bool gfx::GraphicsDevice::isOpen() {
     return this->open;
 }
-void gfx::Renderer::close() {
+void gfx::GraphicsDevice::close() {
     this->open = false;
 }
 
-bool gfx::Renderer::isFullscreen() {
+bool gfx::GraphicsDevice::isFullscreen() {
     return this->fullscreen;
 }
-void gfx::Renderer::setFullscreen() {
+void gfx::GraphicsDevice::setFullscreen() {
     if(!this->initialized) {
         throw std::runtime_error("tried to set uninitialized renderer to fullscreen.\n");
     }
@@ -185,7 +191,7 @@ void gfx::Renderer::setFullscreen() {
         this->fullscreen = true;
     }
 }
-void gfx::Renderer::setBorderlessFullscreen() {
+void gfx::GraphicsDevice::setBorderlessFullscreen() {
     if(!this->initialized) {
         throw std::runtime_error("tried to set uninitialized renderer to borderless fullscreen!\n");
     }
@@ -196,7 +202,7 @@ void gfx::Renderer::setBorderlessFullscreen() {
         this->fullscreen = true;
     }
 }
-void gfx::Renderer::setWindowed() {
+void gfx::GraphicsDevice::setWindowed() {
     if(!this->initialized) {
         throw std::runtime_error("tried to set uninitialized renderer to windowed mode.\n");
     }    
@@ -208,10 +214,10 @@ void gfx::Renderer::setWindowed() {
     }
 }
 
-bool gfx::Renderer::isMaximized() {
+bool gfx::GraphicsDevice::isMaximized() {
     return this->maximized;
 }
-bool gfx::Renderer::setMaximized(bool m) {
+bool gfx::GraphicsDevice::setMaximized(bool m) {
     this->maximized = m;
 
     if(!this->initialized) {
@@ -225,10 +231,10 @@ bool gfx::Renderer::setMaximized(bool m) {
     return true;
 }
 
-bool gfx::Renderer::isHidden() {
+bool gfx::GraphicsDevice::isHidden() {
     return this->hidden;
 }
-bool gfx::Renderer::setHidden(bool h) {
+bool gfx::GraphicsDevice::setHidden(bool h) {
     this->hidden = h;
     
     if(!this->initialized) {
@@ -242,10 +248,10 @@ bool gfx::Renderer::setHidden(bool h) {
     return true;
 }
 
-bool gfx::Renderer::isFocused() {
+bool gfx::GraphicsDevice::isFocused() {
 	return this->focused;
 }
-bool gfx::Renderer::setFocused(bool f) {
+bool gfx::GraphicsDevice::setFocused(bool f) {
     if(!this->initialized) {
         return false;
     }
@@ -260,11 +266,11 @@ bool gfx::Renderer::setFocused(bool f) {
     return true;
 }
 
-bool gfx::Renderer::isKeyPressed(core::KEYBOARD_KEY key) {
+bool gfx::GraphicsDevice::isKeyPressed(core::KEYBOARD_KEY key) {
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
 
-void gfx::Renderer::pollEvents() {
+void gfx::GraphicsDevice::pollEvents() {
     while(SDL_PollEvent(&this->_sdlEvent) && this->_sdlEvent.type == SDL_WINDOWEVENT && this->_sdlEvent.window.windowID == this->_sdlWindowID) {
         switch(this->_sdlEvent.window.event) {
             case SDL_WINDOWEVENT_MOVED:
@@ -321,7 +327,7 @@ void gfx::Renderer::pollEvents() {
     }
 }
 
-std::string gfx::Renderer::getClipboardString() {
+std::string gfx::GraphicsDevice::getClipboardString() {
     std::string returnval;
 
     if(this->initialized && SDL_HasClipboardText() == SDL_TRUE) {
@@ -335,7 +341,7 @@ std::string gfx::Renderer::getClipboardString() {
 
     return returnval;
 }
-bool gfx::Renderer::setClipboardString(const std::string& s) {
+bool gfx::GraphicsDevice::setClipboardString(const std::string& s) {
     if(!this->initialized) {
         return false;
     } else if(SDL_SetClipboardText(s.c_str()) < 0) {
@@ -347,7 +353,7 @@ bool gfx::Renderer::setClipboardString(const std::string& s) {
     return true;
 }
 
-SDL_Scancode gfx::Renderer::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
+SDL_Scancode gfx::GraphicsDevice::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
     SDL_Scancode sdlKey = SDL_SCANCODE_UNKNOWN;
 
     switch(gfxKey) {
@@ -475,23 +481,28 @@ SDL_Scancode gfx::Renderer::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
     return sdlKey;
 }
 
-void gfx::Renderer::swapBuffers() {
+void gfx::GraphicsDevice::swapBuffers() {
     if(!this->initialized) {
         return;
     }
 
     SDL_GL_SwapWindow(this->_pSdlWindow);
 }
-void gfx::Renderer::begin() {
+void gfx::GraphicsDevice::begin() {
     if(this->isDrawing) {
         return;
     }
 
     this->isDrawing = true;
 
+	this->lastFrameTime = this->currentFrameTime;
+	this->currentFrameTime = SDL_GetTicks();
+
+	this->deltaTime = (float)(this->currentFrameTime - this->lastFrameTime) / 1000.0f;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void gfx::Renderer::end() {
+void gfx::GraphicsDevice::end() {
     this->isDrawing = false;
 
 	this->pollEvents();
