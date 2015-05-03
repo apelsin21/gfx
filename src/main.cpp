@@ -144,6 +144,9 @@ int main() {
 			ballArray[i].render(batch, graphicsDevice.deltaTime);
 		}
 
+		printf("dt: %f\n", graphicsDevice.deltaTime);
+		printf("fps: %u\n", graphicsDevice.fps);
+
 		batch.drawAll();
 
         graphicsDevice.end();

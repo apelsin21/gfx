@@ -44,8 +44,8 @@ namespace gfx {
             gfx::ContextSettings contextSettings;
             glm::i32vec2 resolution, position;
             std::string title;
-			unsigned int boundTextureID, boundShaderProgramID, lastFrameTime, currentFrameTime;
-			float deltaTime;
+			unsigned int boundTextureID, boundShaderProgramID, fps;
+			float deltaTime, lastFrameTime, currentFrameTime;
 
             GraphicsDevice();
             ~GraphicsDevice();

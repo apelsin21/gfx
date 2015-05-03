@@ -11,13 +11,13 @@ gfx::GraphicsDevice::GraphicsDevice() {
     this->maximized = false;
     this->hidden = false;
     this->focused = false;
+
 	this->boundTextureID = 0;
 	this->boundShaderProgramID = 0;
-
-	//Time
+	this->fps = 0;
 	this->deltaTime = 0.0f;
-	this->currentFrameTime = 0;
-	this->lastFrameTime = 0;
+	this->currentFrameTime = 0.0f;
+	this->lastFrameTime = 0.0f;
 
     this->_sdlWindowID = 0;
     this->_sdlContext = NULL;
@@ -497,8 +497,8 @@ void gfx::GraphicsDevice::begin() {
 
 	this->lastFrameTime = this->currentFrameTime;
 	this->currentFrameTime = SDL_GetTicks();
-
-	this->deltaTime = (float)(this->currentFrameTime - this->lastFrameTime) / 1000.0f;
+	this->deltaTime = (this->currentFrameTime - this->lastFrameTime) / 1000.0f;
+	this->fps = 1/this->deltaTime;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
