@@ -86,11 +86,9 @@ int main() {
 		tex.bindID();
 		program.bindID();
 
-		batch.draw(tex, pos, 0.5f);
 
-		for(unsigned int i = 0; i < 100; i++) {
-			batch.draw(tex, glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f)), rand(0.0f, 1.0f));
-		}
+		glm::vec4 uv(0.5f, 0.5f, 1.0f, 1.0f);
+		batch.draw(tex, pos, 1.0f, uv);
 
 		batch.drawAll();
 

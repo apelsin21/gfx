@@ -1,37 +1,41 @@
 #version 330 core
 
 in vec3 v_pos;
-in vec2 v_uv;
+in vec4 v_uv;
 
 out vec2 f_uv;
 
 void main() {
-    f_uv = v_uv;
-
 	vec2 corner = v_pos.xy;
 	switch(gl_VertexID) {
-		case 0:
-			corner += vec2(-1*v_pos.z, -1*v_pos.z); //bl
+		case 0: //bl
+			corner += vec2(-1*v_pos.z, -1*v_pos.z);
+			f_uv = vec2(v_uv.xy);
 		break;
 
-		case 1:
-			corner += vec2(1*v_pos.z, -1*v_pos.z); //br
+		case 1: //br
+			corner += vec2(1*v_pos.z, -1*v_pos.z);
+			f_uv = vec2(v_uv.z, v_uv.y);
 		break;
 
-		case 2:
-			corner += vec2(-1*v_pos.z, 1*v_pos.z); //tl
+		case 2: //tl
+			corner += vec2(-1*v_pos.z, 1*v_pos.z);
+			f_uv = vec2(v_uv.x, v_uv.w);
 		break;
 
-		case 3:
-			corner += vec2(1*v_pos.z, -1*v_pos.z); //br
+		case 3: //br
+			corner += vec2(1*v_pos.z, -1*v_pos.z);
+			f_uv = vec2(v_uv.z, v_uv.y);
 		break;
 
-		case 4:
-			corner += vec2(1*v_pos.z, 1*v_pos.z); //tr
+		case 4: //tr
+			corner += vec2(1*v_pos.z, 1*v_pos.z);
+			f_uv = vec2(v_uv.z, v_uv.w);
 		break;
 
-		case 5:
-			corner += vec2(-1*v_pos.z, 1*v_pos.z); //tl
+		case 5: //tl
+			corner += vec2(-1*v_pos.z, 1*v_pos.z);
+			f_uv = vec2(v_uv.x, v_uv.w);
 		break;
 	}
 	

@@ -23,6 +23,7 @@ namespace gfx {
 
 			void draw(gfx::Texture&, const glm::vec2&);
 			void draw(gfx::Texture&, const glm::vec2&, float);
+			void draw(gfx::Texture&, const glm::vec2&, float, const glm::vec4&);
 
 			void drawAll();
 	};
