@@ -107,10 +107,12 @@ bool gfx::GraphicsDevice::initialize(const std::string& t, const glm::i32vec2& r
     this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
 	this->currentFrameTime = SDL_GetTicks();
 
-    glDepthFunc(GL_LESS);
     glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_CULL_FACE);
+
+	//glEnable(GL_DEPTH_TEST);
+    //glDepthFunc(GL_LESS);
 
     return true;
 }
@@ -500,7 +502,8 @@ void gfx::GraphicsDevice::begin() {
 	this->deltaTime = (this->currentFrameTime - this->lastFrameTime) / 1000.0f;
 	this->fps = 1/this->deltaTime;
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 void gfx::GraphicsDevice::end() {
     this->isDrawing = false;

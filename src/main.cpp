@@ -93,7 +93,7 @@ int main() {
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch;
+	gfx::SpriteBatch batch(100000);
 	gfx::Sprite* sprite;
 
 	std::srand(time(NULL)); //seeds random number generator
@@ -125,9 +125,8 @@ int main() {
 
 	graphicsDevice.setClearColor(gfx::CYAN); //"background" color
 
-	int numBalls = 10000;
-	Ball ballArray[numBalls];
-	for(unsigned int i = 0; i < numBalls; i++) {
+	Ball ballArray[batch.max];
+	for(unsigned int i = 0; i < batch.max; i++) {
 		ballArray[i] = Ball();
 	}
 	program.bindID(); //use the program and the attached shaders
@@ -138,7 +137,7 @@ int main() {
         }
 
         graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
-		for(unsigned int i = 0; i < numBalls; i++) {
+		for(unsigned int i = 0; i < batch.max; i++) {
 			ballArray[i].render(batch, graphicsDevice.deltaTime); //this doesn't actually draw anything, but updates the buffer in the SpriteBatch 
 		}
 
