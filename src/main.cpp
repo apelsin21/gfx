@@ -35,10 +35,9 @@ class Ball {
 		float scale, timer;
 
 		Ball() {
-			this->pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
 			this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 0.0f);
 			this->scale = 0.01f;
-			this->velocity = glm::vec2(rand(-3.0f, 3.0f), rand(-3.0f, 3.0f));
+			this->velocity = glm::vec2(rand(-0.5f, 0.5f), rand(-0.5f, 0.5f));
 
 			this->timer = 0.0f;
 		}
@@ -93,7 +92,7 @@ int main() {
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch(100000);
+	gfx::SpriteBatch batch(10000);
 	gfx::Sprite* sprite;
 
 	std::srand(time(NULL)); //seeds random number generator
@@ -125,24 +124,28 @@ int main() {
 
 	graphicsDevice.setClearColor(gfx::CYAN); //"background" color
 
-	Ball ballArray[batch.max];
-	for(unsigned int i = 0; i < batch.max; i++) {
-		ballArray[i] = Ball();
-	}
+	std::vector<Ball> ballArray;
 	program.bindID(); //use the program and the attached shaders
 	tex.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
 	while(graphicsDevice.open) {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
+			if(ballArray.size() < batch.max) {
+				ballArray.push_back(Ball());
+			}
+        }
 
         graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
-		for(unsigned int i = 0; i < batch.max; i++) {
-			ballArray[i].render(batch, graphicsDevice.deltaTime); //this doesn't actually draw anything, but updates the buffer in the SpriteBatch 
-		}
 
 		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		printf("fps: %u\n", graphicsDevice.fps);
+		printf("balls: %u\n", ballArray.size());
+
+		for(unsigned int i = 0; i < ballArray.size(); i++) {
+			ballArray[i].render(batch, graphicsDevice.deltaTime); //this doesn't actually draw anything, but updates the buffer in the SpriteBatch 
+		}
 
 		batch.drawAll(); //this draws every sprite
 

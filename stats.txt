@@ -1,0 +1,645 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ns/call  ns/call  name    
+ 22.42      0.07     0.07  7500000     8.67    13.27  Ball::nextFrame()
+ 20.69      0.13     0.06  7500000     8.00     9.27  glm::tvec2<float, (glm::precision)0> glm::operator*<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&, float const&)
+ 17.25      0.18     0.05  7500000     6.67    37.20  Ball::render(gfx::SpriteBatch&, float)
+ 13.80      0.22     0.04  7500000     5.33     6.67  gfx::SpriteBatch::draw(glm::tvec2<float, (glm::precision)0> const&, float, glm::tvec4<float, (glm::precision)0> const&)
+  6.90      0.24     0.02  7500001     2.67     2.67  glm::tvec4<float, (glm::precision)0>::tvec4(float, float, float, float)
+  3.45      0.25     0.01 17700000     0.57     0.57  Ball::timerIsBetween(float, float)
+  3.45      0.26     0.01  7900000     1.27     1.27  glm::tvec2<float, (glm::precision)0>::tvec2(float const&, float const&)
+  3.45      0.27     0.01  7500000     1.33     1.33  glm::tvec2<float, (glm::precision)0>& glm::tvec2<float, (glm::precision)0>::operator+=<float>(glm::tvec2<float, (glm::precision)0> const&)
+  3.45      0.28     0.01  7500000     1.33     1.33  glm::tvec3<float, (glm::precision)0>::tvec3(float const&, float const&, float const&)
+  3.45      0.29     0.01                             main
+  1.72      0.29     0.01   200000    25.01    25.01  Ball::resetTimer()
+  0.00      0.29     0.00  7700002     0.00     0.00  glm::tvec4<float, (glm::precision)0>::~tvec4()
+  0.00      0.29     0.00  7500000     0.00     0.00  float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec3<float, (glm::precision)0> const&)
+  0.00      0.29     0.00  7500000     0.00     0.00  float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec4<float, (glm::precision)0> const&)
+  0.00      0.29     0.00   800000     0.00     0.00  rand(float, float)
+  0.00      0.29     0.00   400001     0.00     0.00  glm::tvec2<float, (glm::precision)0>::tvec2()
+  0.00      0.29     0.00   200001     0.00     0.00  glm::tvec4<float, (glm::precision)0>::tvec4()
+  0.00      0.29     0.00   200000     0.00     5.20  Ball::Ball()
+  0.00      0.29     0.00   200000     0.00     0.00  Ball::~Ball()
+  0.00      0.29     0.00       77     0.00     0.00  gfx::Color::Color(float, float, float, float)
+  0.00      0.29     0.00       75     0.00     0.00  gfx::SpriteBatch::drawAll()
+  0.00      0.29     0.00       75     0.00     0.00  gfx::GraphicsDevice::pollEvents()
+  0.00      0.29     0.00       75     0.00     0.00  gfx::GraphicsDevice::swapBuffers()
+  0.00      0.29     0.00       75     0.00     0.00  gfx::GraphicsDevice::isKeyPressed(core::KEYBOARD_KEY)
+  0.00      0.29     0.00       75     0.00     0.00  gfx::GraphicsDevice::convertKeyToSDLScancode(core::KEYBOARD_KEY)
+  0.00      0.29     0.00       75     0.00     0.00  gfx::GraphicsDevice::end()
+  0.00      0.29     0.00       75     0.00     0.00  gfx::GraphicsDevice::begin()
+  0.00      0.29     0.00       13     0.00     0.00  gfx::GLObject::GLObject()
+  0.00      0.29     0.00       10     0.00     0.00  gfx::Shader::Shader()
+  0.00      0.29     0.00       10     0.00     0.00  gfx::Shader::~Shader()
+  0.00      0.29     0.00        6     0.00     0.00  gfx::ShaderProgram::hasValidID()
+  0.00      0.29     0.00        3     0.00     0.00  gfx::Texture::hasValidID()
+  0.00      0.29     0.00        3     0.00     0.00  gfx::Texture::bindID()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::ShaderProgram::attachShader(gfx::Shader const&)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::ShaderProgram::getAttribLocation(std::string const&)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::ShaderProgram::ShaderProgram()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::ShaderProgram::~ShaderProgram()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::ContextSettings::~ContextSettings()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Color::~Color()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Shader::hasValidID()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Shader::loadFromFile(std::string const&)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Shader::compile()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Shader::createID(gfx::SHADER_TYPE)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Shader::deleteID()
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Shader::operator=(gfx::Shader const&)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Texture::textureWrapToGLEnum(gfx::TEXTURE_WRAP)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::Texture::textureFilterToGLEnum(gfx::TEXTURE_FILTER)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::GLObject::operator=(gfx::GLObject const&)
+  0.00      0.29     0.00        2     0.00     0.00  gfx::shaderTypeToGLEnum(gfx::SHADER_TYPE)
+  0.00      0.29     0.00        2     0.00     0.00  glm::tvec2<int, (glm::precision)0>::tvec2(int const&, int const&)
+  0.00      0.29     0.00        2     0.00     0.00  glm::tvec2<int, (glm::precision)0>::tvec2()
+  0.00      0.29     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z4randff
+  0.00      0.29     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN3gfx11SpriteBatchC2Ev
+  0.00      0.29     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN3gfx14GraphicsDeviceC2Ev
+  0.00      0.29     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN3gfx6SpriteC2Eii
+  0.00      0.29     0.00        1     0.00     0.00  __static_initialization_and_destruction_0(int, int)
+  0.00      0.29     0.00        1     0.00     0.00  __static_initialization_and_destruction_0(int, int)
+  0.00      0.29     0.00        1     0.00     0.00  __static_initialization_and_destruction_0(int, int)
+  0.00      0.29     0.00        1     0.00     0.00  __static_initialization_and_destruction_0(int, int)
+  0.00      0.29     0.00        1     0.00     0.00  gfx::SpriteBatch::initialize(int, int)
+  0.00      0.29     0.00        1     0.00     2.67  gfx::SpriteBatch::SpriteBatch(unsigned int)
+  0.00      0.29     0.00        1     0.00     0.00  gfx::SpriteBatch::~SpriteBatch()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::ShaderProgram::link()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::ShaderProgram::bindID()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::ShaderProgram::createID()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::ShaderProgram::deleteID()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::GraphicsDevice::initialize(std::string const&, glm::tvec2<int, (glm::precision)0> const&, gfx::ContextSettings&)
+  0.00      0.29     0.00        1     0.00     0.00  gfx::GraphicsDevice::setClearColor(gfx::Color const&)
+  0.00      0.29     0.00        1     0.00     0.00  gfx::GraphicsDevice::GraphicsDevice()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::GraphicsDevice::~GraphicsDevice()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::ContextSettings::ContextSettings(int, int, int, bool, bool, bool)
+  0.00      0.29     0.00        1     0.00     0.00  gfx::ContextSettings::ContextSettings()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::FreeImageTexture::loadFromFile(std::string const&)
+  0.00      0.29     0.00        1     0.00     0.00  gfx::FreeImageTexture::getFreeImageFormatFromPath(std::string const&)
+  0.00      0.29     0.00        1     0.00     0.00  gfx::FreeImageTexture::FreeImageTexture()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::FreeImageTexture::~FreeImageTexture()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::Color::Color()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::Texture::createID()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::Texture::deleteID()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::Texture::Texture()
+  0.00      0.29     0.00        1     0.00     0.00  gfx::Texture::~Texture()
+  0.00      0.29     0.00        1     0.00     0.00  glm::tvec2<float, (glm::precision)0>::tvec2<int, int>(int const&, int const&)
+  0.00      0.29     0.00        1     0.00     0.00  glm::tvec2<float, (glm::precision)0>::tvec2<unsigned int, unsigned int>(unsigned int const&, unsigned int const&)
+  0.00      0.29     0.00        1     0.00     0.00  glm::tvec2<int, (glm::precision)0>::tvec2<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&)
+  0.00      0.29     0.00        1     0.00     0.00  glm::detail::ieee754_QNAN::ieee754_QNAN()
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+ 
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this 
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2014 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 3.45% of 0.29 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]    100.0    0.01    0.28                 main [1]
+                0.05    0.23 7500000/7500000     Ball::render(gfx::SpriteBatch&, float) [2]
+                0.00    0.00  200000/200000      Ball::Ball() [12]
+                0.00    0.00       1/1           gfx::SpriteBatch::SpriteBatch(unsigned int) [13]
+                0.00    0.00  200000/200000      Ball::~Ball() [26]
+                0.00    0.00      75/75          gfx::GraphicsDevice::isKeyPressed(core::KEYBOARD_KEY) [31]
+                0.00    0.00      75/75          gfx::GraphicsDevice::begin() [34]
+                0.00    0.00      75/75          gfx::SpriteBatch::drawAll() [28]
+                0.00    0.00      75/75          gfx::GraphicsDevice::end() [33]
+                0.00    0.00       2/10          gfx::Shader::Shader() [36]
+                0.00    0.00       2/2           gfx::Shader::createID(gfx::SHADER_TYPE) [50]
+                0.00    0.00       2/2           gfx::Shader::loadFromFile(std::string const&) [48]
+                0.00    0.00       2/2           gfx::Shader::compile() [49]
+                0.00    0.00       2/2           gfx::ShaderProgram::attachShader(gfx::Shader const&) [41]
+                0.00    0.00       2/2           gfx::ShaderProgram::getAttribLocation(std::string const&) [42]
+                0.00    0.00       2/2           gfx::Shader::deleteID() [51]
+                0.00    0.00       2/10          gfx::Shader::~Shader() [37]
+                0.00    0.00       1/1           gfx::FreeImageTexture::FreeImageTexture() [81]
+                0.00    0.00       1/1           gfx::GraphicsDevice::GraphicsDevice() [75]
+                0.00    0.00       1/2           gfx::ShaderProgram::ShaderProgram() [43]
+                0.00    0.00       1/1           gfx::ContextSettings::ContextSettings(int, int, int, bool, bool, bool) [77]
+                0.00    0.00       1/1           glm::tvec2<float, (glm::precision)0>::tvec2<int, int>(int const&, int const&) [88]
+                0.00    0.00       1/1           glm::tvec2<int, (glm::precision)0>::tvec2<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&) [90]
+                0.00    0.00       1/1           gfx::GraphicsDevice::initialize(std::string const&, glm::tvec2<int, (glm::precision)0> const&, gfx::ContextSettings&) [73]
+                0.00    0.00       1/1           gfx::ShaderProgram::createID() [71]
+                0.00    0.00       1/1           gfx::ShaderProgram::link() [69]
+                0.00    0.00       1/1           gfx::Texture::createID() [84]
+                0.00    0.00       1/1           gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+                0.00    0.00       1/1           gfx::SpriteBatch::initialize(int, int) [67]
+                0.00    0.00       1/1           gfx::GraphicsDevice::setClearColor(gfx::Color const&) [74]
+                0.00    0.00       1/1           gfx::ShaderProgram::bindID() [70]
+                0.00    0.00       1/3           gfx::Texture::bindID() [40]
+                0.00    0.00       1/1           gfx::ShaderProgram::deleteID() [72]
+                0.00    0.00       1/1           gfx::Texture::deleteID() [85]
+                0.00    0.00       1/1           gfx::SpriteBatch::~SpriteBatch() [68]
+                0.00    0.00       1/2           gfx::ShaderProgram::~ShaderProgram() [44]
+                0.00    0.00       1/2           gfx::ContextSettings::~ContextSettings() [45]
+                0.00    0.00       1/1           gfx::GraphicsDevice::~GraphicsDevice() [76]
+                0.00    0.00       1/1           gfx::FreeImageTexture::~FreeImageTexture() [82]
+-----------------------------------------------
+                0.05    0.23 7500000/7500000     main [1]
+[2]     96.2    0.05    0.23 7500000         Ball::render(gfx::SpriteBatch&, float) [2]
+                0.07    0.03 7500000/7500000     Ball::nextFrame() [3]
+                0.06    0.01 7500000/7500000     glm::tvec2<float, (glm::precision)0> glm::operator*<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&, float const&) [4]
+                0.04    0.01 7500000/7500000     gfx::SpriteBatch::draw(glm::tvec2<float, (glm::precision)0> const&, float, glm::tvec4<float, (glm::precision)0> const&) [5]
+                0.01    0.00 7500000/7500000     glm::tvec2<float, (glm::precision)0>& glm::tvec2<float, (glm::precision)0>::operator+=<float>(glm::tvec2<float, (glm::precision)0> const&) [9]
+-----------------------------------------------
+                0.07    0.03 7500000/7500000     Ball::render(gfx::SpriteBatch&, float) [2]
+[3]     34.3    0.07    0.03 7500000         Ball::nextFrame() [3]
+                0.02    0.00 7300000/7500001     glm::tvec4<float, (glm::precision)0>::tvec4(float, float, float, float) [6]
+                0.01    0.00 17700000/17700000     Ball::timerIsBetween(float, float) [7]
+                0.01    0.00  200000/200000      Ball::resetTimer() [11]
+                0.00    0.00 7300000/7700002     glm::tvec4<float, (glm::precision)0>::~tvec4() [20]
+-----------------------------------------------
+                0.06    0.01 7500000/7500000     Ball::render(gfx::SpriteBatch&, float) [2]
+[4]     24.0    0.06    0.01 7500000         glm::tvec2<float, (glm::precision)0> glm::operator*<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&, float const&) [4]
+                0.01    0.00 7500000/7900000     glm::tvec2<float, (glm::precision)0>::tvec2(float const&, float const&) [8]
+-----------------------------------------------
+                0.04    0.01 7500000/7500000     Ball::render(gfx::SpriteBatch&, float) [2]
+[5]     17.2    0.04    0.01 7500000         gfx::SpriteBatch::draw(glm::tvec2<float, (glm::precision)0> const&, float, glm::tvec4<float, (glm::precision)0> const&) [5]
+                0.01    0.00 7500000/7500000     glm::tvec3<float, (glm::precision)0>::tvec3(float const&, float const&, float const&) [10]
+                0.00    0.00 7500000/7500000     float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec3<float, (glm::precision)0> const&) [21]
+                0.00    0.00 7500000/7500000     float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec4<float, (glm::precision)0> const&) [22]
+-----------------------------------------------
+                0.00    0.00       1/7500001     gfx::SpriteBatch::SpriteBatch(unsigned int) [13]
+                0.00    0.00  200000/7500001     Ball::Ball() [12]
+                0.02    0.00 7300000/7500001     Ball::nextFrame() [3]
+[6]      6.9    0.02    0.00 7500001         glm::tvec4<float, (glm::precision)0>::tvec4(float, float, float, float) [6]
+-----------------------------------------------
+                0.01    0.00 17700000/17700000     Ball::nextFrame() [3]
+[7]      3.4    0.01    0.00 17700000         Ball::timerIsBetween(float, float) [7]
+-----------------------------------------------
+                0.00    0.00  400000/7900000     Ball::Ball() [12]
+                0.01    0.00 7500000/7900000     glm::tvec2<float, (glm::precision)0> glm::operator*<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&, float const&) [4]
+[8]      3.4    0.01    0.00 7900000         glm::tvec2<float, (glm::precision)0>::tvec2(float const&, float const&) [8]
+-----------------------------------------------
+                0.01    0.00 7500000/7500000     Ball::render(gfx::SpriteBatch&, float) [2]
+[9]      3.4    0.01    0.00 7500000         glm::tvec2<float, (glm::precision)0>& glm::tvec2<float, (glm::precision)0>::operator+=<float>(glm::tvec2<float, (glm::precision)0> const&) [9]
+-----------------------------------------------
+                0.01    0.00 7500000/7500000     gfx::SpriteBatch::draw(glm::tvec2<float, (glm::precision)0> const&, float, glm::tvec4<float, (glm::precision)0> const&) [5]
+[10]     3.4    0.01    0.00 7500000         glm::tvec3<float, (glm::precision)0>::tvec3(float const&, float const&, float const&) [10]
+-----------------------------------------------
+                0.01    0.00  200000/200000      Ball::nextFrame() [3]
+[11]     1.7    0.01    0.00  200000         Ball::resetTimer() [11]
+-----------------------------------------------
+                0.00    0.00  200000/200000      main [1]
+[12]     0.4    0.00    0.00  200000         Ball::Ball() [12]
+                0.00    0.00  200000/7500001     glm::tvec4<float, (glm::precision)0>::tvec4(float, float, float, float) [6]
+                0.00    0.00  400000/7900000     glm::tvec2<float, (glm::precision)0>::tvec2(float const&, float const&) [8]
+                0.00    0.00  800000/800000      rand(float, float) [23]
+                0.00    0.00  400000/400001      glm::tvec2<float, (glm::precision)0>::tvec2() [24]
+                0.00    0.00  200000/200001      glm::tvec4<float, (glm::precision)0>::tvec4() [25]
+                0.00    0.00  200000/7700002     glm::tvec4<float, (glm::precision)0>::~tvec4() [20]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[13]     0.0    0.00    0.00       1         gfx::SpriteBatch::SpriteBatch(unsigned int) [13]
+                0.00    0.00       1/7500001     glm::tvec4<float, (glm::precision)0>::tvec4(float, float, float, float) [6]
+                0.00    0.00       1/200001      glm::tvec4<float, (glm::precision)0>::tvec4() [25]
+                0.00    0.00       1/7700002     glm::tvec4<float, (glm::precision)0>::~tvec4() [20]
+-----------------------------------------------
+                0.00    0.00       1/7700002     gfx::SpriteBatch::SpriteBatch(unsigned int) [13]
+                0.00    0.00       1/7700002     gfx::SpriteBatch::~SpriteBatch() [68]
+                0.00    0.00  200000/7700002     Ball::Ball() [12]
+                0.00    0.00  200000/7700002     Ball::~Ball() [26]
+                0.00    0.00 7300000/7700002     Ball::nextFrame() [3]
+[20]     0.0    0.00    0.00 7700002         glm::tvec4<float, (glm::precision)0>::~tvec4() [20]
+-----------------------------------------------
+                0.00    0.00 7500000/7500000     gfx::SpriteBatch::draw(glm::tvec2<float, (glm::precision)0> const&, float, glm::tvec4<float, (glm::precision)0> const&) [5]
+[21]     0.0    0.00    0.00 7500000         float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec3<float, (glm::precision)0> const&) [21]
+-----------------------------------------------
+                0.00    0.00 7500000/7500000     gfx::SpriteBatch::draw(glm::tvec2<float, (glm::precision)0> const&, float, glm::tvec4<float, (glm::precision)0> const&) [5]
+[22]     0.0    0.00    0.00 7500000         float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec4<float, (glm::precision)0> const&) [22]
+-----------------------------------------------
+                0.00    0.00  800000/800000      Ball::Ball() [12]
+[23]     0.0    0.00    0.00  800000         rand(float, float) [23]
+-----------------------------------------------
+                0.00    0.00       1/400001      gfx::Texture::Texture() [86]
+                0.00    0.00  400000/400001      Ball::Ball() [12]
+[24]     0.0    0.00    0.00  400001         glm::tvec2<float, (glm::precision)0>::tvec2() [24]
+-----------------------------------------------
+                0.00    0.00       1/200001      gfx::SpriteBatch::SpriteBatch(unsigned int) [13]
+                0.00    0.00  200000/200001      Ball::Ball() [12]
+[25]     0.0    0.00    0.00  200001         glm::tvec4<float, (glm::precision)0>::tvec4() [25]
+-----------------------------------------------
+                0.00    0.00  200000/200000      main [1]
+[26]     0.0    0.00    0.00  200000         Ball::~Ball() [26]
+                0.00    0.00  200000/7700002     glm::tvec4<float, (glm::precision)0>::~tvec4() [20]
+-----------------------------------------------
+                0.00    0.00       1/77          gfx::GraphicsDevice::GraphicsDevice() [75]
+                0.00    0.00      19/77          __static_initialization_and_destruction_0(int, int) [63]
+                0.00    0.00      19/77          __static_initialization_and_destruction_0(int, int) [64]
+                0.00    0.00      19/77          __static_initialization_and_destruction_0(int, int) [65]
+                0.00    0.00      19/77          __static_initialization_and_destruction_0(int, int) [66]
+[27]     0.0    0.00    0.00      77         gfx::Color::Color(float, float, float, float) [27]
+-----------------------------------------------
+                0.00    0.00      75/75          main [1]
+[28]     0.0    0.00    0.00      75         gfx::SpriteBatch::drawAll() [28]
+-----------------------------------------------
+                0.00    0.00      75/75          gfx::GraphicsDevice::end() [33]
+[29]     0.0    0.00    0.00      75         gfx::GraphicsDevice::pollEvents() [29]
+                0.00    0.00       1/2           glm::tvec2<int, (glm::precision)0>::tvec2(int const&, int const&) [57]
+-----------------------------------------------
+                0.00    0.00      75/75          gfx::GraphicsDevice::end() [33]
+[30]     0.0    0.00    0.00      75         gfx::GraphicsDevice::swapBuffers() [30]
+-----------------------------------------------
+                0.00    0.00      75/75          main [1]
+[31]     0.0    0.00    0.00      75         gfx::GraphicsDevice::isKeyPressed(core::KEYBOARD_KEY) [31]
+                0.00    0.00      75/75          gfx::GraphicsDevice::convertKeyToSDLScancode(core::KEYBOARD_KEY) [32]
+-----------------------------------------------
+                0.00    0.00      75/75          gfx::GraphicsDevice::isKeyPressed(core::KEYBOARD_KEY) [31]
+[32]     0.0    0.00    0.00      75         gfx::GraphicsDevice::convertKeyToSDLScancode(core::KEYBOARD_KEY) [32]
+-----------------------------------------------
+                0.00    0.00      75/75          main [1]
+[33]     0.0    0.00    0.00      75         gfx::GraphicsDevice::end() [33]
+                0.00    0.00      75/75          gfx::GraphicsDevice::swapBuffers() [30]
+                0.00    0.00      75/75          gfx::GraphicsDevice::pollEvents() [29]
+-----------------------------------------------
+                0.00    0.00      75/75          main [1]
+[34]     0.0    0.00    0.00      75         gfx::GraphicsDevice::begin() [34]
+-----------------------------------------------
+                0.00    0.00       1/13          gfx::Texture::Texture() [86]
+                0.00    0.00       2/13          gfx::ShaderProgram::ShaderProgram() [43]
+                0.00    0.00      10/13          gfx::Shader::Shader() [36]
+[35]     0.0    0.00    0.00      13         gfx::GLObject::GLObject() [35]
+-----------------------------------------------
+                0.00    0.00       2/10          main [1]
+                0.00    0.00       8/10          gfx::ShaderProgram::ShaderProgram() [43]
+[36]     0.0    0.00    0.00      10         gfx::Shader::Shader() [36]
+                0.00    0.00      10/13          gfx::GLObject::GLObject() [35]
+-----------------------------------------------
+                0.00    0.00       2/10          main [1]
+                0.00    0.00       8/10          gfx::ShaderProgram::~ShaderProgram() [44]
+[37]     0.0    0.00    0.00      10         gfx::Shader::~Shader() [37]
+-----------------------------------------------
+                0.00    0.00       1/6           gfx::ShaderProgram::createID() [71]
+                0.00    0.00       1/6           gfx::ShaderProgram::deleteID() [72]
+                0.00    0.00       1/6           gfx::ShaderProgram::bindID() [70]
+                0.00    0.00       1/6           gfx::ShaderProgram::link() [69]
+                0.00    0.00       2/6           gfx::ShaderProgram::attachShader(gfx::Shader const&) [41]
+[38]     0.0    0.00    0.00       6         gfx::ShaderProgram::hasValidID() [38]
+-----------------------------------------------
+                0.00    0.00       1/3           gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+                0.00    0.00       1/3           gfx::Texture::createID() [84]
+                0.00    0.00       1/3           gfx::Texture::deleteID() [85]
+[39]     0.0    0.00    0.00       3         gfx::Texture::hasValidID() [39]
+-----------------------------------------------
+                0.00    0.00       1/3           main [1]
+                0.00    0.00       1/3           gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+                0.00    0.00       1/3           gfx::Texture::createID() [84]
+[40]     0.0    0.00    0.00       3         gfx::Texture::bindID() [40]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[41]     0.0    0.00    0.00       2         gfx::ShaderProgram::attachShader(gfx::Shader const&) [41]
+                0.00    0.00       2/6           gfx::ShaderProgram::hasValidID() [38]
+                0.00    0.00       2/2           gfx::Shader::operator=(gfx::Shader const&) [52]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[42]     0.0    0.00    0.00       2         gfx::ShaderProgram::getAttribLocation(std::string const&) [42]
+-----------------------------------------------
+                0.00    0.00       1/2           main [1]
+                0.00    0.00       1/2           gfx::GraphicsDevice::GraphicsDevice() [75]
+[43]     0.0    0.00    0.00       2         gfx::ShaderProgram::ShaderProgram() [43]
+                0.00    0.00       8/10          gfx::Shader::Shader() [36]
+                0.00    0.00       2/13          gfx::GLObject::GLObject() [35]
+-----------------------------------------------
+                0.00    0.00       1/2           main [1]
+                0.00    0.00       1/2           gfx::GraphicsDevice::~GraphicsDevice() [76]
+[44]     0.0    0.00    0.00       2         gfx::ShaderProgram::~ShaderProgram() [44]
+                0.00    0.00       8/10          gfx::Shader::~Shader() [37]
+-----------------------------------------------
+                0.00    0.00       1/2           main [1]
+                0.00    0.00       1/2           gfx::GraphicsDevice::~GraphicsDevice() [76]
+[45]     0.0    0.00    0.00       2         gfx::ContextSettings::~ContextSettings() [45]
+-----------------------------------------------
+                0.00    0.00       1/2           gfx::GraphicsDevice::GraphicsDevice() [75]
+                0.00    0.00       1/2           gfx::GraphicsDevice::~GraphicsDevice() [76]
+[46]     0.0    0.00    0.00       2         gfx::Color::~Color() [46]
+-----------------------------------------------
+                0.00    0.00       2/2           gfx::Shader::compile() [49]
+[47]     0.0    0.00    0.00       2         gfx::Shader::hasValidID() [47]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[48]     0.0    0.00    0.00       2         gfx::Shader::loadFromFile(std::string const&) [48]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[49]     0.0    0.00    0.00       2         gfx::Shader::compile() [49]
+                0.00    0.00       2/2           gfx::Shader::hasValidID() [47]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[50]     0.0    0.00    0.00       2         gfx::Shader::createID(gfx::SHADER_TYPE) [50]
+                0.00    0.00       2/2           gfx::shaderTypeToGLEnum(gfx::SHADER_TYPE) [56]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[51]     0.0    0.00    0.00       2         gfx::Shader::deleteID() [51]
+-----------------------------------------------
+                0.00    0.00       2/2           gfx::ShaderProgram::attachShader(gfx::Shader const&) [41]
+[52]     0.0    0.00    0.00       2         gfx::Shader::operator=(gfx::Shader const&) [52]
+                0.00    0.00       2/2           gfx::GLObject::operator=(gfx::GLObject const&) [55]
+-----------------------------------------------
+                0.00    0.00       2/2           gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+[53]     0.0    0.00    0.00       2         gfx::Texture::textureWrapToGLEnum(gfx::TEXTURE_WRAP) [53]
+-----------------------------------------------
+                0.00    0.00       2/2           gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+[54]     0.0    0.00    0.00       2         gfx::Texture::textureFilterToGLEnum(gfx::TEXTURE_FILTER) [54]
+-----------------------------------------------
+                0.00    0.00       2/2           gfx::Shader::operator=(gfx::Shader const&) [52]
+[55]     0.0    0.00    0.00       2         gfx::GLObject::operator=(gfx::GLObject const&) [55]
+-----------------------------------------------
+                0.00    0.00       2/2           gfx::Shader::createID(gfx::SHADER_TYPE) [50]
+[56]     0.0    0.00    0.00       2         gfx::shaderTypeToGLEnum(gfx::SHADER_TYPE) [56]
+-----------------------------------------------
+                0.00    0.00       1/2           gfx::GraphicsDevice::GraphicsDevice() [75]
+                0.00    0.00       1/2           gfx::GraphicsDevice::pollEvents() [29]
+[57]     0.0    0.00    0.00       2         glm::tvec2<int, (glm::precision)0>::tvec2(int const&, int const&) [57]
+-----------------------------------------------
+                0.00    0.00       2/2           gfx::GraphicsDevice::GraphicsDevice() [75]
+[58]     0.0    0.00    0.00       2         glm::tvec2<int, (glm::precision)0>::tvec2() [58]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [173]
+[59]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z4randff [59]
+                0.00    0.00       1/1           __static_initialization_and_destruction_0(int, int) [63]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [173]
+[60]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN3gfx11SpriteBatchC2Ev [60]
+                0.00    0.00       1/1           __static_initialization_and_destruction_0(int, int) [66]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [173]
+[61]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN3gfx14GraphicsDeviceC2Ev [61]
+                0.00    0.00       1/1           __static_initialization_and_destruction_0(int, int) [64]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [173]
+[62]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN3gfx6SpriteC2Eii [62]
+                0.00    0.00       1/1           __static_initialization_and_destruction_0(int, int) [65]
+-----------------------------------------------
+                0.00    0.00       1/1           _GLOBAL__sub_I__Z4randff [59]
+[63]     0.0    0.00    0.00       1         __static_initialization_and_destruction_0(int, int) [63]
+                0.00    0.00      19/77          gfx::Color::Color(float, float, float, float) [27]
+                0.00    0.00       1/1           glm::detail::ieee754_QNAN::ieee754_QNAN() [91]
+-----------------------------------------------
+                0.00    0.00       1/1           _GLOBAL__sub_I__ZN3gfx14GraphicsDeviceC2Ev [61]
+[64]     0.0    0.00    0.00       1         __static_initialization_and_destruction_0(int, int) [64]
+                0.00    0.00      19/77          gfx::Color::Color(float, float, float, float) [27]
+-----------------------------------------------
+                0.00    0.00       1/1           _GLOBAL__sub_I__ZN3gfx6SpriteC2Eii [62]
+[65]     0.0    0.00    0.00       1         __static_initialization_and_destruction_0(int, int) [65]
+                0.00    0.00      19/77          gfx::Color::Color(float, float, float, float) [27]
+-----------------------------------------------
+                0.00    0.00       1/1           _GLOBAL__sub_I__ZN3gfx11SpriteBatchC2Ev [60]
+[66]     0.0    0.00    0.00       1         __static_initialization_and_destruction_0(int, int) [66]
+                0.00    0.00      19/77          gfx::Color::Color(float, float, float, float) [27]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[67]     0.0    0.00    0.00       1         gfx::SpriteBatch::initialize(int, int) [67]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[68]     0.0    0.00    0.00       1         gfx::SpriteBatch::~SpriteBatch() [68]
+                0.00    0.00       1/7700002     glm::tvec4<float, (glm::precision)0>::~tvec4() [20]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[69]     0.0    0.00    0.00       1         gfx::ShaderProgram::link() [69]
+                0.00    0.00       1/6           gfx::ShaderProgram::hasValidID() [38]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[70]     0.0    0.00    0.00       1         gfx::ShaderProgram::bindID() [70]
+                0.00    0.00       1/6           gfx::ShaderProgram::hasValidID() [38]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[71]     0.0    0.00    0.00       1         gfx::ShaderProgram::createID() [71]
+                0.00    0.00       1/6           gfx::ShaderProgram::hasValidID() [38]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[72]     0.0    0.00    0.00       1         gfx::ShaderProgram::deleteID() [72]
+                0.00    0.00       1/6           gfx::ShaderProgram::hasValidID() [38]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[73]     0.0    0.00    0.00       1         gfx::GraphicsDevice::initialize(std::string const&, glm::tvec2<int, (glm::precision)0> const&, gfx::ContextSettings&) [73]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[74]     0.0    0.00    0.00       1         gfx::GraphicsDevice::setClearColor(gfx::Color const&) [74]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[75]     0.0    0.00    0.00       1         gfx::GraphicsDevice::GraphicsDevice() [75]
+                0.00    0.00       2/2           glm::tvec2<int, (glm::precision)0>::tvec2() [58]
+                0.00    0.00       1/1           gfx::Color::Color() [83]
+                0.00    0.00       1/2           gfx::ShaderProgram::ShaderProgram() [43]
+                0.00    0.00       1/1           gfx::ContextSettings::ContextSettings() [78]
+                0.00    0.00       1/77          gfx::Color::Color(float, float, float, float) [27]
+                0.00    0.00       1/2           gfx::Color::~Color() [46]
+                0.00    0.00       1/2           glm::tvec2<int, (glm::precision)0>::tvec2(int const&, int const&) [57]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[76]     0.0    0.00    0.00       1         gfx::GraphicsDevice::~GraphicsDevice() [76]
+                0.00    0.00       1/2           gfx::ContextSettings::~ContextSettings() [45]
+                0.00    0.00       1/2           gfx::ShaderProgram::~ShaderProgram() [44]
+                0.00    0.00       1/2           gfx::Color::~Color() [46]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[77]     0.0    0.00    0.00       1         gfx::ContextSettings::ContextSettings(int, int, int, bool, bool, bool) [77]
+-----------------------------------------------
+                0.00    0.00       1/1           gfx::GraphicsDevice::GraphicsDevice() [75]
+[78]     0.0    0.00    0.00       1         gfx::ContextSettings::ContextSettings() [78]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[79]     0.0    0.00    0.00       1         gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+                0.00    0.00       2/2           gfx::Texture::textureFilterToGLEnum(gfx::TEXTURE_FILTER) [54]
+                0.00    0.00       2/2           gfx::Texture::textureWrapToGLEnum(gfx::TEXTURE_WRAP) [53]
+                0.00    0.00       1/1           gfx::FreeImageTexture::getFreeImageFormatFromPath(std::string const&) [80]
+                0.00    0.00       1/1           glm::tvec2<float, (glm::precision)0>::tvec2<unsigned int, unsigned int>(unsigned int const&, unsigned int const&) [89]
+                0.00    0.00       1/3           gfx::Texture::hasValidID() [39]
+                0.00    0.00       1/3           gfx::Texture::bindID() [40]
+-----------------------------------------------
+                0.00    0.00       1/1           gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+[80]     0.0    0.00    0.00       1         gfx::FreeImageTexture::getFreeImageFormatFromPath(std::string const&) [80]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[81]     0.0    0.00    0.00       1         gfx::FreeImageTexture::FreeImageTexture() [81]
+                0.00    0.00       1/1           gfx::Texture::Texture() [86]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[82]     0.0    0.00    0.00       1         gfx::FreeImageTexture::~FreeImageTexture() [82]
+                0.00    0.00       1/1           gfx::Texture::~Texture() [87]
+-----------------------------------------------
+                0.00    0.00       1/1           gfx::GraphicsDevice::GraphicsDevice() [75]
+[83]     0.0    0.00    0.00       1         gfx::Color::Color() [83]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[84]     0.0    0.00    0.00       1         gfx::Texture::createID() [84]
+                0.00    0.00       1/3           gfx::Texture::hasValidID() [39]
+                0.00    0.00       1/3           gfx::Texture::bindID() [40]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[85]     0.0    0.00    0.00       1         gfx::Texture::deleteID() [85]
+                0.00    0.00       1/3           gfx::Texture::hasValidID() [39]
+-----------------------------------------------
+                0.00    0.00       1/1           gfx::FreeImageTexture::FreeImageTexture() [81]
+[86]     0.0    0.00    0.00       1         gfx::Texture::Texture() [86]
+                0.00    0.00       1/13          gfx::GLObject::GLObject() [35]
+                0.00    0.00       1/400001      glm::tvec2<float, (glm::precision)0>::tvec2() [24]
+-----------------------------------------------
+                0.00    0.00       1/1           gfx::FreeImageTexture::~FreeImageTexture() [82]
+[87]     0.0    0.00    0.00       1         gfx::Texture::~Texture() [87]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[88]     0.0    0.00    0.00       1         glm::tvec2<float, (glm::precision)0>::tvec2<int, int>(int const&, int const&) [88]
+-----------------------------------------------
+                0.00    0.00       1/1           gfx::FreeImageTexture::loadFromFile(std::string const&) [79]
+[89]     0.0    0.00    0.00       1         glm::tvec2<float, (glm::precision)0>::tvec2<unsigned int, unsigned int>(unsigned int const&, unsigned int const&) [89]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[90]     0.0    0.00    0.00       1         glm::tvec2<int, (glm::precision)0>::tvec2<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&) [90]
+-----------------------------------------------
+                0.00    0.00       1/1           __static_initialization_and_destruction_0(int, int) [63]
+[91]     0.0    0.00    0.00       1         glm::detail::ieee754_QNAN::ieee754_QNAN() [91]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2014 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [59] _GLOBAL__sub_I__Z4randff [33] gfx::GraphicsDevice::end() [87] gfx::Texture::~Texture()
+  [60] _GLOBAL__sub_I__ZN3gfx11SpriteBatchC2Ev [34] gfx::GraphicsDevice::begin() [35] gfx::GLObject::GLObject()
+  [61] _GLOBAL__sub_I__ZN3gfx14GraphicsDeviceC2Ev [75] gfx::GraphicsDevice::GraphicsDevice() [55] gfx::GLObject::operator=(gfx::GLObject const&)
+  [62] _GLOBAL__sub_I__ZN3gfx6SpriteC2Eii [76] gfx::GraphicsDevice::~GraphicsDevice() [56] gfx::shaderTypeToGLEnum(gfx::SHADER_TYPE)
+  [63] __static_initialization_and_destruction_0(int, int) [77] gfx::ContextSettings::ContextSettings(int, int, int, bool, bool, bool) [24] glm::tvec2<float, (glm::precision)0>::tvec2()
+  [64] __static_initialization_and_destruction_0(int, int) [78] gfx::ContextSettings::ContextSettings() [8] glm::tvec2<float, (glm::precision)0>::tvec2(float const&, float const&)
+  [65] __static_initialization_and_destruction_0(int, int) [45] gfx::ContextSettings::~ContextSettings() [88] glm::tvec2<float, (glm::precision)0>::tvec2<int, int>(int const&, int const&)
+  [66] __static_initialization_and_destruction_0(int, int) [79] gfx::FreeImageTexture::loadFromFile(std::string const&) [89] glm::tvec2<float, (glm::precision)0>::tvec2<unsigned int, unsigned int>(unsigned int const&, unsigned int const&)
+  [23] rand(float, float)     [80] gfx::FreeImageTexture::getFreeImageFormatFromPath(std::string const&) [9] glm::tvec2<float, (glm::precision)0>& glm::tvec2<float, (glm::precision)0>::operator+=<float>(glm::tvec2<float, (glm::precision)0> const&)
+  [67] gfx::SpriteBatch::initialize(int, int) [81] gfx::FreeImageTexture::FreeImageTexture() [57] glm::tvec2<int, (glm::precision)0>::tvec2(int const&, int const&)
+   [5] gfx::SpriteBatch::draw(glm::tvec2<float, (glm::precision)0> const&, float, glm::tvec4<float, (glm::precision)0> const&) [82] gfx::FreeImageTexture::~FreeImageTexture() [90] glm::tvec2<int, (glm::precision)0>::tvec2<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&)
+  [28] gfx::SpriteBatch::drawAll() [27] gfx::Color::Color(float, float, float, float) [58] glm::tvec2<int, (glm::precision)0>::tvec2()
+  [13] gfx::SpriteBatch::SpriteBatch(unsigned int) [83] gfx::Color::Color() [10] glm::tvec3<float, (glm::precision)0>::tvec3(float const&, float const&, float const&)
+  [68] gfx::SpriteBatch::~SpriteBatch() [46] gfx::Color::~Color() [6] glm::tvec4<float, (glm::precision)0>::tvec4(float, float, float, float)
+  [38] gfx::ShaderProgram::hasValidID() [47] gfx::Shader::hasValidID() [25] glm::tvec4<float, (glm::precision)0>::tvec4()
+  [41] gfx::ShaderProgram::attachShader(gfx::Shader const&) [48] gfx::Shader::loadFromFile(std::string const&) [20] glm::tvec4<float, (glm::precision)0>::~tvec4()
+  [42] gfx::ShaderProgram::getAttribLocation(std::string const&) [49] gfx::Shader::compile() [91] glm::detail::ieee754_QNAN::ieee754_QNAN()
+  [69] gfx::ShaderProgram::link() [50] gfx::Shader::createID(gfx::SHADER_TYPE) [21] float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec3<float, (glm::precision)0> const&)
+  [70] gfx::ShaderProgram::bindID() [51] gfx::Shader::deleteID() [22] float const* glm::value_ptr<float, (glm::precision)0>(glm::tvec4<float, (glm::precision)0> const&)
+  [71] gfx::ShaderProgram::createID() [36] gfx::Shader::Shader() [4] glm::tvec2<float, (glm::precision)0> glm::operator*<float, (glm::precision)0>(glm::tvec2<float, (glm::precision)0> const&, float const&)
+  [72] gfx::ShaderProgram::deleteID() [37] gfx::Shader::~Shader() [11] Ball::resetTimer()
+  [43] gfx::ShaderProgram::ShaderProgram() [52] gfx::Shader::operator=(gfx::Shader const&) [7] Ball::timerIsBetween(float, float)
+  [44] gfx::ShaderProgram::~ShaderProgram() [39] gfx::Texture::hasValidID() [2] Ball::render(gfx::SpriteBatch&, float)
+  [73] gfx::GraphicsDevice::initialize(std::string const&, glm::tvec2<int, (glm::precision)0> const&, gfx::ContextSettings&) [53] gfx::Texture::textureWrapToGLEnum(gfx::TEXTURE_WRAP) [3] Ball::nextFrame()
+  [29] gfx::GraphicsDevice::pollEvents() [54] gfx::Texture::textureFilterToGLEnum(gfx::TEXTURE_FILTER) [12] Ball::Ball()
+  [30] gfx::GraphicsDevice::swapBuffers() [40] gfx::Texture::bindID() [26] Ball::~Ball()
+  [31] gfx::GraphicsDevice::isKeyPressed(core::KEYBOARD_KEY) [84] gfx::Texture::createID() [1] main
+  [74] gfx::GraphicsDevice::setClearColor(gfx::Color const&) [85] gfx::Texture::deleteID()
+  [32] gfx::GraphicsDevice::convertKeyToSDLScancode(core::KEYBOARD_KEY) [86] gfx::Texture::Texture()
