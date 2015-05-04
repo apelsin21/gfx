@@ -92,7 +92,7 @@ int main() {
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch(10000);
+	gfx::SpriteBatch batch(100000);
 	gfx::Sprite* sprite;
 
 	std::srand(time(NULL)); //seeds random number generator
@@ -132,10 +132,19 @@ int main() {
             graphicsDevice.open = false;
         }
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
-			if(ballArray.size() < batch.max) {
-				ballArray.push_back(Ball());
+			glm::vec2 pos(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
+
+			for(unsigned int i = 0; i < (int)rand(1.0f, 40.0f); i++) {
+				if(ballArray.size() < batch.max) {
+					Ball rocket;
+					rocket.pos = pos;
+					ballArray.push_back(rocket);
+				}
 			}
         }
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_R)) {
+			ballArray.clear();
+		}
 
         graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
 
