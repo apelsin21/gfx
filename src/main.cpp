@@ -31,57 +31,44 @@ class Ball {
 	public:
 		glm::vec2 pos;
 		glm::vec4 uv;
-		glm::vec2 velocity;
-		float scale, timer;
+		float scale, timer, speed;
 
 		Ball() {
+			this->pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
 			this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 0.0f);
-			this->scale = 0.01f;
-			this->velocity = glm::vec2(rand(-0.5f, 0.5f), rand(-0.5f, 0.5f));
+			this->speed = rand(0.1f, 1.0f);
 
-			this->timer = 0.0f;
+			this->timer = 2.5f;
+			this->scale = 0.01f;
 		}
 		~Ball() {
 		}
 
-		bool timerIsBetween(float low, float high) {
-			if(this->timer >= low && this->timer <= high) {
-				return true;
-			}
-			return false;
-		}
 		void resetTimer() {
-			this->timer = 0.0f;
+			this->timer = 2.5f;
 		}
 
-		void nextFrame() {
-			if(this->timerIsBetween(0.0f, 0.5f)) {
-				this->uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f); //shows the first quarter of the texture
-			} else if(this->timerIsBetween(0.5f, 1.0f)) {
-				this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f); //shows the second quarter of the texture
-			} else if(this->timerIsBetween(1.0f, 1.5f)) {
-				this->uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f); //shows the third quarter of the texture
-			} else if(this->timerIsBetween(1.5f, 2.0f)) {
-				this->uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f); //shows the fourth quarter of the texture
-			} else if(this->timer > 2.0f) {
-				this->resetTimer();
+		void updateTexCoords() {
+			if(timer >= 2.0f) {
+				uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f); //shows the first quarter of the texture
+			} else if(timer >= 1.5f) {
+				uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f); //shows the second quarter of the texture
+			} else if(timer >= 1.0f) {
+				uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f); //shows the third quarter of the texture
+			} else if(timer >= 0.5f) {
+				uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f); //shows the fourth quarter of the texture
+			} else if(timer >= 0.0f) {
+				resetTimer();
 			}
-
 		}
 
-		void render(gfx::SpriteBatch& batch, float dt) {
-			this->timer += dt;
+		void render(gfx::SpriteBatch& batch, float dt, const glm::vec2& moveTowards) {
+			this->timer -= dt;
 
-			this->nextFrame();
+			this->updateTexCoords();
 
-			if(this->pos.x >= 1.0f || this->pos.x <= -1.0f) {
-				this->velocity.x *= -1;
-			}
-			if(this->pos.y >= 1.0f || this->pos.y <= -1.0f) {
-				this->velocity.y *= -1;
-			}
+			this->pos += (moveTowards * this->speed) * dt;
 
-			this->pos += this->velocity * dt;
 			batch.draw(this->pos, this->scale, this->uv);
 		}
 };
@@ -92,7 +79,7 @@ int main() {
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch(100000);
+	gfx::SpriteBatch batch(10000);
 	gfx::Sprite* sprite;
 
 	std::srand(time(NULL)); //seeds random number generator
@@ -127,23 +114,32 @@ int main() {
 	std::vector<Ball> ballArray;
 	program.bindID(); //use the program and the attached shaders
 	tex.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
+
+	glm::vec2 pos;
 	while(graphicsDevice.open) {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
-			glm::vec2 pos(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
-
-			for(unsigned int i = 0; i < (int)rand(1.0f, 40.0f); i++) {
-				if(ballArray.size() < batch.max) {
-					Ball rocket;
-					rocket.pos = pos;
-					ballArray.push_back(rocket);
-				}
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_Q)) {
+			if(ballArray.size() < batch.max) {
+				ballArray.emplace_back(Ball());
 			}
         }
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_R)) {
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_E)) {
 			ballArray.clear();
+		}
+
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_W)) {
+			pos.y += 0.5f * graphicsDevice.deltaTime;
+		}
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_S)) {
+			pos.y -= 0.5f * graphicsDevice.deltaTime;
+		}
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
+			pos.x -= 0.5f * graphicsDevice.deltaTime;
+		}
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_D)) {
+			pos.x += 0.5f * graphicsDevice.deltaTime;
 		}
 
         graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
@@ -153,7 +149,7 @@ int main() {
 		printf("balls: %u\n", ballArray.size());
 
 		for(unsigned int i = 0; i < ballArray.size(); i++) {
-			ballArray[i].render(batch, graphicsDevice.deltaTime); //this doesn't actually draw anything, but updates the buffer in the SpriteBatch 
+			ballArray[i].render(batch, graphicsDevice.deltaTime, pos); //this doesn't actually draw anything, but updates the buffer in the SpriteBatch 
 		}
 
 		batch.drawAll(); //this draws every sprite
