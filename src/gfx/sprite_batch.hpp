@@ -14,7 +14,7 @@
 namespace gfx {
 	class SpriteBatch {
 		public:
-			GLuint pos_vbo, uv_vbo, vao, vbo;
+			GLuint vao, vbo;
 			unsigned int max, current;
 			glm::vec4 defaultUV;
 			std::vector<float> tempBuffer;

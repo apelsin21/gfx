@@ -29,15 +29,17 @@ float rand(float LO, float HI) {
 class Ball {
 	protected:
 	public:
-		glm::vec2 pos;
+		glm::vec2 pos, velocity;
 		glm::vec4 uv;
-		float scale, timer, speed;
+		float scale, timer, speed, timerQuarter;
 
 		Ball() {
 			this->uv = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 			this->pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
+			this->velocity = glm::vec2(rand(0.01f, 0.5f), rand(0.01f, 0.5f));
 
-			this->timer = 2.5f;
+			this->timer = rand(1.0f, 3.0f);
+			this->timerQuarter = this->timer/4.0f;
 			this->scale = 0.01f;
 		}
 		~Ball() {
@@ -48,13 +50,13 @@ class Ball {
 		}
 
 		void updateTexCoords() {
-			if(timer >= 2.0f) {
+			if(timer >= this->timerQuarter*3.5f) {
 				uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f); //shows the first quarter of the texture
-			} else if(timer >= 1.5f) {
+			} else if(timer >= this->timerQuarter*2.5f) {
 				uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f); //shows the second quarter of the texture
-			} else if(timer >= 1.0f) {
+			} else if(timer >= this->timerQuarter * 1.5f) {
 				uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f); //shows the third quarter of the texture
-			} else if(timer >= 0.5f) {
+			} else if(timer >= this->timerQuarter) {
 				uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f); //shows the fourth quarter of the texture
 			} else if(timer >= 0.0f) {
 				resetTimer();
@@ -65,7 +67,15 @@ class Ball {
 			this->timer -= dt;
 
 			this->updateTexCoords();
+			
+			if(this->pos.x >= 1.0f || this->pos.x <= -1.0f) {
+				this->velocity.x *= -1;
+			}
+			if(this->pos.y >= 1.0f || this->pos.y <= -1.0f) {
+				this->velocity.y *= -1;
+			}
 
+			this->pos += velocity * dt;
 			batch.draw(this->pos, this->scale, this->uv);
 		}
 };
@@ -76,7 +86,7 @@ int main() {
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch(1000);
+	gfx::SpriteBatch batch(100000);
 	gfx::Sprite* sprite;
 
 	std::srand(time(NULL)); //seeds random number generator
@@ -111,9 +121,8 @@ int main() {
 	program.bindID(); //use the program and the attached shaders
 	tex.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
 
-	std::vector<Ball> ballArray(10000);
-
-	for(unsigned int i = 0; i < ballArray.size(); i++) {
+	std::vector<Ball> ballArray;
+	for(unsigned int i = 0; i < batch.max; i++) {
 		ballArray.emplace_back(Ball());
 	}
 
@@ -125,9 +134,8 @@ int main() {
         graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
 
 		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
-		printf("fps: %u\n", graphicsDevice.fps);
 
-		for(unsigned int i = 0; i < ballArray.size(); i++) {
+		for(unsigned int  i = 0; i < batch.max; i++) {
 			ballArray[i].render(batch, graphicsDevice.deltaTime);
 		}
 
