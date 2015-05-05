@@ -1,6 +1,8 @@
 #ifndef SPRITE_BATCH_HPP
 #define SPRITE_BATCH_HPP
 
+#include <vector>
+
 #include <GL/glew.h>
 
 #include "gfx/sprite.hpp"
@@ -12,9 +14,10 @@
 namespace gfx {
 	class SpriteBatch {
 		public:
-			GLuint pos_vbo, uv_vbo, vao;
+			GLuint pos_vbo, uv_vbo, vao, vbo;
 			unsigned int max, current;
 			glm::vec4 defaultUV;
+			std::vector<float> tempBuffer;
 
 			SpriteBatch();
 			SpriteBatch(unsigned int);
@@ -22,8 +25,8 @@ namespace gfx {
 
 			void initialize(int, int);
 
-			void draw(const glm::vec2&);
-			void draw(const glm::vec2&, float);
+			//void draw(const glm::vec2&);
+			//void draw(const glm::vec2&, float);
 			void draw(const glm::vec2&, float, const glm::vec4&);
 
 			void drawAll();

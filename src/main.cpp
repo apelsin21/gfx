@@ -34,9 +34,8 @@ class Ball {
 		float scale, timer, speed;
 
 		Ball() {
+			this->uv = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 			this->pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
-			this->uv = glm::vec4(0.5f, 0.5f, 1.0f, 0.0f);
-			this->speed = rand(0.1f, 1.0f);
 
 			this->timer = 2.5f;
 			this->scale = 0.01f;
@@ -62,12 +61,10 @@ class Ball {
 			}
 		}
 
-		void render(gfx::SpriteBatch& batch, float dt, const glm::vec2& moveTowards) {
+		void render(gfx::SpriteBatch& batch, float dt) {
 			this->timer -= dt;
 
 			this->updateTexCoords();
-
-			this->pos += (moveTowards * this->speed) * dt;
 
 			batch.draw(this->pos, this->scale, this->uv);
 		}
@@ -79,7 +76,7 @@ int main() {
     gfx::Shader vs, fs;
     gfx::ShaderProgram program;
     gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch(10000);
+	gfx::SpriteBatch batch(1000);
 	gfx::Sprite* sprite;
 
 	std::srand(time(NULL)); //seeds random number generator
@@ -111,48 +108,30 @@ int main() {
 
 	graphicsDevice.setClearColor(gfx::CYAN); //"background" color
 
-	std::vector<Ball> ballArray;
 	program.bindID(); //use the program and the attached shaders
 	tex.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
 
-	glm::vec2 pos;
+	std::vector<Ball> ballArray(10000);
+
+	for(unsigned int i = 0; i < ballArray.size(); i++) {
+		ballArray.emplace_back(Ball());
+	}
+
 	while(graphicsDevice.open) {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_Q)) {
-			if(ballArray.size() < batch.max) {
-				ballArray.emplace_back(Ball());
-			}
-        }
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_E)) {
-			ballArray.clear();
-		}
-
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_W)) {
-			pos.y += 0.5f * graphicsDevice.deltaTime;
-		}
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_S)) {
-			pos.y -= 0.5f * graphicsDevice.deltaTime;
-		}
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
-			pos.x -= 0.5f * graphicsDevice.deltaTime;
-		}
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_D)) {
-			pos.x += 0.5f * graphicsDevice.deltaTime;
-		}
 
         graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
 
 		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		printf("fps: %u\n", graphicsDevice.fps);
-		printf("balls: %u\n", ballArray.size());
 
 		for(unsigned int i = 0; i < ballArray.size(); i++) {
-			ballArray[i].render(batch, graphicsDevice.deltaTime, pos); //this doesn't actually draw anything, but updates the buffer in the SpriteBatch 
+			ballArray[i].render(batch, graphicsDevice.deltaTime);
 		}
 
-		batch.drawAll(); //this draws every sprite
+		batch.drawAll(); //this draws every sprite and updates vram
 
         graphicsDevice.end(); //swaps backbuffer with frontbuffer
     }
