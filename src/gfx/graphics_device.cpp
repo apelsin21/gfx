@@ -502,7 +502,6 @@ void gfx::GraphicsDevice::begin() {
 	this->deltaTime = (this->currentFrameTime - this->lastFrameTime) / 1000.0f;
 	this->fps = 1/this->deltaTime;
 
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 void gfx::GraphicsDevice::end() {

@@ -5,8 +5,7 @@
 
 #include <GL/glew.h>
 
-#include "gfx/sprite.hpp"
-#include "gfx/free_image_texture.hpp"
+#include "gfx/texture.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

@@ -10,17 +10,18 @@
 
 #include "core/keyboard_keys.hpp"
 
-#include "gfx/free_image_texture.hpp"
-#include "gfx/free_type_font.hpp"
+#include "gfx/texture.hpp"
+#include "gfx/font.hpp"
+
 #include "gfx/graphics_device.hpp"
-#include "gfx/shader.hpp"
-#include "gfx/shader_program.hpp"
-#include "gfx/default_shaders.hpp"
-#include "gfx/shader_type.hpp"
 #include "gfx/graphics_device_event.hpp"
 #include "gfx/context_settings.hpp"
+
+#include "gfx/shader.hpp"
+#include "gfx/shader_program.hpp"
+#include "gfx/shader_type.hpp"
+
 #include "gfx/sprite_batch.hpp"
-#include "gfx/sprite.hpp"
 
 float rand(float LO, float HI) {
 	return(LO + (float)rand() / ((float)RAND_MAX/(HI-LO)));
@@ -33,14 +34,14 @@ class Ball {
 		glm::vec4 uv;
 		float scale, timer, speed, timerQuarter;
 
-		Ball() {
-			this->uv = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-			this->pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
+		Ball(const glm::vec2& p) {
+			this->uv = glm::vec4(0.463f, 0.0f, 0.493f, 0.77f);
+			this->pos = p;
 			this->velocity = glm::vec2(rand(0.01f, 0.5f), rand(0.01f, 0.5f));
 
 			this->timer = rand(1.0f, 3.0f);
 			this->timerQuarter = this->timer/4.0f;
-			this->scale = 0.01f;
+			this->scale = 0.05f;
 		}
 		~Ball() {
 		}
@@ -64,9 +65,8 @@ class Ball {
 		}
 
 		void render(gfx::SpriteBatch& batch, float dt) {
-			this->timer -= dt;
-
-			this->updateTexCoords();
+			//this->timer -= dt;
+			//this->updateTexCoords();
 			
 			if(this->pos.x >= 1.0f || this->pos.x <= -1.0f) {
 				this->velocity.x *= -1;
@@ -81,13 +81,14 @@ class Ball {
 };
 
 int main() {
-    gfx::FreeImageTexture tex;
-    gfx::GraphicsDevice graphicsDevice; //initializes opengl and sdl2
-    gfx::Shader vs, fs;
+    gfx::GraphicsDevice graphicsDevice; //handles initialization of opengl and sdl2
+    gfx::Shader vs, fs; //vertex, fragment shader
     gfx::ShaderProgram program;
-    gfx::ContextSettings settings(3, 3, 24, true, true, true); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch(100000);
-	gfx::Sprite* sprite;
+    gfx::ContextSettings settings(3, 3, 24, true, true, false); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
+	gfx::SpriteBatch batch(10000);
+
+	gfx::Font font;
+    gfx::Texture tex;
 
 	std::srand(time(NULL)); //seeds random number generator
 
@@ -107,7 +108,10 @@ int main() {
         program.link();
 
         tex.createID();
-        tex.loadFromFile("test.png");
+        tex.loadFromFile("data/textures/test.png");
+
+		font.createID();
+		font.loadFromFile("data/fonts/FreeSans.ttf", 12);
 
 		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
 
@@ -119,25 +123,32 @@ int main() {
 	graphicsDevice.setClearColor(gfx::CYAN); //"background" color
 
 	program.bindID(); //use the program and the attached shaders
-	tex.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
+	font.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
 
 	std::vector<Ball> ballArray;
-	for(unsigned int i = 0; i < batch.max; i++) {
-		ballArray.emplace_back(Ball());
-	}
 
 	while(graphicsDevice.open) {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
+        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
+			glm::vec2 pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
+
+			for(unsigned int i = 0; i < 5; i++) {
+				ballArray.emplace_back(Ball(pos));
+			}
+        }
 
         graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
 
 		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
+		printf("fps: %u\n", graphicsDevice.fps);
 
-		for(unsigned int  i = 0; i < batch.max; i++) {
+		for(unsigned int i = 0; i < ballArray.size(); i++) {
 			ballArray[i].render(batch, graphicsDevice.deltaTime);
 		}
+
+		//batch.draw(glm::vec2(pos.x, pos.y), pos.z, glm::vec4(0.463f, 0.0f, 0.493f, 0.8f));
 
 		batch.drawAll(); //this draws every sprite and updates vram
 
@@ -146,6 +157,7 @@ int main() {
 
     vs.deleteID();
     fs.deleteID();
+	font.deleteID();
     program.deleteID();
     tex.deleteID();
 

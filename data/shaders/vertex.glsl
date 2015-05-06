@@ -23,7 +23,7 @@ void main() {
 			f_uv = vec2(v_uv.x, v_uv.w);
 		break;
 
-		case 3: //bottom right AGAIN. some vertices are duplicated.
+		case 3: //bottom right 
 			corner += vec2(1*v_pos.z, -1*v_pos.z);
 			f_uv = vec2(v_uv.z, v_uv.y);
 		break;

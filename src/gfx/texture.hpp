@@ -3,6 +3,10 @@
 
 #include <string>
 #include <stdio.h>
+#include <stdexcept>
+#include <fstream>
+
+#include <FreeImage.h>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -24,6 +28,8 @@ namespace gfx {
     };
 
     class Texture : public GLObject {
+		protected:
+            FREE_IMAGE_FORMAT getFreeImageFormatFromPath(const std::string&);
         public:
             TEXTURE_FILTER minFilter, magFilter;
             TEXTURE_WRAP sWrap, tWrap;
@@ -33,13 +39,14 @@ namespace gfx {
             std::string path;
 
             Texture();
+			~Texture();
 
-            virtual bool loadFromFile(const std::string&) = 0;
+            bool loadFromFile(const std::string&);
 
-			virtual void createID();
-			virtual void deleteID();
-			virtual void bindID();
-			virtual bool hasValidID();
+			void createID();
+			void deleteID();
+			void bindID();
+			bool hasValidID();
 
             GLenum textureFilterToGLEnum(TEXTURE_FILTER);
             GLenum textureWrapToGLEnum(TEXTURE_WRAP);

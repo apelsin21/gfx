@@ -32,7 +32,7 @@ void gfx::SpriteBatch::initialize(int v_pos, int v_uv) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 	int totalBufferSize = (sizeof(float)*7)*this->max;
-	glBufferData(GL_ARRAY_BUFFER, totalBufferSize, NULL, GL_DYNAMIC_DRAW); 
+	glBufferData(GL_ARRAY_BUFFER, totalBufferSize, NULL, GL_STREAM_DRAW); 
 
     glEnableVertexAttribArray(v_pos);
     glVertexAttribPointer(v_pos, 3, GL_FLOAT, GL_FALSE, sizeof(float)*7, (GLvoid*)0);
@@ -64,10 +64,9 @@ void gfx::SpriteBatch::draw(const glm::vec2& pos, float scale, const glm::vec4& 
 
 void gfx::SpriteBatch::drawAll() {
 	glBindVertexArray(this->vao);
-
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float)*this->current, (GLvoid*)&this->tempBuffer[0]);
-
 	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, this->current/7);
+
 	this->current = 0;
 }
