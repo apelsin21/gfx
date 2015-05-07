@@ -2,7 +2,7 @@
 #define FONT_HPP
 
 #include <string>
-#include <vector>
+#include <map>
 #include <algorithm>
 #include <stdexcept>
 
@@ -10,6 +10,7 @@
 #include FT_FREETYPE_H
 
 #include <glm/glm.hpp>
+#include <glm/gtx/type_aligned.hpp>
 
 #include "gfx/gl_object.hpp"
 #include "gfx/glyph.hpp"
@@ -20,10 +21,10 @@ namespace gfx {
 			Font();
 			~Font();
 
-            std::vector<Glyph> glyphs;
+            std::map<char, glm::vec4> glyphs;
 
             std::string path;
-            glm::vec2 res;
+            glm::i32vec2 resolution;
 
 			void createID();
 			void deleteID();

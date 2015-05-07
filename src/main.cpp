@@ -111,7 +111,7 @@ int main() {
         tex.loadFromFile("data/textures/test.png");
 
 		font.createID();
-		font.loadFromFile("data/fonts/FreeSans.ttf", 12);
+		font.loadFromFile("data/fonts/FreeSans.ttf", 32);
 
 		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
 
@@ -131,30 +131,17 @@ int main() {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
-			glm::vec2 pos = glm::vec2(rand(-1.0f, 1.0f), rand(-1.0f, 1.0f));
 
-			for(unsigned int i = 0; i < 5; i++) {
-				ballArray.emplace_back(Ball(pos));
-			}
-        }
+        graphicsDevice.begin();
 
-        graphicsDevice.begin(); //clears the color buffer and the depth buffer, calculates deltatime and fps
-
-		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
-		printf("fps: %u\n", graphicsDevice.fps);
-
-		//for(unsigned int i = 0; i < ballArray.size(); i++) {
-		//	ballArray[i].render(batch, graphicsDevice.deltaTime);
-		//}
+		//printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
+		//printf("fps: %u\n", graphicsDevice.fps);
 		
-		batch.drawString("a", font, glm::vec2(0.0f, 0.0f), 1.0f);
+		batch.drawString("nej, ja.", font, glm::vec2(-0.9f, 0.0f), 0.07f);
 
-		//batch.draw(glm::vec2(pos.x, pos.y), pos.z, glm::vec4(0.463f, 0.0f, 0.493f, 0.8f));
+		batch.drawAll();
 
-		batch.drawAll(); //this draws every sprite and updates vram
-
-        graphicsDevice.end(); //swaps backbuffer with frontbuffer
+        graphicsDevice.end();
     }
 
     vs.deleteID();

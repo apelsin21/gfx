@@ -62,11 +62,9 @@ void gfx::SpriteBatch::draw(const glm::vec2& pos, float scale, const glm::vec4& 
 	this->current += 7;
 }
 void gfx::SpriteBatch::drawString(const std::string& text, gfx::Font& font, const glm::vec2& pos, float scale) {
-	int i = 1;
-
-	printf("character %u: res: %fx%f, advance: %fx%f\n", i, font.glyphs[i].resolution.x, font.glyphs[i].resolution.y,
-			font.glyphs[0].advance.x, font.glyphs[i].advance.x);
-	printf("left: %f, top: %f, x offset: %f\n", font.glyphs[i].left, font.glyphs[i].top, font.glyphs[i].offset);
+	for(unsigned int i = 0; i < text.size(); i++) {
+		this->draw(glm::vec2(pos.x + (i*0.2f), pos.y), scale, font.glyphs[text[i]]);
+	}
 }
 
 void gfx::SpriteBatch::drawAll() {
