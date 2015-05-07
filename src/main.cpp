@@ -137,7 +137,7 @@ int main() {
 		//printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		//printf("fps: %u\n", graphicsDevice.fps);
 		
-		batch.drawString("nej, ja.", font, glm::vec2(-0.9f, 0.0f), 0.07f);
+		batch.drawString(":)", font, glm::vec2(0.0f, 0.0f), 0.07f);
 
 		batch.drawAll();
 

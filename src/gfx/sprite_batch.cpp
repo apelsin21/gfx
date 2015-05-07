@@ -63,7 +63,7 @@ void gfx::SpriteBatch::draw(const glm::vec2& pos, float scale, const glm::vec4& 
 }
 void gfx::SpriteBatch::drawString(const std::string& text, gfx::Font& font, const glm::vec2& pos, float scale) {
 	for(unsigned int i = 0; i < text.size(); i++) {
-		this->draw(glm::vec2(pos.x + (i*0.2f), pos.y), scale, font.glyphs[text[i]]);
+		this->draw(glm::vec2(pos.x - font.glyphs[text[i]].offset, pos.y), scale, font.glyphs[text[i]].uvs);
 	}
 }
 

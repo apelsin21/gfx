@@ -94,7 +94,6 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
 
 	this->bindID();
 
-	printf("font texture size: %ux%u\n", this->resolution.x, this->resolution.y);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, this->resolution.x, this->resolution.y, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -108,19 +107,15 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
 
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, fg->bitmap.width, fg->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, fg->bitmap.buffer);
 
-		//gfx::Glyph character;
-		//character.resolution = glm::vec2(fg->bitmap.width, fg->bitmap.rows);
-		//character.advance = glm::vec2(fg->advance.x >> 6, fg->advance.y >> 6);
-		//character.left = fg->bitmap_left;
-		//character.top = fg->bitmap_top;
-		//character.offset = (float)x / this->resolution.x;
+		gfx::Glyph character;
+		character.resolution = glm::vec2(fg->bitmap.width, fg->bitmap.rows);
+		character.advance = glm::vec2(fg->advance.x >> 6, fg->advance.y >> 6);
+		character.left = fg->bitmap_left;
+		character.top = fg->bitmap_top;
+		character.offset = (float)x / this->resolution.x;
+		character.uvs = glm::vec4(character.offset, 0.0f, character.offset + ((float)fg->bitmap.width / this->resolution.x), (float)fg->bitmap.rows / this->resolution.y);
 
-		float blx = ((float)x / this->resolution.x);
-		
-		this->glyphs[i] = glm::vec4(blx,
-			0.0f,
-		   	blx + ((float)fg->bitmap.width / this->resolution.x),
-		   	(float)fg->bitmap.rows / this->resolution.y);
+		this->glyphs[i] = character;
 
 		x += fg->bitmap.width;
 	}

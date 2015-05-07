@@ -21,7 +21,7 @@ namespace gfx {
 			Font();
 			~Font();
 
-            std::map<char, glm::vec4> glyphs;
+            std::map<char, gfx::Glyph> glyphs;
 
             std::string path;
             glm::i32vec2 resolution;
