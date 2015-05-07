@@ -110,6 +110,15 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
 
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, fg->bitmap.width, fg->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, fg->bitmap.buffer);
 
+		gfx::Glyph character;
+		character.resolution = glm::vec2(fg->bitmap.width, fg->bitmap.rows);
+		character.advance = glm::vec2(fg->advance.x >> 6, fg->advance.y >> 6);
+		character.left = fg->bitmap_left;
+		character.top = fg->bitmap_top;
+		character.offset = (float)x / w;
+
+		this->glyphs.emplace_back(character);
+
 		x += fg->bitmap.width;
 	}
 

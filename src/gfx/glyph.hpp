@@ -6,11 +6,11 @@
 namespace gfx {
     class Glyph {
         public:
-            glm::vec2 res, advance;
+            glm::vec2 resolution, advance;
             float left, top, offset;
 
             Glyph(const glm::vec2& r, const glm::vec2 a, float l, float t, float o) {
-                this->res = r;
+                this->resolution = r;
                 this->advance = a;
                 this->left = l;
                 this->top = t;

@@ -13,7 +13,6 @@
 
 #include "gfx/gl_object.hpp"
 #include "gfx/glyph.hpp"
-#include "gfx/sprite_batch.hpp"
 
 namespace gfx {
     class Font : public GLObject {

@@ -144,9 +144,11 @@ int main() {
 		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		printf("fps: %u\n", graphicsDevice.fps);
 
-		for(unsigned int i = 0; i < ballArray.size(); i++) {
-			ballArray[i].render(batch, graphicsDevice.deltaTime);
-		}
+		//for(unsigned int i = 0; i < ballArray.size(); i++) {
+		//	ballArray[i].render(batch, graphicsDevice.deltaTime);
+		//}
+		
+		batch.drawString("a", font, glm::vec2(0.0f, 0.0f), 1.0f);
 
 		//batch.draw(glm::vec2(pos.x, pos.y), pos.z, glm::vec4(0.463f, 0.0f, 0.493f, 0.8f));
 
