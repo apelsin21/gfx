@@ -27,8 +27,8 @@ namespace gfx {
 
 			//void draw(const glm::vec2&);
 			//void draw(const glm::vec2&, float);
-			void draw(const glm::vec2&, float, const glm::vec4&);
-			void drawString(const std::string&, gfx::Font&, const glm::vec2&, float);
+			void draw(const glm::vec2&, const glm::vec2&, const glm::vec4&);
+			void drawString(const std::string&, gfx::Font&, const glm::vec2&, const glm::vec2&);
 
 			void drawAll();
 	};

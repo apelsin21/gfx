@@ -31,37 +31,38 @@ void gfx::SpriteBatch::initialize(int v_pos, int v_uv) {
 	glBindVertexArray(this->vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-	int totalBufferSize = (sizeof(float)*7)*this->max;
+	int totalBufferSize = (sizeof(float)*8)*this->max;
 	glBufferData(GL_ARRAY_BUFFER, totalBufferSize, NULL, GL_STREAM_DRAW); 
 
     glEnableVertexAttribArray(v_pos);
-    glVertexAttribPointer(v_pos, 3, GL_FLOAT, GL_FALSE, sizeof(float)*7, (GLvoid*)0);
+    glVertexAttribPointer(v_pos, 4, GL_FLOAT, GL_FALSE, sizeof(float)*8, (GLvoid*)0);
 	glVertexAttribDivisor(v_pos, 1);
 
     glEnableVertexAttribArray(v_uv);
-    glVertexAttribPointer(v_uv, 4, GL_FLOAT, GL_FALSE, sizeof(float)*7, (GLvoid*)(sizeof(float)*3)); 
+    glVertexAttribPointer(v_uv, 4, GL_FLOAT, GL_FALSE, sizeof(float)*8, (GLvoid*)(sizeof(float)*4)); 
 	glVertexAttribDivisor(v_uv, 1);
 
 	this->tempBuffer.reserve(this->max * 7);
 }
 
-void gfx::SpriteBatch::draw(const glm::vec2& pos, float scale, const glm::vec4& uv) {
-	if((this->current/7) >= this->max) {
+void gfx::SpriteBatch::draw(const glm::vec2& pos, const glm::vec2& scale, const glm::vec4& uv) {
+	if((this->current/8) >= this->max) {
 		printf("spritebatch can't render more than %u sprites\n", this->max);
 		return;
 	}
 
 	this->tempBuffer[this->current] = pos.x;
 	this->tempBuffer[this->current + 1] = pos.y;
-	this->tempBuffer[this->current + 2] = scale;
-	this->tempBuffer[this->current + 3] = uv.x;
-	this->tempBuffer[this->current + 4] = uv.y;
-	this->tempBuffer[this->current + 5] = uv.z;
-	this->tempBuffer[this->current + 6] = uv.w;
+	this->tempBuffer[this->current + 2] = scale.x;
+	this->tempBuffer[this->current + 3] = scale.y;
+	this->tempBuffer[this->current + 4] = uv.x;
+	this->tempBuffer[this->current + 5] = uv.y;
+	this->tempBuffer[this->current + 6] = uv.z;
+	this->tempBuffer[this->current + 7] = uv.w;
 	
-	this->current += 7;
+	this->current += 8;
 }
-void gfx::SpriteBatch::drawString(const std::string& text, gfx::Font& font, const glm::vec2& pos, float scale) {
+void gfx::SpriteBatch::drawString(const std::string& text, gfx::Font& font, const glm::vec2& pos, const glm::vec2& scale) {
 	for(unsigned int i = 0; i < text.size(); i++) {
 		this->draw(glm::vec2(pos.x - font.glyphs[text[i]].offset, pos.y), scale, font.glyphs[text[i]].uvs);
 	}
@@ -71,7 +72,7 @@ void gfx::SpriteBatch::drawAll() {
 	glBindVertexArray(this->vao);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float)*this->current, (GLvoid*)&this->tempBuffer[0]);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, this->current/7);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, this->current/8);
 
 	this->current = 0;
 }

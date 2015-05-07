@@ -76,7 +76,7 @@ class Ball {
 			}
 
 			this->pos += velocity * dt;
-			batch.draw(this->pos, this->scale, this->uv);
+			batch.draw(this->pos, glm::vec2(this->scale, this->scale), this->uv);
 		}
 };
 
@@ -137,7 +137,7 @@ int main() {
 		//printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		//printf("fps: %u\n", graphicsDevice.fps);
 		
-		batch.drawString(":)", font, glm::vec2(0.0f, 0.0f), 0.07f);
+		batch.drawString("!", font, glm::vec2(0.0f, 0.0f), glm::vec2(0.5f, 1.0f));
 
 		batch.drawAll();
 
