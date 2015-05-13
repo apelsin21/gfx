@@ -101,6 +101,25 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
 
 	//cache the ascii table
 	for(size_t i = ' '; i <= '~'; i++) {
+		if(i == '~') {
+			size_t temp = 'ö';
+
+			if(FT_Load_Char(ff, temp, FT_LOAD_RENDER)) {
+				continue;
+			}
+
+			glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, fg->bitmap.width, fg->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, fg->bitmap.buffer);
+
+			gfx::Glyph character;
+			character.resolution = glm::vec2(fg->bitmap.width, fg->bitmap.rows);
+			character.advance = glm::vec2(fg->advance.x >> 6, fg->advance.y >> 6);
+			character.left = fg->bitmap_left;
+			character.top = fg->bitmap_top;
+			character.offset = (float)x / this->resolution.x;
+			character.uvs = glm::vec4(character.offset, 0.0f, character.offset + ((float)fg->bitmap.width / this->resolution.x), (float)fg->bitmap.rows / this->resolution.y);
+
+			this->glyphs[temp] = character;
+		}
 		if(FT_Load_Char(ff, i, FT_LOAD_RENDER)) {
 			continue;
 		}
@@ -116,6 +135,7 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
 		character.uvs = glm::vec4(character.offset, 0.0f, character.offset + ((float)fg->bitmap.width / this->resolution.x), (float)fg->bitmap.rows / this->resolution.y);
 
 		this->glyphs[i] = character;
+
 
 		x += fg->bitmap.width;
 	}

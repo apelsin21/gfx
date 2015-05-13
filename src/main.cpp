@@ -111,7 +111,7 @@ int main() {
         tex.loadFromFile("data/textures/test.png");
 
 		font.createID();
-		font.loadFromFile("data/fonts/FreeSans.ttf", 32);
+		font.loadFromFile("data/fonts/FreeSans.ttf", 128);
 
 		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
 
@@ -134,10 +134,15 @@ int main() {
 
         graphicsDevice.begin();
 
-		//printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
-		//printf("fps: %u\n", graphicsDevice.fps);
+		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
+		printf("fps: %u\n", graphicsDevice.fps);
 		
-		batch.drawString("!", font, glm::vec2(0.0f, 0.0f), glm::vec2(0.5f, 1.0f));
+		//std::string text;
+		//text.push_back((char)rand((float)' ', (float)'ö'));
+		
+		std::string text("ö");
+
+		batch.drawString(text, font, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
 
 		batch.drawAll();
 
