@@ -111,7 +111,7 @@ int main() {
         tex.loadFromFile("data/textures/test.png");
 
 		font.createID();
-		font.loadFromFile("data/fonts/FreeSans.ttf", 128);
+		font.loadFromFile("data/fonts/FreeSans.ttf", 32);
 
 		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
 
@@ -127,23 +127,31 @@ int main() {
 
 	std::vector<Ball> ballArray;
 
+	//std::string text;
+	//text.push_back((char)rand((float)' ', (float)'~'));
+	//const float resetTime = 0.1666f * 15.0f;
+	//float timer = resetTime;
+
 	while(graphicsDevice.open) {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
 
+		//if(timer >= 0.0f) {
+		//	timer -= graphicsDevice.deltaTime;
+		//} else {
+		//	text.clear();
+		//	text.push_back((char)rand((float)' ', (float)'~'));
+		//	timer = resetTime;
+		//}
+
         graphicsDevice.begin();
 
 		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		printf("fps: %u\n", graphicsDevice.fps);
+		//printf("timer: %f, char: %c\n", timer, text[0]);
 		
-		//std::string text;
-		//text.push_back((char)rand((float)' ', (float)'ö'));
-		
-		std::string text("ö");
-
-		batch.drawString(text, font, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
-
+		batch.drawString(std::string("bajs korv"), font, glm::vec2(-1.0f, 0.0f), glm::vec2(0.1f, 0.1f));
 		batch.drawAll();
 
         graphicsDevice.end();
