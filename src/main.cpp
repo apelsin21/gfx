@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstdio>
 #include <ctime>
 #include <tuple>
 #include <exception>
@@ -111,7 +112,7 @@ int main() {
         tex.loadFromFile("data/textures/test.png");
 
 		font.createID();
-		font.loadFromFile("data/fonts/FreeSans.ttf", 32);
+		font.loadFromFile("data/fonts/firasans.otf", 32);
 
 		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
 
@@ -120,38 +121,40 @@ int main() {
         return EXIT_FAILURE;
     }
 
-	graphicsDevice.setClearColor(gfx::CYAN); //"background" color
+	graphicsDevice.setClearColor(gfx::BLACK); //"background" color
 
 	program.bindID(); //use the program and the attached shaders
 	font.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
 
 	std::vector<Ball> ballArray;
 
-	//std::string text;
-	//text.push_back((char)rand((float)' ', (float)'~'));
-	//const float resetTime = 0.1666f * 15.0f;
-	//float timer = resetTime;
+	glm::vec2 pos;
 
 	while(graphicsDevice.open) {
         if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
-
-		//if(timer >= 0.0f) {
-		//	timer -= graphicsDevice.deltaTime;
-		//} else {
-		//	text.clear();
-		//	text.push_back((char)rand((float)' ', (float)'~'));
-		//	timer = resetTime;
-		//}
+		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_W)) {
+			pos.y += 2.0f * graphicsDevice.deltaTime;
+		}
+		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_S)) {
+			pos.y -= 2.0f * graphicsDevice.deltaTime;
+		}
+		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
+			pos.x -= 2.0f * graphicsDevice.deltaTime;
+		}
+		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_D)) {
+			pos.x += 2.0f * graphicsDevice.deltaTime;
+		}
 
         graphicsDevice.begin();
 
 		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
 		printf("fps: %u\n", graphicsDevice.fps);
-		//printf("timer: %f, char: %c\n", timer, text[0]);
+
+		const char* fpsLabel = "37!, men ja.";
 		
-		batch.drawString(std::string("bajs korv"), font, glm::vec2(-1.0f, 0.0f), glm::vec2(0.1f, 0.1f));
+		batch.drawString(fpsLabel, font, pos, glm::vec2(0.1f, 0.1f));
 		batch.drawAll();
 
         graphicsDevice.end();

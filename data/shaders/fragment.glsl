@@ -9,9 +9,5 @@ out vec4 out_color;
 void main() {
     vec4 temp = texture(sampler, f_uv);
 
-	if(temp.r < 0.3) {
-		discard;
-	}
-
-	gl_FragColor = temp;
+	gl_FragColor = vec4(1.0f, 1.0f, 1.0f, temp.r);
 }

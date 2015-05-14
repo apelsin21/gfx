@@ -70,10 +70,12 @@ void gfx::SpriteBatch::drawString(const std::string& text, gfx::Font& font, cons
 
 		float left = pos.x + (glyph.left * scale.x);
 		float top = pos.y - (glyph.top * scale.y);
+		float w = glyph.uvs.z * scale.x;
+		float h = glyph.uvs.w * scale.y;
 
 		this->draw(
 				glm::vec2(left + penPos, pos.y),
-			   	glm::vec2(scale.x - (glyph.uvs.z - glyph.uvs.x), scale.y * (glyph.uvs.w - glyph.uvs.y)),
+			   	glm::vec2(w, h),
 			   	glyph.uvs
 		);
 
