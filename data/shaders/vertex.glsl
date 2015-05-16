@@ -3,6 +3,8 @@
 in vec4 v_pos;
 in vec4 v_uv;
 
+uniform mat4 v_projection;
+
 out vec2 f_uv;
 
 void main() {
@@ -39,5 +41,5 @@ void main() {
 		break;
 	}
 	
-    gl_Position = vec4(corner.xy, 0.0, 1.0);
+    gl_Position = v_projection * vec4(corner.xy, 0.0, 1.0);
 }

@@ -11,7 +11,7 @@
 #include "gfx/texture.hpp"
 #include "gfx/font.hpp"
 
-namespace gfx {
+namespace mg {
 	class SpriteBatch {
 		public:
 			GLuint vao, vbo;
@@ -25,10 +25,8 @@ namespace gfx {
 
 			void initialize(int, int);
 
-			//void draw(const glm::vec2&);
-			//void draw(const glm::vec2&, float);
 			void draw(const glm::vec2&, const glm::vec2&, const glm::vec4&);
-			void drawString(const std::string&, gfx::Font&, const glm::vec2&, const glm::vec2&);
+			void draw(const std::wstring&, mg::Font&, const glm::vec2&);
 
 			void drawAll();
 	};

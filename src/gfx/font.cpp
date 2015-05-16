@@ -1,25 +1,25 @@
 #include "gfx/font.hpp"
 
-gfx::Font::Font() {
+mg::Font::Font() {
 }
-gfx::Font::~Font() {
+mg::Font::~Font() {
 }
 
-void gfx::Font::createID() {
+void mg::Font::createID() {
     if(!this->hasValidID()) {
         glGenTextures(1, &this->id);
         this->bindID(); //Texture name isn't valid until bound
     }
 }
-void gfx::Font::deleteID() {
+void mg::Font::deleteID() {
     if(this->hasValidID()) {
         glDeleteTextures(1, &this->id);
     }
 }
-void gfx::Font::bindID() {
+void mg::Font::bindID() {
     glBindTexture(GL_TEXTURE_2D, this->id);
 }
-bool gfx::Font::hasValidID() {
+bool mg::Font::hasValidID() {
     if(glIsTexture(this->id) == GL_TRUE) {
         return true;
     } else {
@@ -27,7 +27,7 @@ bool gfx::Font::hasValidID() {
     }
 }
 
-bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
+bool mg::Font::loadFromFile(const std::string& path, unsigned int size) {
 	if(!this->hasValidID()) {
         std::string errMsg("tried to load font ");
         errMsg += path;
@@ -61,7 +61,6 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
         return false;
     }
 
-	//size of 6*64 at 96 dpi
     if(FT_Set_Pixel_Sizes(ff, 0, size) != 0) {
         std::string errMsg("failed to set pixel size ");
 		errMsg += size;
@@ -82,9 +81,15 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
 
     FT_Set_Transform(ff, &fm, NULL);
 
-    for(size_t i = ' '; i < '~'; i++) {
-        if(FT_Load_Char(ff, i, FT_LOAD_RENDER)) {
-            printf("failed to load character %c from font %s\n", (char)i, path.c_str());
+	//if we have no characters to cache, load some common characters
+	if(this->cacheString.empty()) {
+		this->cacheString = L" abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ1234567890!#¤%&/()=?`*^_-:.,'@£$€¥{[]};<>|";
+	}
+    for(size_t i = 0; i < this->cacheString.size(); i++) {
+		FT_ULong charIndex = FT_Get_Char_Index(ff, (FT_ULong)this->cacheString[i]);
+
+        if(FT_Load_Char(ff, charIndex, FT_LOAD_RENDER)) {
+            printf("failed to load character %c from font %s\n", (wchar_t)i, path.c_str());
             continue;
         }
 
@@ -97,35 +102,39 @@ bool gfx::Font::loadFromFile(const std::string& path, unsigned int size) {
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, this->resolution.x, this->resolution.y, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	int x = 0;
-
-	//cache the ascii table
-	for(size_t i = ' '; i <= '~'; i++) {
-		if(FT_Load_Char(ff, i, FT_LOAD_RENDER)) {
-			continue;
-		}
+	float x = 0;
+	for(size_t i = 0; i < this->cacheString.size(); i++) {
+        if(FT_Load_Char(ff, this->cacheString[i], FT_LOAD_RENDER)) {
+            continue;
+        }
 
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, fg->bitmap.width, fg->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, fg->bitmap.buffer);
 
-		gfx::Glyph character;
-		character.resolution = glm::vec2(fg->bitmap.width, fg->bitmap.rows);
+		mg::Glyph character;
 		character.advance = glm::vec2(fg->advance.x >> 6, fg->advance.y >> 6);
+		character.resolution = glm::vec2(fg->bitmap.width, fg->bitmap.rows);
 		character.left = fg->bitmap_left;
 		character.top = fg->bitmap_top;
-		character.offset = (float)x / this->resolution.x;
-		character.uvs = glm::vec4(character.offset, 0.0f, character.offset + ((float)fg->bitmap.width / this->resolution.x), (float)fg->bitmap.rows / this->resolution.y);
 
-		this->glyphs[i] = character;
+		float offset = x / this->resolution.x;
+		character.uvs = glm::vec4(
+			offset,
+			0.0f, 
+			offset + (character.resolution.x / this->resolution.x),
+			character.resolution.y / this->resolution.y
+		);
+
+		this->glyphs[this->cacheString[i]] = character;
 
 
-		x += fg->bitmap.width;
+		x += character.resolution.x;
 	}
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     FT_Done_Face(ff);
     FT_Done_FreeType(fl);

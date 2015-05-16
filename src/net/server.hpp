@@ -1,7 +1,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-namespace net {
+namespace mg {
     class Server {
         
     };

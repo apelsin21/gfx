@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-namespace gfx {
+namespace mg {
     class Camera {
         public:
             glm::mat4 projection, view, combined;

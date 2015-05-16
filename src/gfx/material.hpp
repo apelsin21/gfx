@@ -10,7 +10,7 @@
 #include "gfx/shader_program.hpp"
 #include "gfx/color.hpp"
 
-namespace gfx {
+namespace mg {
     class Material {
         public:
             Texture diffuseTexture, normalTexture, specularTexture;

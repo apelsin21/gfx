@@ -1,7 +1,7 @@
 #ifndef COLOR_HPP
 #define COLOR_HPP
 
-namespace gfx {
+namespace mg {
     class Color {
         public:
             Color() {
@@ -28,6 +28,7 @@ namespace gfx {
     static const Color RED = Color(1, 0, 0, 1);
     static const Color GREEN = Color(0, 1, 0, 1);
     static const Color BLUE = Color(0, 0, 1, 1);
+    static const Color CORN_FLOWER_BLUE = Color(0.392156f, 0.584313f, 0.929411f, 1);
     static const Color LIGHT_GRAY = Color(0.75f, 0.75f, 0.75f, 1);
     static const Color GRAY = Color(0.5f, 0.5f, 0.5f, 1);
     static const Color DARK_GRAY = Color(0.25f, 0.25f, 0.25f, 1);

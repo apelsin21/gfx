@@ -13,7 +13,7 @@
 #include "gfx/shader_type.hpp"
 #include "gfx/gl_object.hpp"
 
-namespace gfx {
+namespace mg {
     class Shader : public GLObject {
         public:
             std::string src, path;

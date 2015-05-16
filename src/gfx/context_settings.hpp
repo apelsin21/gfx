@@ -1,7 +1,7 @@
 #ifndef CONTEXT_SETTINGS_HPP
 #define CONTEXT_SETTINGS_HPP
 
-namespace gfx {
+namespace mg {
     class ContextSettings {
         protected:
         public:

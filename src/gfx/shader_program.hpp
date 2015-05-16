@@ -11,10 +11,10 @@
 #include "gfx/shader.hpp"
 #include "gfx/gl_object.hpp"
 
-namespace gfx {
+namespace mg {
     class ShaderProgram : public GLObject {
         public:
-            gfx::Shader vs, fs, geom, tess;
+            mg::Shader vs, fs, geom, tess;
             bool loaded, linked;
 
             ShaderProgram();

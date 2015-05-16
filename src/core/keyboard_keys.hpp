@@ -1,7 +1,7 @@
 #ifndef KEYBOARD_KEYS_HPP
 #define KEYBOARD_KEYS_HPP
 
-namespace core {
+namespace mg {
     enum KEYBOARD_KEY {
         KEY_NONE,
         KEY_A,

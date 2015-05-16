@@ -1,7 +1,7 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-namespace net {
+namespace mg {
     class Client {
         
     };

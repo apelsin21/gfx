@@ -26,7 +26,7 @@
 #include "gfx/context_settings.hpp"
 #include "gfx/sprite_batch.hpp"
 
-namespace gfx {
+namespace mg {
     class GraphicsDevice {
         protected:
             Color clearColor;
@@ -37,11 +37,11 @@ namespace gfx {
             unsigned int _sdlWindowID;
             const unsigned char* _pSdlKeyboardState;
 
-            SDL_Scancode convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey);
+            SDL_Scancode convertKeyToSDLScancode(mg::KEYBOARD_KEY gfxKey);
         public:
             ShaderProgram spriteShaderProgram;
             bool isDrawing, open, fullscreen, initialized, maximized, hidden, focused;
-            gfx::ContextSettings contextSettings;
+            mg::ContextSettings contextSettings;
             glm::i32vec2 resolution, position;
             std::string title;
 			unsigned int boundTextureID, boundShaderProgramID, fps;
@@ -84,7 +84,7 @@ namespace gfx {
             bool isFocused();
             bool setFocused(bool);
  
-            bool isKeyPressed(core::KEYBOARD_KEY);
+            bool isKeyPressed(mg::KEYBOARD_KEY);
 
             std::string getClipboardString();
             bool setClipboardString(const std::string&);

@@ -1,7 +1,7 @@
 #ifndef MOUSE_KEYS_HPP
 #define MOUSE_KEYS_HPP
 
-namespace core {
+namespace mg {
     enum MOUSE_KEY {
         MOUSE_LEFT, //the standard left mouse button
         MOUSE_MIDDLE, //click down on the scroll wheel or the actual middle button on mostly older mice

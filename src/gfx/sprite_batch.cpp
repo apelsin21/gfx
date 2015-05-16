@@ -1,6 +1,6 @@
 #include "gfx/sprite_batch.hpp"
 
-gfx::SpriteBatch::SpriteBatch() {
+mg::SpriteBatch::SpriteBatch() {
 	this->max = 10000; //max sprites to be able to render. this is only 0.2 mb vram
 	this->current = 0;
 
@@ -8,7 +8,7 @@ gfx::SpriteBatch::SpriteBatch() {
 	this->vao = 0;
 	this->defaultUV = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 }
-gfx::SpriteBatch::SpriteBatch(unsigned int max) {
+mg::SpriteBatch::SpriteBatch(unsigned int max) {
 	this->max = max;
 	this->current = 0;
 
@@ -16,7 +16,7 @@ gfx::SpriteBatch::SpriteBatch(unsigned int max) {
 	this->vao = 0;
 	this->defaultUV = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 }
-gfx::SpriteBatch::~SpriteBatch() {
+mg::SpriteBatch::~SpriteBatch() {
 	if(glIsVertexArray(this->vao) == GL_TRUE) {
     	glDeleteVertexArrays(1, &this->vao);
 	}
@@ -25,7 +25,7 @@ gfx::SpriteBatch::~SpriteBatch() {
 	}
 }
 
-void gfx::SpriteBatch::initialize(int v_pos, int v_uv) {
+void mg::SpriteBatch::initialize(int v_pos, int v_uv) {
     glGenVertexArrays(1, &this->vao);
     glGenBuffers(1, &this->vbo);
 	glBindVertexArray(this->vao);
@@ -45,7 +45,7 @@ void gfx::SpriteBatch::initialize(int v_pos, int v_uv) {
 	this->tempBuffer.reserve(this->max * 7);
 }
 
-void gfx::SpriteBatch::draw(const glm::vec2& pos, const glm::vec2& scale, const glm::vec4& uv) {
+void mg::SpriteBatch::draw(const glm::vec2& pos, const glm::vec2& scale, const glm::vec4& uv) {
 	if((this->current/8) >= this->max) {
 		printf("spritebatch can't render more than %u sprites\n", this->max);
 		return;
@@ -62,31 +62,34 @@ void gfx::SpriteBatch::draw(const glm::vec2& pos, const glm::vec2& scale, const 
 	
 	this->current += 8;
 }
-void gfx::SpriteBatch::drawString(const std::string& text, gfx::Font& font, const glm::vec2& pos, const glm::vec2& scale) {
-	float penPos = 0.0f;
+void mg::SpriteBatch::draw(const std::wstring& text, mg::Font& font, const glm::vec2& pos) {
+	glm::vec2 pen = pos; 
 
 	for(unsigned int i = 0; i < text.size(); i++) {
-		gfx::Glyph glyph = font.glyphs[text[i]];
+		mg::Glyph glyph = font.glyphs[text[i]];
 
-		float left = pos.x + (glyph.left * scale.x);
-		float top = pos.y - (glyph.top * scale.y);
-		float w = glyph.uvs.z * scale.x;
-		float h = glyph.uvs.w * scale.y;
+		float w = glyph.resolution.x;
+		float h = glyph.resolution.y;
+
+		float x2 = pen.x + glyph.left;
+		float y2 = -pen.y - glyph.top;
+
+		pen.x += glyph.advance.x*2.0f;
+		pen.y += glyph.advance.y;
+
+		if(!w || !h) {
+			continue;
+		}
 
 		this->draw(
-				glm::vec2(left + penPos, pos.y),
+				glm::vec2(x2 + (w/2.0f), -y2 - (h/2.0f)),
 			   	glm::vec2(w, h),
 			   	glyph.uvs
 		);
-
-		printf("pen: %f\n", penPos);
-		printf("left: %f\n", left);
-		penPos += (glyph.uvs.z*2.0f) * scale.x;
 	}
-
 }
 
-void gfx::SpriteBatch::drawAll() {
+void mg::SpriteBatch::drawAll() {
 	glBindVertexArray(this->vao);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float)*this->current, (GLvoid*)&this->tempBuffer[0]);

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace gfx {
+namespace mg {
     enum GRAPHICS_DEVICE_EVENT {
         GRAPHICS_DEVICE_EVENT_NONE,
         GRAPHICS_DEVICE_EVENT_SHOWN,

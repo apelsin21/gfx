@@ -15,15 +15,16 @@
 #include "gfx/gl_object.hpp"
 #include "gfx/glyph.hpp"
 
-namespace gfx {
+namespace mg {
     class Font : public GLObject {
         public:
 			Font();
 			~Font();
 
-            std::map<char, gfx::Glyph> glyphs;
+            std::map<wchar_t, mg::Glyph> glyphs;
 
             std::string path;
+			std::wstring cacheString;
             glm::i32vec2 resolution;
 
 			void createID();

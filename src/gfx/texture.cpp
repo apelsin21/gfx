@@ -1,6 +1,6 @@
 #include "gfx/texture.hpp"
 
-gfx::Texture::Texture() {
+mg::Texture::Texture() {
     this->mipmaps = true;
     this->bpp = 0;
 
@@ -9,10 +9,10 @@ gfx::Texture::Texture() {
     this->sWrap = TEXTURE_WRAP::TEXTURE_WRAP_REPEAT;
     this->tWrap = TEXTURE_WRAP::TEXTURE_WRAP_REPEAT;
 }
-gfx::Texture::~Texture() {
+mg::Texture::~Texture() {
 }
 
-FREE_IMAGE_FORMAT gfx::Texture::getFreeImageFormatFromPath(const std::string& path) {
+FREE_IMAGE_FORMAT mg::Texture::getFreeImageFormatFromPath(const std::string& path) {
    FREE_IMAGE_FORMAT format = FreeImage_GetFileType(path.c_str(), 0);
    
    if(format == FIF_UNKNOWN) {
@@ -20,7 +20,7 @@ FREE_IMAGE_FORMAT gfx::Texture::getFreeImageFormatFromPath(const std::string& pa
    }
 }
 
-bool gfx::Texture::loadFromFile(const std::string& path) {
+bool mg::Texture::loadFromFile(const std::string& path) {
     std::ifstream fileCheck(path);
     if(!fileCheck.good()) {
         std::string errMsg("tried to load texture ");
@@ -85,21 +85,21 @@ bool gfx::Texture::loadFromFile(const std::string& path) {
     return true;
 }
 
-void gfx::Texture::createID() {
+void mg::Texture::createID() {
     if(!this->hasValidID()) {
         glGenTextures(1, &this->id);
         this->bindID(); //Texture name isn't valid until bound
     }
 }
-void gfx::Texture::deleteID() {
+void mg::Texture::deleteID() {
     if(this->hasValidID()) {
         glDeleteTextures(1, &this->id);
     }
 }
-void gfx::Texture::bindID() {
+void mg::Texture::bindID() {
     glBindTexture(GL_TEXTURE_2D, this->id);
 }
-bool gfx::Texture::hasValidID() {
+bool mg::Texture::hasValidID() {
     if(glIsTexture(this->id) == GL_TRUE) {
         return true;
     } else {
@@ -107,7 +107,7 @@ bool gfx::Texture::hasValidID() {
     }
 }
 
-GLenum gfx::Texture::textureFilterToGLEnum(TEXTURE_FILTER t) {
+GLenum mg::Texture::textureFilterToGLEnum(TEXTURE_FILTER t) {
     switch(t) {
     case TEXTURE_FILTER::TEXTURE_FILTER_NEAREST:
         return GL_NEAREST;
@@ -117,7 +117,7 @@ GLenum gfx::Texture::textureFilterToGLEnum(TEXTURE_FILTER t) {
     break;
     }
 }
-GLenum gfx::Texture::textureWrapToGLEnum(TEXTURE_WRAP t) {
+GLenum mg::Texture::textureWrapToGLEnum(TEXTURE_WRAP t) {
     switch(t) {
     case TEXTURE_WRAP::TEXTURE_WRAP_REPEAT:
         return GL_REPEAT;

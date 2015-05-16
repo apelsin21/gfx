@@ -1,6 +1,6 @@
 #include "gfx/graphics_device.hpp"
 
-gfx::GraphicsDevice::GraphicsDevice() {
+mg::GraphicsDevice::GraphicsDevice() {
     this->clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
     this->resolution = glm::i32vec2(800, 600);
 
@@ -23,7 +23,7 @@ gfx::GraphicsDevice::GraphicsDevice() {
     this->_sdlContext = NULL;
     this->_pSdlWindow = nullptr;
 }
-gfx::GraphicsDevice::~GraphicsDevice() {
+mg::GraphicsDevice::~GraphicsDevice() {
     if(this->_sdlContext) {
         SDL_GL_DeleteContext(this->_sdlContext);
     }
@@ -35,7 +35,7 @@ gfx::GraphicsDevice::~GraphicsDevice() {
     SDL_Quit();
 }
 
-bool gfx::GraphicsDevice::initialize(const std::string& t, const glm::i32vec2& res, ContextSettings& context) {
+bool mg::GraphicsDevice::initialize(const std::string& t, const glm::i32vec2& res, ContextSettings& context) {
     if(this->initialized) {
         throw std::runtime_error("renderer is already initialized!\n");
         return false;
@@ -117,7 +117,7 @@ bool gfx::GraphicsDevice::initialize(const std::string& t, const glm::i32vec2& r
     return true;
 }
 
-void gfx::GraphicsDevice::setClearColor(const gfx::Color& c) {
+void mg::GraphicsDevice::setClearColor(const mg::Color& c) {
 	if(!this->initialized) {
 		printf("tried to set clearcolor of uninitialized renderer.\n");
 		return;
@@ -129,14 +129,14 @@ void gfx::GraphicsDevice::setClearColor(const gfx::Color& c) {
                  c.b,
                  c.a);
 }
-gfx::Color gfx::GraphicsDevice::getClearColor() {
+mg::Color mg::GraphicsDevice::getClearColor() {
     return this->clearColor;
 }
 
-std::string gfx::GraphicsDevice::getTitle() {
+std::string mg::GraphicsDevice::getTitle() {
     return this->title;
 }
-bool gfx::GraphicsDevice::setTitle(const std::string& t) {
+bool mg::GraphicsDevice::setTitle(const std::string& t) {
     if(this->initialized) {
     	this->title = t;
         SDL_SetWindowTitle(this->_pSdlWindow, this->title.c_str());
@@ -146,10 +146,10 @@ bool gfx::GraphicsDevice::setTitle(const std::string& t) {
     return false;
 }
 
-glm::i32vec2 gfx::GraphicsDevice::getResolution() {
+glm::i32vec2 mg::GraphicsDevice::getResolution() {
     return this->resolution;
 }
-bool gfx::GraphicsDevice::setResolution(const glm::i32vec2& r) {
+bool mg::GraphicsDevice::setResolution(const glm::i32vec2& r) {
     if(this->initialized) {
 		this->resolution = r;
         SDL_SetWindowSize(this->_pSdlWindow, this->resolution.x, this->resolution.y);
@@ -159,10 +159,10 @@ bool gfx::GraphicsDevice::setResolution(const glm::i32vec2& r) {
     return false;
 }
 
-glm::i32vec2 gfx::GraphicsDevice::getPosition() {
+glm::i32vec2 mg::GraphicsDevice::getPosition() {
     return this->position;
 }
-bool gfx::GraphicsDevice::setPosition(const glm::i32vec2& p) {
+bool mg::GraphicsDevice::setPosition(const glm::i32vec2& p) {
     if(this->initialized) {
 		this->position = p;
         SDL_SetWindowPosition(this->_pSdlWindow, p.x, p.y);
@@ -172,17 +172,17 @@ bool gfx::GraphicsDevice::setPosition(const glm::i32vec2& p) {
     return false;
 }
 
-bool gfx::GraphicsDevice::isOpen() {
+bool mg::GraphicsDevice::isOpen() {
     return this->open;
 }
-void gfx::GraphicsDevice::close() {
+void mg::GraphicsDevice::close() {
     this->open = false;
 }
 
-bool gfx::GraphicsDevice::isFullscreen() {
+bool mg::GraphicsDevice::isFullscreen() {
     return this->fullscreen;
 }
-void gfx::GraphicsDevice::setFullscreen() {
+void mg::GraphicsDevice::setFullscreen() {
     if(!this->initialized) {
         throw std::runtime_error("tried to set uninitialized renderer to fullscreen.\n");
     }
@@ -193,7 +193,7 @@ void gfx::GraphicsDevice::setFullscreen() {
         this->fullscreen = true;
     }
 }
-void gfx::GraphicsDevice::setBorderlessFullscreen() {
+void mg::GraphicsDevice::setBorderlessFullscreen() {
     if(!this->initialized) {
         throw std::runtime_error("tried to set uninitialized renderer to borderless fullscreen!\n");
     }
@@ -204,7 +204,7 @@ void gfx::GraphicsDevice::setBorderlessFullscreen() {
         this->fullscreen = true;
     }
 }
-void gfx::GraphicsDevice::setWindowed() {
+void mg::GraphicsDevice::setWindowed() {
     if(!this->initialized) {
         throw std::runtime_error("tried to set uninitialized renderer to windowed mode.\n");
     }    
@@ -216,10 +216,10 @@ void gfx::GraphicsDevice::setWindowed() {
     }
 }
 
-bool gfx::GraphicsDevice::isMaximized() {
+bool mg::GraphicsDevice::isMaximized() {
     return this->maximized;
 }
-bool gfx::GraphicsDevice::setMaximized(bool m) {
+bool mg::GraphicsDevice::setMaximized(bool m) {
     this->maximized = m;
 
     if(!this->initialized) {
@@ -233,10 +233,10 @@ bool gfx::GraphicsDevice::setMaximized(bool m) {
     return true;
 }
 
-bool gfx::GraphicsDevice::isHidden() {
+bool mg::GraphicsDevice::isHidden() {
     return this->hidden;
 }
-bool gfx::GraphicsDevice::setHidden(bool h) {
+bool mg::GraphicsDevice::setHidden(bool h) {
     this->hidden = h;
     
     if(!this->initialized) {
@@ -250,10 +250,10 @@ bool gfx::GraphicsDevice::setHidden(bool h) {
     return true;
 }
 
-bool gfx::GraphicsDevice::isFocused() {
+bool mg::GraphicsDevice::isFocused() {
 	return this->focused;
 }
-bool gfx::GraphicsDevice::setFocused(bool f) {
+bool mg::GraphicsDevice::setFocused(bool f) {
     if(!this->initialized) {
         return false;
     }
@@ -268,11 +268,11 @@ bool gfx::GraphicsDevice::setFocused(bool f) {
     return true;
 }
 
-bool gfx::GraphicsDevice::isKeyPressed(core::KEYBOARD_KEY key) {
+bool mg::GraphicsDevice::isKeyPressed(mg::KEYBOARD_KEY key) {
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
 
-void gfx::GraphicsDevice::pollEvents() {
+void mg::GraphicsDevice::pollEvents() {
     while(SDL_PollEvent(&this->_sdlEvent) && this->_sdlEvent.type == SDL_WINDOWEVENT && this->_sdlEvent.window.windowID == this->_sdlWindowID) {
         switch(this->_sdlEvent.window.event) {
             case SDL_WINDOWEVENT_MOVED:
@@ -329,7 +329,7 @@ void gfx::GraphicsDevice::pollEvents() {
     }
 }
 
-std::string gfx::GraphicsDevice::getClipboardString() {
+std::string mg::GraphicsDevice::getClipboardString() {
     std::string returnval;
 
     if(this->initialized && SDL_HasClipboardText() == SDL_TRUE) {
@@ -343,7 +343,7 @@ std::string gfx::GraphicsDevice::getClipboardString() {
 
     return returnval;
 }
-bool gfx::GraphicsDevice::setClipboardString(const std::string& s) {
+bool mg::GraphicsDevice::setClipboardString(const std::string& s) {
     if(!this->initialized) {
         return false;
     } else if(SDL_SetClipboardText(s.c_str()) < 0) {
@@ -355,125 +355,125 @@ bool gfx::GraphicsDevice::setClipboardString(const std::string& s) {
     return true;
 }
 
-SDL_Scancode gfx::GraphicsDevice::convertKeyToSDLScancode(core::KEYBOARD_KEY gfxKey) {
+SDL_Scancode mg::GraphicsDevice::convertKeyToSDLScancode(mg::KEYBOARD_KEY gfxKey) {
     SDL_Scancode sdlKey = SDL_SCANCODE_UNKNOWN;
 
     switch(gfxKey) {
-        case core::KEYBOARD_KEY::KEY_A:
+        case mg::KEYBOARD_KEY::KEY_A:
             sdlKey = SDL_SCANCODE_A;
             break;
-        case core::KEYBOARD_KEY::KEY_B:
+        case mg::KEYBOARD_KEY::KEY_B:
             sdlKey = SDL_SCANCODE_B;
             break;
-        case core::KEYBOARD_KEY::KEY_C:
+        case mg::KEYBOARD_KEY::KEY_C:
             sdlKey = SDL_SCANCODE_C;
             break;
-        case core::KEYBOARD_KEY::KEY_D:
+        case mg::KEYBOARD_KEY::KEY_D:
             sdlKey = SDL_SCANCODE_D;
             break;
-        case core::KEYBOARD_KEY::KEY_E:
+        case mg::KEYBOARD_KEY::KEY_E:
             sdlKey = SDL_SCANCODE_E;
             break;
-        case core::KEYBOARD_KEY::KEY_F:
+        case mg::KEYBOARD_KEY::KEY_F:
             sdlKey = SDL_SCANCODE_F;
             break;
-        case core::KEYBOARD_KEY::KEY_G:
+        case mg::KEYBOARD_KEY::KEY_G:
             sdlKey = SDL_SCANCODE_G;
             break;
-        case core::KEYBOARD_KEY::KEY_H:
+        case mg::KEYBOARD_KEY::KEY_H:
             sdlKey = SDL_SCANCODE_H;
             break;
-        case core::KEYBOARD_KEY::KEY_I:
+        case mg::KEYBOARD_KEY::KEY_I:
             sdlKey = SDL_SCANCODE_I;
             break;
-        case core::KEYBOARD_KEY::KEY_J:
+        case mg::KEYBOARD_KEY::KEY_J:
             sdlKey = SDL_SCANCODE_J;
             break;
-        case core::KEYBOARD_KEY::KEY_K:
+        case mg::KEYBOARD_KEY::KEY_K:
             sdlKey = SDL_SCANCODE_K;
             break;
-        case core::KEYBOARD_KEY::KEY_L:
+        case mg::KEYBOARD_KEY::KEY_L:
             sdlKey = SDL_SCANCODE_L;
             break;
-        case core::KEYBOARD_KEY::KEY_M:
+        case mg::KEYBOARD_KEY::KEY_M:
             sdlKey = SDL_SCANCODE_M;
             break;
-        case core::KEYBOARD_KEY::KEY_N:
+        case mg::KEYBOARD_KEY::KEY_N:
             sdlKey = SDL_SCANCODE_N;
             break;
-        case core::KEYBOARD_KEY::KEY_O:
+        case mg::KEYBOARD_KEY::KEY_O:
             sdlKey = SDL_SCANCODE_O;
             break;
-        case core::KEYBOARD_KEY::KEY_P:
+        case mg::KEYBOARD_KEY::KEY_P:
             sdlKey = SDL_SCANCODE_P;
             break;
-        case core::KEYBOARD_KEY::KEY_Q:
+        case mg::KEYBOARD_KEY::KEY_Q:
             sdlKey = SDL_SCANCODE_Q;
             break;
-        case core::KEYBOARD_KEY::KEY_R:
+        case mg::KEYBOARD_KEY::KEY_R:
             sdlKey = SDL_SCANCODE_R;
             break;
-        case core::KEYBOARD_KEY::KEY_S:
+        case mg::KEYBOARD_KEY::KEY_S:
             sdlKey = SDL_SCANCODE_S;
             break;
-        case core::KEYBOARD_KEY::KEY_T:
+        case mg::KEYBOARD_KEY::KEY_T:
             sdlKey = SDL_SCANCODE_T;
             break;
-        case core::KEYBOARD_KEY::KEY_U:
+        case mg::KEYBOARD_KEY::KEY_U:
             sdlKey = SDL_SCANCODE_U;
             break;
-        case core::KEYBOARD_KEY::KEY_V:
+        case mg::KEYBOARD_KEY::KEY_V:
             sdlKey = SDL_SCANCODE_V;
             break;
-        case core::KEYBOARD_KEY::KEY_W:
+        case mg::KEYBOARD_KEY::KEY_W:
             sdlKey = SDL_SCANCODE_W;
             break;
-        case core::KEYBOARD_KEY::KEY_X:
+        case mg::KEYBOARD_KEY::KEY_X:
             sdlKey = SDL_SCANCODE_X;
             break;
-        case core::KEYBOARD_KEY::KEY_Y:
+        case mg::KEYBOARD_KEY::KEY_Y:
             sdlKey = SDL_SCANCODE_Y;
             break;
-        case core::KEYBOARD_KEY::KEY_Z:
+        case mg::KEYBOARD_KEY::KEY_Z:
             sdlKey = SDL_SCANCODE_Z;
             break;
-        case core::KEYBOARD_KEY::KEY_ESCAPE:
+        case mg::KEYBOARD_KEY::KEY_ESCAPE:
             sdlKey = SDL_SCANCODE_ESCAPE;
             break;
-        case core::KEYBOARD_KEY::KEY_F1:
+        case mg::KEYBOARD_KEY::KEY_F1:
             sdlKey = SDL_SCANCODE_F1;
             break;
-        case core::KEYBOARD_KEY::KEY_F2:
+        case mg::KEYBOARD_KEY::KEY_F2:
             sdlKey = SDL_SCANCODE_F2;
             break;
-        case core::KEYBOARD_KEY::KEY_F3:
+        case mg::KEYBOARD_KEY::KEY_F3:
             sdlKey = SDL_SCANCODE_F3;
             break;
-        case core::KEYBOARD_KEY::KEY_F4:
+        case mg::KEYBOARD_KEY::KEY_F4:
             sdlKey = SDL_SCANCODE_F4;
             break;
-        case core::KEYBOARD_KEY::KEY_F5:
+        case mg::KEYBOARD_KEY::KEY_F5:
             sdlKey = SDL_SCANCODE_F5;
             break;
-        case core::KEYBOARD_KEY::KEY_F6:
+        case mg::KEYBOARD_KEY::KEY_F6:
             sdlKey = SDL_SCANCODE_F6;
             break;
-        case core::KEYBOARD_KEY::KEY_F7:
+        case mg::KEYBOARD_KEY::KEY_F7:
             sdlKey = SDL_SCANCODE_F7;
             break;
-        case core::KEYBOARD_KEY::KEY_F8:
+        case mg::KEYBOARD_KEY::KEY_F8:
             sdlKey = SDL_SCANCODE_F8;
             break;
-        case core::KEYBOARD_KEY::KEY_F9:
+        case mg::KEYBOARD_KEY::KEY_F9:
             sdlKey = SDL_SCANCODE_F9;
             break;
-        case core::KEYBOARD_KEY::KEY_F10:
+        case mg::KEYBOARD_KEY::KEY_F10:
             sdlKey = SDL_SCANCODE_F10;
             break;
-        case core::KEYBOARD_KEY::KEY_F11:
+        case mg::KEYBOARD_KEY::KEY_F11:
             sdlKey = SDL_SCANCODE_F11;
             break;
-        case core::KEYBOARD_KEY::KEY_F12:
+        case mg::KEYBOARD_KEY::KEY_F12:
             sdlKey = SDL_SCANCODE_F12;
             break;
         default:
@@ -483,14 +483,14 @@ SDL_Scancode gfx::GraphicsDevice::convertKeyToSDLScancode(core::KEYBOARD_KEY gfx
     return sdlKey;
 }
 
-void gfx::GraphicsDevice::swapBuffers() {
+void mg::GraphicsDevice::swapBuffers() {
     if(!this->initialized) {
         return;
     }
 
     SDL_GL_SwapWindow(this->_pSdlWindow);
 }
-void gfx::GraphicsDevice::begin() {
+void mg::GraphicsDevice::begin() {
     if(this->isDrawing) {
         return;
     }
@@ -504,7 +504,7 @@ void gfx::GraphicsDevice::begin() {
 
     glClear(GL_COLOR_BUFFER_BIT);
 }
-void gfx::GraphicsDevice::end() {
+void mg::GraphicsDevice::end() {
     this->isDrawing = false;
 
 	this->pollEvents();

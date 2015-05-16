@@ -1,29 +1,29 @@
 #include "gfx/shader_program.hpp"
 
-gfx::ShaderProgram::ShaderProgram() {
+mg::ShaderProgram::ShaderProgram() {
     this->loaded = false;
     this->linked = false;
     this->id = -1;
 }
-gfx::ShaderProgram::~ShaderProgram() {
+mg::ShaderProgram::~ShaderProgram() {
 }
 
-void gfx::ShaderProgram::createID() {
+void mg::ShaderProgram::createID() {
     if(!this->hasValidID()) {
         this->id = glCreateProgram();
     }
 }
-void gfx::ShaderProgram::deleteID() {
+void mg::ShaderProgram::deleteID() {
     if(this->hasValidID()) {
         glDeleteProgram(this->id);
     }
 }
-void gfx::ShaderProgram::bindID() {
+void mg::ShaderProgram::bindID() {
 	if(this->hasValidID()) {
 		glUseProgram(this->id);
 	}
 }
-bool gfx::ShaderProgram::hasValidID() {
+bool mg::ShaderProgram::hasValidID() {
     if(glIsProgram(this->id) == GL_TRUE) {
         return true;
     } else {
@@ -31,11 +31,11 @@ bool gfx::ShaderProgram::hasValidID() {
     }
 }
 
-int gfx::ShaderProgram::getAttribLocation(const std::string& name) {
+int mg::ShaderProgram::getAttribLocation(const std::string& name) {
 	return glGetAttribLocation(this->id, name.c_str());
 }
 
-bool gfx::ShaderProgram::attachShader(const gfx::Shader& s) {
+bool mg::ShaderProgram::attachShader(const mg::Shader& s) {
     if(!this->hasValidID()) {
         std::string errMsg("tried to attach shader ");
         errMsg += s.path;
@@ -79,7 +79,7 @@ bool gfx::ShaderProgram::attachShader(const gfx::Shader& s) {
     return true;
 }
 
-bool gfx::ShaderProgram::link() {
+bool mg::ShaderProgram::link() {
 	if(!this->hasValidID()) {
         throw std::runtime_error("tried to link shaderprogram with invalid id!\n");
 		return false;

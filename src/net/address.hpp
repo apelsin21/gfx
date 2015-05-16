@@ -5,7 +5,7 @@
 #include <sstream>
 #include <cmath>
 
-namespace net {
+namespace mg {
     class Address {
         public:
             unsigned short a, b, c, d, port;

@@ -1,24 +1,24 @@
 #include "gfx/shader.hpp"
 
-gfx::Shader::Shader() {
+mg::Shader::Shader() {
     this->id = -1;
     this->type = SHADER_TYPE::SHADER_TYPE_NONE;
 }
-gfx::Shader::~Shader() {
+mg::Shader::~Shader() {
 }
 
-void gfx::Shader::createID(SHADER_TYPE t) {
+void mg::Shader::createID(SHADER_TYPE t) {
     if(glIsShader(this->id) == GL_FALSE) {
         this->type = t;
         this->id = glCreateShader(shaderTypeToGLEnum(this->type));
     }
 }
-void gfx::Shader::deleteID() {
+void mg::Shader::deleteID() {
     if(glIsShader(this->id) == GL_TRUE) {
         glDeleteShader(this->id);
     }
 }
-bool gfx::Shader::hasValidID() {
+bool mg::Shader::hasValidID() {
     if(glIsShader(this->id) == GL_TRUE) {
         return true;
     } else {
@@ -26,7 +26,7 @@ bool gfx::Shader::hasValidID() {
     }
 }
 
-bool gfx::Shader::loadFromFile(const std::string& p) {
+bool mg::Shader::loadFromFile(const std::string& p) {
     std::ifstream infile(p, std::ios::in);
     std::string line;
 
@@ -48,13 +48,13 @@ bool gfx::Shader::loadFromFile(const std::string& p) {
 
     return true;
 }
-bool gfx::Shader::loadFromMemory(const std::string& src) {
+bool mg::Shader::loadFromMemory(const std::string& src) {
     this->src = src;
 
     return true;
 }
 
-bool gfx::Shader::compile() {
+bool mg::Shader::compile() {
     if(!this->hasValidID()) {
         std::string errMsg("failed to compile invalid GL shader ");
         errMsg += this->path;

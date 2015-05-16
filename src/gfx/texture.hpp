@@ -15,7 +15,7 @@
 
 #include "gfx/gl_object.hpp"
 
-namespace gfx {
+namespace mg {
     enum TEXTURE_FILTER {
         TEXTURE_FILTER_NEAREST,
         TEXTURE_FILTER_LINEAR,

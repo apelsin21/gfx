@@ -1,6 +1,6 @@
 #include "gfx/context_settings.hpp"
 
-gfx::ContextSettings::ContextSettings(int ma, int mi, bool core) {
+mg::ContextSettings::ContextSettings(int ma, int mi, bool core) {
     this->major = ma;
     this->minor = mi;
     this->coreProfile = core;
@@ -8,7 +8,7 @@ gfx::ContextSettings::ContextSettings(int ma, int mi, bool core) {
 	this->vsync = true;
     this->depthBits = 24;
 }
-gfx::ContextSettings::ContextSettings(int ma, int mi, int db, bool core, bool buffers, bool vsync_) {
+mg::ContextSettings::ContextSettings(int ma, int mi, int db, bool core, bool buffers, bool vsync_) {
     this->major = ma;
     this->minor = mi;
     this->depthBits = db;
@@ -16,7 +16,7 @@ gfx::ContextSettings::ContextSettings(int ma, int mi, int db, bool core, bool bu
     this->doubleBuffered = buffers;
 	this->vsync = vsync_;
 }
-gfx::ContextSettings::ContextSettings() {
+mg::ContextSettings::ContextSettings() {
     this->major = 3;
     this->minor = 0;
     this->coreProfile = false;
@@ -24,17 +24,17 @@ gfx::ContextSettings::ContextSettings() {
     this->vsync = true;
     this->depthBits = 24;
 }
-gfx::ContextSettings::~ContextSettings() {
+mg::ContextSettings::~ContextSettings() {
 }
 
-bool gfx::ContextSettings::operator<(const ContextSettings& other) {
+bool mg::ContextSettings::operator<(const ContextSettings& other) {
     if(this->major < other.major || (this->major == other.major && this->minor < other.minor)) {
         return true;
     } else {
         return false;
     }
 }
-bool gfx::ContextSettings::operator>(const ContextSettings& other) {
+bool mg::ContextSettings::operator>(const ContextSettings& other) {
     if(this->major < other.major || (this->major == other.major && this->minor < other.minor)) {
         return false;
     } else {

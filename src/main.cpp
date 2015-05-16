@@ -65,7 +65,7 @@ class Ball {
 			}
 		}
 
-		void render(gfx::SpriteBatch& batch, float dt) {
+		void render(mg::SpriteBatch& batch, float dt) {
 			//this->timer -= dt;
 			//this->updateTexCoords();
 			
@@ -82,22 +82,22 @@ class Ball {
 };
 
 int main() {
-    gfx::GraphicsDevice graphicsDevice; //handles initialization of opengl and sdl2
-    gfx::Shader vs, fs; //vertex, fragment shader
-    gfx::ShaderProgram program;
-    gfx::ContextSettings settings(3, 3, 24, true, true, false); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
-	gfx::SpriteBatch batch(10000);
+    mg::GraphicsDevice graphicsDevice; //handles initialization of opengl and sdl2
+    mg::Shader vs, fs; //vertex, fragment shader
+    mg::ShaderProgram program;
+    mg::ContextSettings settings(3, 3, 24, true, true, false); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
+	mg::SpriteBatch batch(10000);
 
-	gfx::Font font;
-    gfx::Texture tex;
+	mg::Font font;
+    mg::Texture tex;
 
 	std::srand(time(NULL)); //seeds random number generator
 
     try {
         graphicsDevice.initialize("Test Window", glm::vec2(800, 600), settings); //title, resolution, context settings
 
-        vs.createID(gfx::SHADER_TYPE::SHADER_TYPE_VERTEX);
-        fs.createID(gfx::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
+        vs.createID(mg::SHADER_TYPE::SHADER_TYPE_VERTEX);
+        fs.createID(mg::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
         vs.loadFromFile("data/shaders/vertex.glsl");
         fs.loadFromFile("data/shaders/fragment.glsl");
         vs.compile();
@@ -121,40 +121,51 @@ int main() {
         return EXIT_FAILURE;
     }
 
-	graphicsDevice.setClearColor(gfx::BLACK); //"background" color
+	graphicsDevice.setClearColor(mg::CORN_FLOWER_BLUE); //"background" color
 
 	program.bindID(); //use the program and the attached shaders
 	font.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
 
 	std::vector<Ball> ballArray;
 
-	glm::vec2 pos;
+	glm::vec2 pos(500.0f, 500.0f);
+	float speed = 1000.0f;
+
+	int timer;
+	std::wstring fpsLabel;
+	
+	GLuint mat = glGetUniformLocation(program.id, "v_projection");
 
 	while(graphicsDevice.open) {
-        if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_ESCAPE)) {
+        if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_ESCAPE)) {
             graphicsDevice.open = false;
         }
-		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_W)) {
-			pos.y += 2.0f * graphicsDevice.deltaTime;
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_W)) {
+			pos.y += speed * graphicsDevice.deltaTime;
 		}
-		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_S)) {
-			pos.y -= 2.0f * graphicsDevice.deltaTime;
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_S)) {
+			pos.y -= speed * graphicsDevice.deltaTime;
 		}
-		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_A)) {
-			pos.x -= 2.0f * graphicsDevice.deltaTime;
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_A)) {
+			pos.x -= speed * graphicsDevice.deltaTime;
 		}
-		if(graphicsDevice.isKeyPressed(core::KEYBOARD_KEY::KEY_D)) {
-			pos.x += 2.0f * graphicsDevice.deltaTime;
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_D)) {
+			pos.x += speed * graphicsDevice.deltaTime;
 		}
+
+		timer += graphicsDevice.fps;
+
+		if(timer >= 60*60) {
+			fpsLabel = L"fps: ";
+			fpsLabel += std::to_wstring(graphicsDevice.fps);
+
+			timer = 0;
+		}
+
+		glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(glm::ortho(0.0f, (float)graphicsDevice.resolution.x, 0.0f, (float)graphicsDevice.resolution.y, -1.0f, 1.0f)));
 
         graphicsDevice.begin();
-
-		printf("frametime: %f\n", graphicsDevice.deltaTime * 1000.0f);
-		printf("fps: %u\n", graphicsDevice.fps);
-
-		const char* fpsLabel = "37!, men ja.";
-		
-		batch.drawString(fpsLabel, font, pos, glm::vec2(0.1f, 0.1f));
+		batch.draw(L"test, det är bra att ha det!", font, pos);
 		batch.drawAll();
 
         graphicsDevice.end();

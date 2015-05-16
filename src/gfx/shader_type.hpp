@@ -1,7 +1,7 @@
 #ifndef SHADER_TYPE_HPP
 #define SHADER_TYPE_HPP
 
-namespace gfx {
+namespace mg {
     enum SHADER_TYPE {
         SHADER_TYPE_NONE,
         

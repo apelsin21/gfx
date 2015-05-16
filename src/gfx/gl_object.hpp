@@ -6,7 +6,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-namespace gfx {
+namespace mg {
 	class GLObject {
 		public:
 			GLuint id;
