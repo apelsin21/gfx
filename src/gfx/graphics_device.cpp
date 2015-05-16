@@ -268,6 +268,26 @@ bool mg::GraphicsDevice::setFocused(bool f) {
     return true;
 }
 
+bool mg::GraphicsDevice::hasPressedKey() {
+	for(unsigned int i = 0; i < (int)SDL_Scancode::SDL_NUM_SCANCODES; i++) {
+		if(this->_pSdlKeyboardState[i] != 0) {
+			return true;
+		}
+	}
+
+	return false;
+}
+std::vector<mg::KEYBOARD_KEY> mg::GraphicsDevice::getPressedKeys() {
+	std::vector<mg::KEYBOARD_KEY> pressedKeys;
+
+	for(unsigned int i = 0; i < (int)SDL_Scancode::SDL_NUM_SCANCODES; i++) {
+		if(this->_pSdlKeyboardState[i] != 0) {
+			pressedKeys.emplace_back((mg::KEYBOARD_KEY)i);
+		}
+	}
+
+	return pressedKeys;
+}
 bool mg::GraphicsDevice::isKeyPressed(mg::KEYBOARD_KEY key) {
     return this->_pSdlKeyboardState[convertKeyToSDLScancode(key)];
 }
@@ -353,134 +373,6 @@ bool mg::GraphicsDevice::setClipboardString(const std::string& s) {
     }
 
     return true;
-}
-
-SDL_Scancode mg::GraphicsDevice::convertKeyToSDLScancode(mg::KEYBOARD_KEY gfxKey) {
-    SDL_Scancode sdlKey = SDL_SCANCODE_UNKNOWN;
-
-    switch(gfxKey) {
-        case mg::KEYBOARD_KEY::KEY_A:
-            sdlKey = SDL_SCANCODE_A;
-            break;
-        case mg::KEYBOARD_KEY::KEY_B:
-            sdlKey = SDL_SCANCODE_B;
-            break;
-        case mg::KEYBOARD_KEY::KEY_C:
-            sdlKey = SDL_SCANCODE_C;
-            break;
-        case mg::KEYBOARD_KEY::KEY_D:
-            sdlKey = SDL_SCANCODE_D;
-            break;
-        case mg::KEYBOARD_KEY::KEY_E:
-            sdlKey = SDL_SCANCODE_E;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F:
-            sdlKey = SDL_SCANCODE_F;
-            break;
-        case mg::KEYBOARD_KEY::KEY_G:
-            sdlKey = SDL_SCANCODE_G;
-            break;
-        case mg::KEYBOARD_KEY::KEY_H:
-            sdlKey = SDL_SCANCODE_H;
-            break;
-        case mg::KEYBOARD_KEY::KEY_I:
-            sdlKey = SDL_SCANCODE_I;
-            break;
-        case mg::KEYBOARD_KEY::KEY_J:
-            sdlKey = SDL_SCANCODE_J;
-            break;
-        case mg::KEYBOARD_KEY::KEY_K:
-            sdlKey = SDL_SCANCODE_K;
-            break;
-        case mg::KEYBOARD_KEY::KEY_L:
-            sdlKey = SDL_SCANCODE_L;
-            break;
-        case mg::KEYBOARD_KEY::KEY_M:
-            sdlKey = SDL_SCANCODE_M;
-            break;
-        case mg::KEYBOARD_KEY::KEY_N:
-            sdlKey = SDL_SCANCODE_N;
-            break;
-        case mg::KEYBOARD_KEY::KEY_O:
-            sdlKey = SDL_SCANCODE_O;
-            break;
-        case mg::KEYBOARD_KEY::KEY_P:
-            sdlKey = SDL_SCANCODE_P;
-            break;
-        case mg::KEYBOARD_KEY::KEY_Q:
-            sdlKey = SDL_SCANCODE_Q;
-            break;
-        case mg::KEYBOARD_KEY::KEY_R:
-            sdlKey = SDL_SCANCODE_R;
-            break;
-        case mg::KEYBOARD_KEY::KEY_S:
-            sdlKey = SDL_SCANCODE_S;
-            break;
-        case mg::KEYBOARD_KEY::KEY_T:
-            sdlKey = SDL_SCANCODE_T;
-            break;
-        case mg::KEYBOARD_KEY::KEY_U:
-            sdlKey = SDL_SCANCODE_U;
-            break;
-        case mg::KEYBOARD_KEY::KEY_V:
-            sdlKey = SDL_SCANCODE_V;
-            break;
-        case mg::KEYBOARD_KEY::KEY_W:
-            sdlKey = SDL_SCANCODE_W;
-            break;
-        case mg::KEYBOARD_KEY::KEY_X:
-            sdlKey = SDL_SCANCODE_X;
-            break;
-        case mg::KEYBOARD_KEY::KEY_Y:
-            sdlKey = SDL_SCANCODE_Y;
-            break;
-        case mg::KEYBOARD_KEY::KEY_Z:
-            sdlKey = SDL_SCANCODE_Z;
-            break;
-        case mg::KEYBOARD_KEY::KEY_ESCAPE:
-            sdlKey = SDL_SCANCODE_ESCAPE;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F1:
-            sdlKey = SDL_SCANCODE_F1;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F2:
-            sdlKey = SDL_SCANCODE_F2;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F3:
-            sdlKey = SDL_SCANCODE_F3;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F4:
-            sdlKey = SDL_SCANCODE_F4;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F5:
-            sdlKey = SDL_SCANCODE_F5;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F6:
-            sdlKey = SDL_SCANCODE_F6;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F7:
-            sdlKey = SDL_SCANCODE_F7;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F8:
-            sdlKey = SDL_SCANCODE_F8;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F9:
-            sdlKey = SDL_SCANCODE_F9;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F10:
-            sdlKey = SDL_SCANCODE_F10;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F11:
-            sdlKey = SDL_SCANCODE_F11;
-            break;
-        case mg::KEYBOARD_KEY::KEY_F12:
-            sdlKey = SDL_SCANCODE_F12;
-            break;
-        default:
-            break;
-    }
-
-    return sdlKey;
 }
 
 void mg::GraphicsDevice::swapBuffers() {

@@ -1,83 +1,85 @@
 #ifndef KEYBOARD_KEYS_HPP
 #define KEYBOARD_KEYS_HPP
 
+#include <SDL2/SDL_scancode.h>
+
 namespace mg {
     enum KEYBOARD_KEY {
         KEY_NONE,
-        KEY_A,
-        KEY_B,
-        KEY_C,
-        KEY_D,
-        KEY_E,
-        KEY_F,
-        KEY_G,
-        KEY_H,
-        KEY_I,
-        KEY_J,
-        KEY_K,
-        KEY_L,
-        KEY_M,
-        KEY_N,
-        KEY_O,
-        KEY_P,
-        KEY_Q,
-        KEY_R,
-        KEY_S,
-        KEY_T,
-        KEY_U,
-        KEY_V,
-        KEY_W,
-        KEY_X,
-        KEY_Y,
-        KEY_Z,
+        KEY_A = (int)'a',
+        KEY_B = (int)'b',
+        KEY_C = (int)'c',
+        KEY_D = (int)'d',
+        KEY_E = (int)'e',
+        KEY_F = (int)'f',
+        KEY_G = (int)'g',
+        KEY_H = (int)'h',
+        KEY_I = (int)'i',
+        KEY_J = (int)'j',
+        KEY_K = (int)'k',
+        KEY_L = (int)'l',
+        KEY_M = (int)'m',
+        KEY_N = (int)'n',
+        KEY_O = (int)'o',
+        KEY_P = (int)'p',
+        KEY_Q = (int)'q',
+        KEY_R = (int)'r',
+        KEY_S = (int)'s',
+        KEY_T = (int)'t',
+        KEY_U = (int)'u',
+        KEY_V = (int)'v',
+        KEY_W = (int)'w',
+        KEY_X = (int)'x',
+        KEY_Y = (int)'y',
+        KEY_Z = (int)'z',
       
-        KEY_1,
-        KEY_2,
-        KEY_3,
-        KEY_4,
-        KEY_5,
-        KEY_6,
-        KEY_7,
-        KEY_8,
-        KEY_9,
-        KEY_0,
+        KEY_1 = (int)'1',
+        KEY_2 = (int)'2',
+        KEY_3 = (int)'3',
+        KEY_4 = (int)'4',
+        KEY_5 = (int)'5',
+        KEY_6 = (int)'6',
+        KEY_7 = (int)'7',
+        KEY_8 = (int)'8',
+        KEY_9 = (int)'9',
+        KEY_0 = (int)'0',
       
-        KEY_RETURN,
+        KEY_RETURN = (int)'\n',
         KEY_ESCAPE,
         KEY_BACKSPACE,
-        KEY_TAB,
-        KEY_SPACE,
+        KEY_TAB = (int)'\t',
+        KEY_SPACE = (int)' ',
       
-        KEY_MINUS,
-        KEY_EQUALS,
-        KEY_LEFTBRACKET,
-        KEY_RIGHTBRACKET,
-        KEY_BACKSLASH,
+        KEY_MINUS = (int)'-',
+        KEY_EQUALS = (int)'=',
+        KEY_LEFTBRACKET = (int)'[',
+        KEY_RIGHTBRACKET = (int)']',
+        KEY_BACKSLASH = (int)'\b',
 
         KEY_NONUSHASH,
  
-        KEY_SEMICOLON,
+        KEY_SEMICOLON = (int)';',
         KEY_APOSTROPHE,
         KEY_GRAVE,
   
-        KEY_COMMA,
-        KEY_PERIOD,
-        KEY_SLASH,
+        KEY_COMMA = (int)',',
+        KEY_PERIOD = (int)'.',
+        KEY_SLASH = (int)'/',
    
         KEY_CAPSLOCK,
     
-        KEY_F1,
-        KEY_F2,
-        KEY_F3,
-        KEY_F4,
-        KEY_F5,
-        KEY_F6,
-        KEY_F7,
-        KEY_F8,
-        KEY_F9,
-        KEY_F10,
-        KEY_F11,
-        KEY_F12,
+        KEY_F1 = 1000,
+        KEY_F2 = 1001,
+        KEY_F3 = 1002,
+        KEY_F4 = 1003,
+        KEY_F5 = 1004,
+        KEY_F6 = 1005,
+        KEY_F7 = 1006,
+        KEY_F8 = 1007,
+        KEY_F9 = 1008,
+        KEY_F10	= 1009,
+        KEY_F11	= 1010,
+        KEY_F12	= 1011,
       
         KEY_PRINTSCREEN,
         KEY_SCROLLLOCK,
@@ -273,6 +275,477 @@ namespace mg {
         
         KEY_COUNT //for bounds checking
     };
+
+	static SDL_Scancode convertKeyToSDLScancode(mg::KEYBOARD_KEY mgKey) {
+		SDL_Scancode sdlKey = SDL_SCANCODE_UNKNOWN;
+
+    	switch(mgKey) {
+    	    case mg::KEYBOARD_KEY::KEY_A:
+    	        sdlKey = SDL_SCANCODE_A;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_B:
+    	        sdlKey = SDL_SCANCODE_B;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_C:
+    	        sdlKey = SDL_SCANCODE_C;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_D:
+    	        sdlKey = SDL_SCANCODE_D;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_E:
+    	        sdlKey = SDL_SCANCODE_E;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F:
+    	        sdlKey = SDL_SCANCODE_F;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_G:
+    	        sdlKey = SDL_SCANCODE_G;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_H:
+    	        sdlKey = SDL_SCANCODE_H;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_I:
+    	        sdlKey = SDL_SCANCODE_I;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_J:
+    	        sdlKey = SDL_SCANCODE_J;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_K:
+    	        sdlKey = SDL_SCANCODE_K;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_L:
+    	        sdlKey = SDL_SCANCODE_L;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_M:
+    	        sdlKey = SDL_SCANCODE_M;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_N:
+    	        sdlKey = SDL_SCANCODE_N;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_O:
+    	        sdlKey = SDL_SCANCODE_O;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_P:
+    	        sdlKey = SDL_SCANCODE_P;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Q:
+    	        sdlKey = SDL_SCANCODE_Q;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_R:
+    	        sdlKey = SDL_SCANCODE_R;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_S:
+    	        sdlKey = SDL_SCANCODE_S;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_T:
+    	        sdlKey = SDL_SCANCODE_T;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_U:
+    	        sdlKey = SDL_SCANCODE_U;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_V:
+    	        sdlKey = SDL_SCANCODE_V;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_W:
+    	        sdlKey = SDL_SCANCODE_W;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_X:
+    	        sdlKey = SDL_SCANCODE_X;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Y:
+    	        sdlKey = SDL_SCANCODE_Y;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Z:
+    	        sdlKey = SDL_SCANCODE_Z;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F1:
+    	        sdlKey = SDL_SCANCODE_F1;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F2:
+    	        sdlKey = SDL_SCANCODE_F2;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F3:
+    	        sdlKey = SDL_SCANCODE_F3;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F4:
+    	        sdlKey = SDL_SCANCODE_F4;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F5:
+    	        sdlKey = SDL_SCANCODE_F5;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F6:
+    	        sdlKey = SDL_SCANCODE_F6;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F7:
+    	        sdlKey = SDL_SCANCODE_F7;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F8:
+    	        sdlKey = SDL_SCANCODE_F8;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F9:
+    	        sdlKey = SDL_SCANCODE_F9;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F10:
+    	        sdlKey = SDL_SCANCODE_F10;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F11:
+    	        sdlKey = SDL_SCANCODE_F11;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F12:
+    	        sdlKey = SDL_SCANCODE_F12;
+    	        break;
+
+    	    case mg::KEYBOARD_KEY::KEY_ESCAPE:
+    	        sdlKey = SDL_SCANCODE_ESCAPE;
+    	        break;
+			case mg::KEYBOARD_KEY::KEY_BACKSPACE:
+				sdlKey = SDL_SCANCODE_BACKSPACE;
+				break;
+			case mg::KEYBOARD_KEY::KEY_SPACE:
+				sdlKey = SDL_SCANCODE_SPACE;
+				break;
+    	    case mg::KEYBOARD_KEY::KEY_RETURN:
+    	        sdlKey = SDL_SCANCODE_RETURN;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_TAB:
+    	        sdlKey = SDL_SCANCODE_TAB;
+    	        break;
+
+    	    case mg::KEYBOARD_KEY::KEY_1:
+    	        sdlKey = SDL_SCANCODE_1;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_2:
+    	        sdlKey = SDL_SCANCODE_2;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_3:
+    	        sdlKey = SDL_SCANCODE_3;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_4:
+    	        sdlKey = SDL_SCANCODE_4;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_5:
+    	        sdlKey = SDL_SCANCODE_5;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_6:
+    	        sdlKey = SDL_SCANCODE_6;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_7:
+    	        sdlKey = SDL_SCANCODE_7;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_8:
+    	        sdlKey = SDL_SCANCODE_8;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_9:
+    	        sdlKey = SDL_SCANCODE_9;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_0:
+    	        sdlKey = SDL_SCANCODE_0;
+    	        break;
+    	    default:
+    	        break;
+    	}
+
+		return sdlKey;
+	}
+	static mg::KEYBOARD_KEY convertSDLScancodeToKey(SDL_Scancode sdlKey) {
+		mg::KEYBOARD_KEY mgKey = mg::KEYBOARD_KEY::KEY_NONE;
+
+    	switch(mgKey) {
+    	    case mg::KEYBOARD_KEY::KEY_A:
+    	        sdlKey = SDL_SCANCODE_A;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_B:
+    	        sdlKey = SDL_SCANCODE_B;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_C:
+    	        sdlKey = SDL_SCANCODE_C;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_D:
+    	        sdlKey = SDL_SCANCODE_D;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_E:
+    	        sdlKey = SDL_SCANCODE_E;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F:
+    	        sdlKey = SDL_SCANCODE_F;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_G:
+    	        sdlKey = SDL_SCANCODE_G;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_H:
+    	        sdlKey = SDL_SCANCODE_H;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_I:
+    	        sdlKey = SDL_SCANCODE_I;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_J:
+    	        sdlKey = SDL_SCANCODE_J;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_K:
+    	        sdlKey = SDL_SCANCODE_K;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_L:
+    	        sdlKey = SDL_SCANCODE_L;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_M:
+    	        sdlKey = SDL_SCANCODE_M;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_N:
+    	        sdlKey = SDL_SCANCODE_N;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_O:
+    	        sdlKey = SDL_SCANCODE_O;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_P:
+    	        sdlKey = SDL_SCANCODE_P;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Q:
+    	        sdlKey = SDL_SCANCODE_Q;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_R:
+    	        sdlKey = SDL_SCANCODE_R;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_S:
+    	        sdlKey = SDL_SCANCODE_S;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_T:
+    	        sdlKey = SDL_SCANCODE_T;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_U:
+    	        sdlKey = SDL_SCANCODE_U;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_V:
+    	        sdlKey = SDL_SCANCODE_V;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_W:
+    	        sdlKey = SDL_SCANCODE_W;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_X:
+    	        sdlKey = SDL_SCANCODE_X;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Y:
+    	        sdlKey = SDL_SCANCODE_Y;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Z:
+    	        sdlKey = SDL_SCANCODE_Z;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F1:
+    	        sdlKey = SDL_SCANCODE_F1;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F2:
+    	        sdlKey = SDL_SCANCODE_F2;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F3:
+    	        sdlKey = SDL_SCANCODE_F3;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F4:
+    	        sdlKey = SDL_SCANCODE_F4;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F5:
+    	        sdlKey = SDL_SCANCODE_F5;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F6:
+    	        sdlKey = SDL_SCANCODE_F6;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F7:
+    	        sdlKey = SDL_SCANCODE_F7;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F8:
+    	        sdlKey = SDL_SCANCODE_F8;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F9:
+    	        sdlKey = SDL_SCANCODE_F9;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F10:
+    	        sdlKey = SDL_SCANCODE_F10;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F11:
+    	        sdlKey = SDL_SCANCODE_F11;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F12:
+    	        sdlKey = SDL_SCANCODE_F12;
+    	        break;
+
+    	    case mg::KEYBOARD_KEY::KEY_ESCAPE:
+    	        sdlKey = SDL_SCANCODE_ESCAPE;
+    	        break;
+			case mg::KEYBOARD_KEY::KEY_BACKSPACE:
+				sdlKey = SDL_SCANCODE_BACKSPACE;
+				break;
+			case mg::KEYBOARD_KEY::KEY_SPACE:
+				sdlKey = SDL_SCANCODE_SPACE;
+				break;
+    	    case mg::KEYBOARD_KEY::KEY_RETURN:
+    	        sdlKey = SDL_SCANCODE_RETURN;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_TAB:
+    	        sdlKey = SDL_SCANCODE_TAB;
+    	        break;
+
+    	    case mg::KEYBOARD_KEY::KEY_1:
+    	        sdlKey = SDL_SCANCODE_1;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_2:
+    	        sdlKey = SDL_SCANCODE_2;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_3:
+    	        sdlKey = SDL_SCANCODE_3;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_4:
+    	        sdlKey = SDL_SCANCODE_4;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_5:
+    	        sdlKey = SDL_SCANCODE_5;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_6:
+    	        sdlKey = SDL_SCANCODE_6;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_7:
+    	        sdlKey = SDL_SCANCODE_7;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_8:
+    	        sdlKey = SDL_SCANCODE_8;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_9:
+    	        sdlKey = SDL_SCANCODE_9;
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_0:
+    	        sdlKey = SDL_SCANCODE_0;
+    	        break;
+    	    default:
+    	        break;
+    	}
+
+		return mgKey;
+	}
+
+	static wchar_t convertKeyToString(mg::KEYBOARD_KEY mgKey) {
+		wchar_t returnChar = '\0';
+
+    	switch(mgKey) {
+    	    case mg::KEYBOARD_KEY::KEY_A:
+				returnChar = 'a';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_B:
+				returnChar = 'b';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_C:
+				returnChar = 'c';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_D:
+				returnChar = 'd';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_E:
+				returnChar = 'e';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_F:
+				returnChar = 'f';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_G:
+				returnChar = 'g';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_H:
+				returnChar = 'h';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_I:
+				returnChar = 'i';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_J:
+				returnChar = 'j';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_K:
+				returnChar = 'k';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_L:
+				returnChar = 'l';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_M:
+				returnChar = 'm';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_N:
+				returnChar = 'n';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_O:
+				returnChar = 'o';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_P:
+				returnChar = 'p';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Q:
+				returnChar = 'q';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_R:
+				returnChar = 'r';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_S:
+				returnChar = 's';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_T:
+				returnChar = 't';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_U:
+				returnChar = 'u';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_V:
+				returnChar = 'v';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_W:
+				returnChar = 'w';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_X:
+				returnChar = 'x';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Y:
+				returnChar = 'y';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_Z:
+				returnChar = 'z';
+    	        break;
+			case mg::KEYBOARD_KEY::KEY_SPACE:
+				returnChar = ' ';
+				break;
+    	    case mg::KEYBOARD_KEY::KEY_RETURN:
+				returnChar = '\n';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_TAB:
+				returnChar = '\t';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_1:
+				returnChar = '1';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_2:
+				returnChar = '2';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_3:
+				returnChar = '3';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_4:
+				returnChar = '4';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_5:
+				returnChar = '5';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_6:
+				returnChar = '6';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_7:
+				returnChar = '7';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_8:
+				returnChar = '8';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_9:
+				returnChar = '9';
+    	        break;
+    	    case mg::KEYBOARD_KEY::KEY_0:
+				returnChar = '0';
+    	        break;
+    	    default:
+    	        break;
+    	}
+
+		return returnChar;
+	}
 }
 
 #endif //KEYBOARD_KEYS_HPP

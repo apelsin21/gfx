@@ -112,7 +112,7 @@ int main() {
         tex.loadFromFile("data/textures/test.png");
 
 		font.createID();
-		font.loadFromFile("data/fonts/firasans.otf", 32);
+		font.loadFromFile("data/fonts/FreeSans.ttf", 32);
 
 		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
 
@@ -128,36 +128,32 @@ int main() {
 
 	std::vector<Ball> ballArray;
 
-	glm::vec2 pos(500.0f, 500.0f);
+	glm::vec2 pos(0.0f, 500.0f);
 	float speed = 1000.0f;
 
 	int timer;
-	std::wstring fpsLabel;
+	std::wstring stats;
 	
 	GLuint mat = glGetUniformLocation(program.id, "v_projection");
 
+	mg::Shader tempThing;
+	tempThing.loadFromFile("src/main.cpp");
+
+	std::wstring text;
+	for(unsigned int i = 0; i < tempThing.src.size(); i++) {
+		text += tempThing.src[i];
+	}
+
 	while(graphicsDevice.open) {
-        if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_ESCAPE)) {
-            graphicsDevice.open = false;
-        }
-		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_W)) {
-			pos.y += speed * graphicsDevice.deltaTime;
-		}
-		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_S)) {
-			pos.y -= speed * graphicsDevice.deltaTime;
-		}
-		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_A)) {
-			pos.x -= speed * graphicsDevice.deltaTime;
-		}
-		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_D)) {
-			pos.x += speed * graphicsDevice.deltaTime;
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_ESCAPE)) {
+			graphicsDevice.open = false;
 		}
 
 		timer += graphicsDevice.fps;
 
 		if(timer >= 60*60) {
-			fpsLabel = L"fps: ";
-			fpsLabel += std::to_wstring(graphicsDevice.fps);
+			stats = L"FPS: ";
+			stats += std::to_wstring(graphicsDevice.fps);
 
 			timer = 0;
 		}
@@ -165,7 +161,9 @@ int main() {
 		glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(glm::ortho(0.0f, (float)graphicsDevice.resolution.x, 0.0f, (float)graphicsDevice.resolution.y, -1.0f, 1.0f)));
 
         graphicsDevice.begin();
-		batch.draw(L"test, det är bra att ha det!", font, pos);
+		batch.draw(L"abcdefghijklmnopqrstuvwxyzåäö\nABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ\n1234567890!#¤%&/\"()=?`^*_-.,:;½§", font, pos);
+		//batch.draw(text, font, glm::vec2(0.0f, graphicsDevice.resolution.y - 32.0f));
+		batch.draw(stats, font, glm::vec2(0.f, 0.f));
 		batch.drawAll();
 
         graphicsDevice.end();

@@ -39,7 +39,7 @@ void mg::SpriteBatch::initialize(int v_pos, int v_uv) {
 	glVertexAttribDivisor(v_pos, 1);
 
     glEnableVertexAttribArray(v_uv);
-    glVertexAttribPointer(v_uv, 4, GL_FLOAT, GL_FALSE, sizeof(float)*8, (GLvoid*)(sizeof(float)*4)); 
+    glVertexAttribPointer(v_uv, 4, GL_FLOAT, GL_TRUE, sizeof(float)*8, (GLvoid*)(sizeof(float)*4)); 
 	glVertexAttribDivisor(v_uv, 1);
 
 	this->tempBuffer.reserve(this->max * 7);
@@ -71,20 +71,24 @@ void mg::SpriteBatch::draw(const std::wstring& text, mg::Font& font, const glm::
 		float w = glyph.resolution.x;
 		float h = glyph.resolution.y;
 
-		float x2 = pen.x + glyph.left;
-		float y2 = -pen.y - glyph.top;
+		float x = pen.x + glyph.left + w;
+		float y = pen.y - (glyph.top + glyph.advance.y - h);
 
 		pen.x += glyph.advance.x*2.0f;
-		pen.y += glyph.advance.y;
 
-		if(!w || !h) {
+		//handle some special characters
+		if(text[i] == '\n') { //newline
+			pen = glm::vec2(pos.x, pen.y - (font.resolution.y*2.0f));
+		} else if(text[i] == '\t') { //tab
+			pen.x += (font.glyphs[' '].advance.x) * 8.0f;
+		} else if(!w || !h) {
 			continue;
 		}
 
 		this->draw(
-				glm::vec2(x2 + (w/2.0f), -y2 - (h/2.0f)),
-			   	glm::vec2(w, h),
-			   	glyph.uvs
+			glm::vec2(x, y),
+			glm::vec2(w, h),
+			glyph.uvs
 		);
 	}
 }

@@ -83,12 +83,10 @@ bool mg::Font::loadFromFile(const std::string& path, unsigned int size) {
 
 	//if we have no characters to cache, load some common characters
 	if(this->cacheString.empty()) {
-		this->cacheString = L" abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ1234567890!#¤%&/()=?`*^_-:.,'@£$€¥{[]};<>|";
+		this->cacheString = L"\b\"\' abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ1234567890!#¤%&/()=?`*^_-:.,'@£$€¥{[]};<>|";
 	}
     for(size_t i = 0; i < this->cacheString.size(); i++) {
-		FT_ULong charIndex = FT_Get_Char_Index(ff, (FT_ULong)this->cacheString[i]);
-
-        if(FT_Load_Char(ff, charIndex, FT_LOAD_RENDER)) {
+        if(FT_Load_Char(ff, this->cacheString[i], FT_LOAD_RENDER)) {
             printf("failed to load character %c from font %s\n", (wchar_t)i, path.c_str());
             continue;
         }
@@ -126,15 +124,14 @@ bool mg::Font::loadFromFile(const std::string& path, unsigned int size) {
 
 		this->glyphs[this->cacheString[i]] = character;
 
-
 		x += character.resolution.x;
 	}
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     FT_Done_Face(ff);
     FT_Done_FreeType(fl);

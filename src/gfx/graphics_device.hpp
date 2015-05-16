@@ -36,8 +36,6 @@ namespace mg {
             SDL_Event _sdlEvent;
             unsigned int _sdlWindowID;
             const unsigned char* _pSdlKeyboardState;
-
-            SDL_Scancode convertKeyToSDLScancode(mg::KEYBOARD_KEY gfxKey);
         public:
             ShaderProgram spriteShaderProgram;
             bool isDrawing, open, fullscreen, initialized, maximized, hidden, focused;
@@ -84,6 +82,8 @@ namespace mg {
             bool isFocused();
             bool setFocused(bool);
  
+			bool hasPressedKey();
+			std::vector<mg::KEYBOARD_KEY> getPressedKeys();
             bool isKeyPressed(mg::KEYBOARD_KEY);
 
             std::string getClipboardString();
