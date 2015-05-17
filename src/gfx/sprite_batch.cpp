@@ -68,28 +68,19 @@ void mg::SpriteBatch::draw(const std::wstring& text, mg::Font& font, const glm::
 	for(unsigned int i = 0; i < text.size(); i++) {
 		mg::Glyph glyph = font.glyphs[text[i]];
 
-		float w = glyph.resolution.x;
-		float h = glyph.resolution.y;
+		this->draw(
+			glm::vec2(pen.x + glyph.left + glyph.resolution.x, pen.y - (glyph.top + glyph.advance.y - glyph.resolution.y)),
+			glm::vec2(glyph.resolution.x, glyph.resolution.y),
+			glyph.uvs
+		);
 
-		float x = pen.x + glyph.left + w;
-		float y = pen.y - (glyph.top + glyph.advance.y - h);
-
-		pen.x += glyph.advance.x*2.0f;
-
-		//handle some special characters
 		if(text[i] == '\n') { //newline
 			pen = glm::vec2(pos.x, pen.y - (font.resolution.y*2.0f));
 		} else if(text[i] == '\t') { //tab
-			pen.x += (font.glyphs[' '].advance.x) * 8.0f;
-		} else if(!w || !h) {
-			continue;
+			pen.x += (glyph.advance.x*2.0f) + (font.glyphs[' '].advance.x * 8.0f);
+		} else { //a normal character
+			pen.x += glyph.advance.x*2.0f;
 		}
-
-		this->draw(
-			glm::vec2(x, y),
-			glm::vec2(w, h),
-			glyph.uvs
-		);
 	}
 }
 

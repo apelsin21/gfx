@@ -53,13 +53,13 @@ class Ball {
 
 		void updateTexCoords() {
 			if(timer >= this->timerQuarter*3.5f) {
-				uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f); //shows the first quarter of the texture
+				uv = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f);
 			} else if(timer >= this->timerQuarter*2.5f) {
-				uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f); //shows the second quarter of the texture
+				uv = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f);
 			} else if(timer >= this->timerQuarter * 1.5f) {
-				uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f); //shows the third quarter of the texture
+				uv = glm::vec4(0.0f, 0.0f, 0.5f, 0.5f);
 			} else if(timer >= this->timerQuarter) {
-				uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f); //shows the fourth quarter of the texture
+				uv = glm::vec4(0.5f, 0.0f, 1.0f, 0.5f);
 			} else if(timer >= 0.0f) {
 				resetTimer();
 			}
@@ -82,24 +82,25 @@ class Ball {
 };
 
 int main() {
-    mg::GraphicsDevice graphicsDevice; //handles initialization of opengl and sdl2
-    mg::Shader vs, fs; //vertex, fragment shader
+    mg::GraphicsDevice graphicsDevice;
+    mg::Shader vs, fs, main;
     mg::ShaderProgram program;
-    mg::ContextSettings settings(3, 3, 24, true, true, false); //opengl 3.3, 24 depth bits, double buffered, vsync'd, core opengl profile
+    mg::ContextSettings settings(3, 3, 24, true, true, false);
 	mg::SpriteBatch batch(10000);
 
 	mg::Font font;
     mg::Texture tex;
 
-	std::srand(time(NULL)); //seeds random number generator
+	std::srand(time(NULL));
 
     try {
-        graphicsDevice.initialize("Test Window", glm::vec2(800, 600), settings); //title, resolution, context settings
+        graphicsDevice.initialize("Test Window", glm::vec2(800, 600), settings);
 
         vs.createID(mg::SHADER_TYPE::SHADER_TYPE_VERTEX);
         fs.createID(mg::SHADER_TYPE::SHADER_TYPE_FRAGMENT);
         vs.loadFromFile("data/shaders/vertex.glsl");
         fs.loadFromFile("data/shaders/fragment.glsl");
+		main.loadFromFile("src/main.cpp");
         vs.compile();
         fs.compile();
 
@@ -112,19 +113,19 @@ int main() {
         tex.loadFromFile("data/textures/test.png");
 
 		font.createID();
-		font.loadFromFile("data/fonts/FreeSans.ttf", 32);
+		font.loadFromFile("data/fonts/FreeSans.ttf", 16);
 
-		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv")); //so the batch knows where to send things in the shader
+		batch.initialize(program.getAttribLocation("v_pos"), program.getAttribLocation("v_uv"));
 
     } catch(const std::runtime_error& e) {
         printf("ERR: %s", e.what());
         return EXIT_FAILURE;
     }
 
-	graphicsDevice.setClearColor(mg::CORN_FLOWER_BLUE); //"background" color
+	graphicsDevice.setClearColor(mg::CORN_FLOWER_BLUE);
 
-	program.bindID(); //use the program and the attached shaders
-	font.bindID(); //use the texture. only one texture atlas is used, so no need to bind every frame
+	program.bindID();
+	font.bindID();
 
 	std::vector<Ball> ballArray;
 
@@ -132,28 +133,41 @@ int main() {
 	float speed = 1000.0f;
 
 	int timer;
-	std::wstring stats;
+	std::wstring fps(L"FPS: ");
+	std::wstring frametime(L"Frametime: ");
 	
 	GLuint mat = glGetUniformLocation(program.id, "v_projection");
 
-	mg::Shader tempThing;
-	tempThing.loadFromFile("src/main.cpp");
-
 	std::wstring text;
-	for(unsigned int i = 0; i < tempThing.src.size(); i++) {
-		text += tempThing.src[i];
+	for(unsigned int i = 0; i < main.src.size(); i++) {
+		text += main.src[i];
 	}
 
 	while(graphicsDevice.open) {
 		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_ESCAPE)) {
 			graphicsDevice.open = false;
 		}
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_W)) {
+			pos.y += speed * graphicsDevice.deltaTime;
+		}
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_S)) {
+			pos.y -= speed * graphicsDevice.deltaTime;
+		}
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_A)) {
+			pos.x -= speed * graphicsDevice.deltaTime;
+		}
+		if(graphicsDevice.isKeyPressed(mg::KEYBOARD_KEY::KEY_D)) {
+			pos.x += speed * graphicsDevice.deltaTime;
+		}
 
 		timer += graphicsDevice.fps;
 
 		if(timer >= 60*60) {
-			stats = L"FPS: ";
-			stats += std::to_wstring(graphicsDevice.fps);
+			fps = L"FPS: ";
+			fps += std::to_wstring(graphicsDevice.fps);
+
+			frametime = L"Frametime: ";
+			frametime += std::to_wstring(graphicsDevice.deltaTime * 1000.0f);
 
 			timer = 0;
 		}
@@ -161,9 +175,10 @@ int main() {
 		glUniformMatrix4fv(mat, 1, GL_FALSE, glm::value_ptr(glm::ortho(0.0f, (float)graphicsDevice.resolution.x, 0.0f, (float)graphicsDevice.resolution.y, -1.0f, 1.0f)));
 
         graphicsDevice.begin();
-		batch.draw(L"abcdefghijklmnopqrstuvwxyzåäö\nABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ\n1234567890!#¤%&/\"()=?`^*_-.,:;½§", font, pos);
-		//batch.draw(text, font, glm::vec2(0.0f, graphicsDevice.resolution.y - 32.0f));
-		batch.draw(stats, font, glm::vec2(0.f, 0.f));
+		batch.draw(font.cacheString, font, pos);
+		//batch.draw(text, font, pos);
+		batch.draw(fps, font, glm::vec2(0.f, 0.f));
+		batch.draw(frametime, font, glm::vec2(0.f, 64.f));
 		batch.drawAll();
 
         graphicsDevice.end();

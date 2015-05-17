@@ -83,7 +83,7 @@ bool mg::Font::loadFromFile(const std::string& path, unsigned int size) {
 
 	//if we have no characters to cache, load some common characters
 	if(this->cacheString.empty()) {
-		this->cacheString = L"\b\"\' abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ1234567890!#¤%&/()=?`*^_-:.,'@£$€¥{[]};<>|";
+		this->cacheString = L" abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ1234567890!#¤%&/\"()=?`*^_-:.,'@£$€¥{[]};<>|";
 	}
     for(size_t i = 0; i < this->cacheString.size(); i++) {
         if(FT_Load_Char(ff, this->cacheString[i], FT_LOAD_RENDER)) {
