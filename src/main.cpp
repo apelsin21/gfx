@@ -1,55 +1,31 @@
-#include <stdlib.h>
-#include <cstdio>
-#include <ctime>
+#include <stdio.h>
 #include <memory>
 #include <exception>
+#include <iostream>
 
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
+#include "core/engine.hpp"
+#include "core/sdl2_window.hpp"
 
-#include "core/keyboard_keys.hpp"
-
-#include "gfx/texture.hpp"
-#include "gfx/font.hpp"
-
-#include "gfx/graphics_device.hpp"
-#include "gfx/graphics_device_event.hpp"
 #include "gfx/context_settings.hpp"
 
-#include "gfx/shader.hpp"
-#include "gfx/shader_program.hpp"
-#include "gfx/shader_type.hpp"
-
-#include "gfx/sprite_batch.hpp"
-
 int main() {
-    mg::Engine engine;
-	std::shared_ptr<Renderer> renderer;
-	std::shared_ptr<GUIManager> guiMgr;
-	std::shared_ptr<Window> window;
-    mg::ContextSettings settings(3, 3, 24, true, true, false);
+	std::shared_ptr<mg::Engine> engine;
+	std::shared_ptr<mg::SDL2Window> window;
 
     try {
-        engine.initialize("Window", glm::vec2(800, 600), settings);
+        engine = std::make_shared<mg::Engine>();
+		window = engine->get<mg::SDL2Window>();
 
-		renderer = engine.getRenderer();
-		guiMgr = engine.getGUIManage();
-		window = engine.getWindow();
-
+		window->init("Test", 800, 600, mg::ContextSettings(2, 1, 24, false, true, false));
     } catch(const std::runtime_error& e) {
         printf("ERR: %s", e.what());
         return -1;
     }
 
 	while(window->isOpen()) {
-		if(window.isKeyPressed(mg::KEYBOARD_KEY::KEY_ESCAPE)) {
+		if(std::cin.peek()) {
 			window->close();
 		}
-
-        renderer->begin();
-		renderer->draw(guiMgr);
-		renderer->end();
 
 		window->swapBuffers();
     }
