@@ -2,14 +2,12 @@ set(SOURCES
     ${SOURCES}
 
 	#core	
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/window.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/sdl2_window.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/engine.cpp
 
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.cpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/graphics_device.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/context_settings.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.cpp
@@ -27,9 +25,7 @@ set(HEADERS
    	${HEADERS}
 	
     #core	
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/window.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/sdl2_window.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/engine.hpp
+    
     ${CMAKE_CURRENT_SOURCE_DIR}/core/keyboard_keys.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/core/mouse_keys.hpp
 
@@ -39,6 +35,8 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.hpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/graphics_device.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/graphics_device_event.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/context_settings.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.hpp
