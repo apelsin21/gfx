@@ -1,8 +1,10 @@
 #include "gfx/font.hpp"
 
 mg::Font::Font() {
+	this->createID();
 }
 mg::Font::~Font() {
+	this->deleteID();
 }
 
 void mg::Font::createID() {
@@ -27,7 +29,7 @@ bool mg::Font::hasValidID() {
     }
 }
 
-bool mg::Font::loadFromFile(const std::string& path, unsigned int size) {
+bool mg::Font::load(const std::string& path, unsigned int size) {
 	if(!this->hasValidID()) {
         std::string errMsg("tried to load font ");
         errMsg += path;

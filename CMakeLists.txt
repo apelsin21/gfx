@@ -31,6 +31,7 @@ if(UNIX)
         assimp
         GL
         GLU
+		luajit-5.1
     )
     
     INCLUDE(FindPkgConfig)

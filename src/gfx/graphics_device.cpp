@@ -2,7 +2,7 @@
 
 mg::GraphicsDevice::GraphicsDevice() {
     this->clearColor = Color(0.0f, 0.0f, 0.0f, 1.0f);
-    this->resolution = glm::i32vec2(800, 600);
+    this->resolution = glm::vec2(800, 600);
 
     this->isDrawing = false;
     this->open = false;
@@ -24,97 +24,13 @@ mg::GraphicsDevice::GraphicsDevice() {
     this->_pSdlWindow = nullptr;
 }
 mg::GraphicsDevice::~GraphicsDevice() {
-    if(this->_sdlContext) {
-        SDL_GL_DeleteContext(this->_sdlContext);
-    }
-    
-    if(this->_pSdlWindow) {
-        SDL_DestroyWindow(this->_pSdlWindow);
-    }
-    
-    SDL_Quit();
 }
 
-bool mg::GraphicsDevice::initialize(const std::string& t, const glm::i32vec2& res, ContextSettings& context) {
+bool mg::GraphicsDevice::initialize(const std::string& t, const glm::vec2& res) {
     if(this->initialized) {
         throw std::runtime_error("renderer is already initialized!\n");
         return false;
     }
-
-    this->contextSettings = context;
-    this->resolution = res;
-    this->title = t;
-    
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::string errMsg("Unable to initialize SDL\n");
-        errMsg += SDL_GetError();
-        errMsg += "\n";
-        throw std::runtime_error(errMsg);
-        return false;
-    }
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, this->contextSettings.major);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, this->contextSettings.minor);
-
-    if(this->contextSettings.doubleBuffered) {
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    } else {
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 0);
-    }
-
-    if(this->contextSettings.coreProfile) {
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);                                                                                                          
-	}
-
-	if(this->contextSettings.vsync) {
-		SDL_GL_SetSwapInterval(1);
-	} else {
-		SDL_GL_SetSwapInterval(0);
-	}
-
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, this->contextSettings.depthBits);
-
-    this->_pSdlWindow = SDL_CreateWindow(this->title.c_str(),
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            res.x, res.y,
-            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-
-    if(!this->_pSdlWindow) {
-        std::string errMsg("Could not create SDL2 window, error:\n");
-        errMsg += SDL_GetError();
-        errMsg += "\n";
-        throw std::runtime_error(errMsg);
-        return false;
-    }
-
-    this->_sdlContext = SDL_GL_CreateContext(this->_pSdlWindow);
-
-    if(this->contextSettings.coreProfile) {
-        glewExperimental = GL_TRUE;
-    }
-
-    GLenum err = glewInit();
-    if(err != GLEW_OK) {
-        std::string errMsg("failed to initialize GLEW, error:\n");
-        errMsg += (char*)glewGetErrorString(err);
-        throw std::runtime_error(errMsg);
-        return false;
-    }
-
-    this->open = true;
-    this->initialized = true;
-    this->_sdlWindowID = SDL_GetWindowID(this->_pSdlWindow);
-    this->_pSdlKeyboardState = SDL_GetKeyboardState(nullptr);
-	this->currentFrameTime = SDL_GetTicks();
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_CULL_FACE);
-
-	//glEnable(GL_DEPTH_TEST);
-    //glDepthFunc(GL_LESS);
-
-    return true;
 }
 
 void mg::GraphicsDevice::setClearColor(const mg::Color& c) {

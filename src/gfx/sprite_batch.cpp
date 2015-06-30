@@ -84,7 +84,8 @@ void mg::SpriteBatch::draw(const std::wstring& text, mg::Font& font, const glm::
 	}
 }
 
-void mg::SpriteBatch::drawAll() {
+void mg::SpriteBatch::drawAll(mg::Texture& texture) {
+	texture.bindID();
 	glBindVertexArray(this->vao);
 	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float)*this->current, (GLvoid*)&this->tempBuffer[0]);

@@ -3,33 +3,33 @@
 
 #include <stdio.h>
 #include <string>
-#include <sstream>
-#include <fstream>
-#include <vector>
 #include <stdexcept>
+#include <fstream>
 
+#define GLEW_STATIC
 #include <GL/glew.h>
 
-#include "gfx/shader_type.hpp"
-#include "gfx/gl_object.hpp"
-
 namespace mg {
-    class Shader : public GLObject {
+    class Shader {
+		protected:
+			GLuint id;
         public:
-            std::string src, path;
-            SHADER_TYPE type;
-            
+            GLuint vs, fs;
+            bool loaded, linked;
+
             Shader();
             ~Shader();
 
-            void createID(SHADER_TYPE);
-            void deleteID();
-            bool hasValidID();
+			void createID();
+			void deleteID();
+			void bindID();
+			bool hasValidID();
+            
+            bool loadFromFile(const std::string&, const std::string&);
 
-            bool loadFromFile(const std::string&);
-            bool loadFromMemory(const std::string&);
+			int getAttribLocation(const std::string&);
 
-            bool compile();            
+            bool link();
     };
 }
 

@@ -13,8 +13,6 @@
 
 #include <glm/glm.hpp>
 
-#include "gfx/gl_object.hpp"
-
 namespace mg {
     enum TEXTURE_FILTER {
         TEXTURE_FILTER_NEAREST,
@@ -27,9 +25,10 @@ namespace mg {
         TEXTURE_WRAP_CLAMP_TO_BORDER 
     };
 
-    class Texture : public GLObject {
+    class Texture {
 		protected:
             FREE_IMAGE_FORMAT getFreeImageFormatFromPath(const std::string&);
+			GLuint id;
         public:
             TEXTURE_FILTER minFilter, magFilter;
             TEXTURE_WRAP sWrap, tWrap;

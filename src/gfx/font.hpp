@@ -9,14 +9,17 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include <glm/glm.hpp>
-#include <glm/gtx/type_aligned.hpp>
+#define GLEW_STATIC
+#include <GL/glew.h>
 
-#include "gfx/gl_object.hpp"
+#include <glm/glm.hpp>
+
 #include "gfx/glyph.hpp"
 
 namespace mg {
-    class Font : public GLObject {
+    class Font {
+		protected:
+			GLuint id;
         public:
 			Font();
 			~Font();
@@ -25,14 +28,14 @@ namespace mg {
 
             std::string path;
 			std::wstring cacheString;
-            glm::i32vec2 resolution;
+            glm::vec2 resolution;
 
 			void createID();
 			void deleteID();
 			void bindID();
 			bool hasValidID();
 
-            bool loadFromFile(const std::string&, unsigned int);
+            bool load(const std::string&, unsigned int);
     };
 }
 
