@@ -28,13 +28,13 @@ bool mg::Font::hasValidID() {
         return false;
     }
 }
+unsigned int mg::Font::getID() {
+    return this->id;
+}
 
 bool mg::Font::load(const std::string& path, unsigned int size) {
 	if(!this->hasValidID()) {
-        std::string errMsg("tried to load font ");
-        errMsg += path;
-        errMsg += ", but the font texture id is invalid.\n";
-        throw std::runtime_error(errMsg);
+        printf("Font %s tried load, but the texture is invalid.\n", path.c_str());
         return false;
 	}
 
@@ -46,30 +46,19 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
 	FT_Matrix fm; //Oh god why
 
     if(FT_Init_FreeType(&fl)) {
-        std::string errMsg("failed to initialize freetype when loading font ");
-        errMsg += path;
-        errMsg += "\n";
-        throw std::runtime_error(errMsg);
+        printf("Freetype failed to initialize loading font %s.\n", path.c_str());
         return false;
     }
 
     int error = FT_New_Face(fl, path.c_str(), 0, &ff);
 
 	if(error == FT_Err_Unknown_File_Format) {
-        std::string errMsg("failed to open font ");
-        errMsg += path;
-        errMsg += ". Unknown format.\n";
-        throw std::runtime_error(errMsg);
+        printf("Font %s failed to load, unknown font format.\n", path.c_str());
         return false;
     }
 
     if(FT_Set_Pixel_Sizes(ff, 0, size) != 0) {
-        std::string errMsg("failed to set pixel size ");
-		errMsg += size;
-		errMsg += " on font: ";
-        errMsg += path;
-        errMsg += ". Maybe it's unavailable.\n";
-        throw std::runtime_error(errMsg);
+        printf("Font failed to set pixel size %d on %s. Unavailable in font?\n", size, path.c_str());
         return false;
 	}
     fg = ff->glyph;
@@ -119,7 +108,7 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
 		float offset = x / this->resolution.x;
 		character.uvs = glm::vec4(
 			offset,
-			0.0f, 
+			0.0f,
 			offset + (character.resolution.x / this->resolution.x),
 			character.resolution.y / this->resolution.y
 		);

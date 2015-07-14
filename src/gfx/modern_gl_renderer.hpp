@@ -9,6 +9,12 @@ namespace mg {
 		public:
 			ModernGLRenderer();
 			~ModernGLRenderer();
+
+			//drawQuad()?
+			//drawMesh()?
+			//draw..?
+			
+			//draw(raw vertices...?)
 	};
 }
 

@@ -17,18 +17,18 @@ namespace mg {
 			GLuint vao, vbo;
 			unsigned int max, current;
 			glm::vec4 defaultUV;
-			std::vector<float> tempBuffer;
+			float* tempBuffer;
 
 			SpriteBatch();
 			SpriteBatch(unsigned int);
 			~SpriteBatch();
 
-			void initialize(int, int);
+			bool initialize(int, int);
 
 			void draw(const glm::vec2&, const glm::vec2&, const glm::vec4&);
 			void draw(const std::wstring&, mg::Font&, const glm::vec2&);
 
-			void drawAll(Texture&);
+			void drawAll(unsigned int);
 	};
 }
 

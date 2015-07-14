@@ -1,14 +1,12 @@
-#include "lua/lua_environment.hpp"
-#include "lua/utils.hpp"
+#include "game/game.hpp"
 
 int main() {
-	mg::LuaEnvironment* env = mg::RegisterMetatables();
+	mg::Game game;
 
-	if(!env->runScript("main.lua")) {
+	if(!game.load()) {
 		return -1;
 	}
-
-	delete env;
+	game.run();
 
 	return 0;
 }

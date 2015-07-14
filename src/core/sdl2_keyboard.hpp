@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 
 #include "core/keyboard.hpp"
+#include "core/keyboard_keys.hpp"
 
 namespace mg {
 	class SDL2Keyboard : public Keyboard {
@@ -16,7 +17,7 @@ namespace mg {
 			SDL2Keyboard();
 			~SDL2Keyboard();
 
-			bool isKeyDown(const std::string&);
+			bool isKeyDown(mg::KEY);
 	};
 }
 

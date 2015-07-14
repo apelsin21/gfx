@@ -8,13 +8,19 @@ set(SOURCES
 
     #gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.cpp
+
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture_loader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sprite_batch.cpp
 
-	#lua
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua/lua_environment.cpp
-	
+	#game
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/game.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/level.cpp
+
     PARENT_SCOPE
 )
 set(HEADERS
@@ -33,18 +39,19 @@ set(HEADERS
 
 	#gfx
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
+
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/free_image_texture_loader.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.hpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sprite_batch.hpp
 
-	#lua
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua/lua_environment.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua/utils.hpp
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua/window_binds.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua/vec2_binds.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/lua/keyboard_binds.hpp
-
+	#game
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/game.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/level.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/sprite.hpp
 
     PARENT_SCOPE
 )

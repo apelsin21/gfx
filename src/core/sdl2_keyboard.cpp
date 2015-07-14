@@ -11,11 +11,11 @@ mg::SDL2Keyboard::SDL2Keyboard() {
 mg::SDL2Keyboard::~SDL2Keyboard() {
 }
 
-bool mg::SDL2Keyboard::isKeyDown(const std::string& key) {
+bool mg::SDL2Keyboard::isKeyDown(mg::KEY key) {
 	if(SDL_WasInit(0) != 0) {
 		SDL_PumpEvents();
 
-		return sdlKeyState[SDL_GetScancodeFromName(key.c_str())] ? true : false;
+		return sdlKeyState[convertKeyToSDLScancode(key)] ? true : false;
 	}
 
 	return false;

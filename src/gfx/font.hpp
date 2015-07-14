@@ -34,6 +34,7 @@ namespace mg {
 			void deleteID();
 			void bindID();
 			bool hasValidID();
+			unsigned int getID();
 
             bool load(const std::string&, unsigned int);
     };

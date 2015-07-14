@@ -3,52 +3,40 @@
 
 #include <string>
 #include <stdio.h>
-#include <stdexcept>
-#include <fstream>
-
-#include <FreeImage.h>
-
-#define GLEW_STATIC
-#include <GL/glew.h>
 
 #include <glm/glm.hpp>
 
 namespace mg {
-    enum TEXTURE_FILTER {
-        TEXTURE_FILTER_NEAREST,
-        TEXTURE_FILTER_LINEAR,
+    enum class TEXTURE_FILTER {
+        NEAREST,
+        LINEAR,
     };
-    enum TEXTURE_WRAP {
-        TEXTURE_WRAP_REPEAT,
-        TEXTURE_WRAP_MIRRORED_REPEAT,
-        TEXTURE_WRAP_CLAMP_TO_EDGE,
-        TEXTURE_WRAP_CLAMP_TO_BORDER 
+    enum class TEXTURE_WRAP {
+        REPEAT,
+        MIRRORED_REPEAT,
+        CLAMP_TO_EDGE,
+        CLAMP_TO_BORDER,
+    };
+    enum class TEXTURE_FORMAT {
+        RGBA8,
+        BGRA,
     };
 
     class Texture {
 		protected:
-            FREE_IMAGE_FORMAT getFreeImageFormatFromPath(const std::string&);
-			GLuint id;
         public:
+			unsigned char* data;
             TEXTURE_FILTER minFilter, magFilter;
             TEXTURE_WRAP sWrap, tWrap;
-            int bpp;
-            bool mipmaps;
+            TEXTURE_FORMAT internalFormat, format;
             glm::vec2 resolution;
             std::string path;
+            int bpp;
+            bool mipmaps;
 
             Texture();
-			~Texture();
 
-            bool loadFromFile(const std::string&);
-
-			void createID();
-			void deleteID();
-			void bindID();
-			bool hasValidID();
-
-            GLenum textureFilterToGLEnum(TEXTURE_FILTER);
-            GLenum textureWrapToGLEnum(TEXTURE_WRAP);
+			virtual bool setData(unsigned char*) = 0;
     };
 }
 
