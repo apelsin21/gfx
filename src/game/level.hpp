@@ -6,6 +6,10 @@
 
 #include "game/sprite.hpp"
 
+#include "gfx/sprite_batch.hpp"
+#include "gfx/gl_texture.hpp"
+#include "gfx/free_image_texture_loader.hpp"
+
 namespace mg {
 	class Level {
 		protected:
@@ -16,6 +20,8 @@ namespace mg {
 			~Level();
 
 			bool load(const std::string&);
+
+			void render(mg::SpriteBatch&);
 	};
 }
 

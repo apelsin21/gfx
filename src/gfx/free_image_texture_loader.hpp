@@ -1,7 +1,9 @@
 #ifndef FREE_IMAGE_TEXTURE_LOADER_HPP
 #define FREE_IMAGE_TEXTURE_LOADER_HPP
 
+#include <cstdlib>
 #include <cstdio>
+#include <cstring>
 #include <string>
 #include <fstream>
 

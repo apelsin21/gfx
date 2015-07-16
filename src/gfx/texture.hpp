@@ -3,8 +3,11 @@
 
 #include <string>
 #include <stdio.h>
+#include <fstream>
 
 #include <glm/glm.hpp>
+
+#include <FreeImage.h>
 
 namespace mg {
     enum class TEXTURE_FILTER {
@@ -31,12 +34,17 @@ namespace mg {
             TEXTURE_FORMAT internalFormat, format;
             glm::vec2 resolution;
             std::string path;
-            int bpp;
+			unsigned int size, bpp;
             bool mipmaps;
 
             Texture();
+			~Texture();
 
-			virtual bool setData(unsigned char*) = 0;
+			bool setData(unsigned char*);
+			unsigned char* getData();
+
+			unsigned int getSize();
+			unsigned int getBPP();
     };
 }
 

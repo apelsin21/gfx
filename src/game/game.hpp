@@ -13,7 +13,6 @@
 #include "game/level.hpp"
 
 #include "gfx/font.hpp"
-#include "gfx/free_image_texture_loader.hpp"
 #include "gfx/gl_texture.hpp"
 #include "gfx/gl_shader.hpp"
 #include "gfx/sprite_batch.hpp"
@@ -31,8 +30,8 @@ namespace mg {
 
 			mg::GLTexture texture;
 			mg::GLShader shader;
-
-			mg::FreeImageTextureLoader fiTexLoader;
+			
+			mg::Font font;
 
 			glm::vec2 pos;
 		public:

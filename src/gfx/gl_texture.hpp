@@ -17,6 +17,9 @@ namespace mg {
             int textureFilterToInt(TEXTURE_FILTER);
             int textureWrapToInt(TEXTURE_WRAP);
             int textureFormatToInt(TEXTURE_FORMAT);
+
+    		FIBITMAP* fb = nullptr;
+    		FREE_IMAGE_FORMAT ff;
         public:
             GLTexture();
 			~GLTexture();
@@ -27,7 +30,7 @@ namespace mg {
 			bool hasValidID();
 			unsigned int getID();
 
-			bool setData(unsigned char*);
+			bool load(const std::string&);
     };
 }
 

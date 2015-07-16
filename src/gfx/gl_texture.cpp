@@ -1,28 +1,30 @@
 #include "gfx/gl_texture.hpp"
 
 mg::GLTexture::GLTexture() : Texture() {
+	this->fb = nullptr;
     createID();
 }
 mg::GLTexture::~GLTexture() {
     deleteID();
+	FreeImage_Unload(this->fb);
 }
 
 void mg::GLTexture::createID() {
     if(!hasValidID()) {
-        glGenTextures(1, &id);
+        glGenTextures(1, &this->id);
         bindID();
     }
 }
 void mg::GLTexture::deleteID() {
     if(hasValidID()) {
-        glDeleteTextures(1, &id);
+        glDeleteTextures(1, &this->id);
     }
 }
 void mg::GLTexture::bindID() {
-    glBindTexture(GL_TEXTURE_2D, id);
+    glBindTexture(GL_TEXTURE_2D, this->id);
 }
 bool mg::GLTexture::hasValidID() {
-    if(glIsTexture(id) == GL_TRUE) {
+    if(glIsTexture(this->id) == GL_TRUE) {
         return true;
     } else {
         return false;
@@ -31,14 +33,46 @@ bool mg::GLTexture::hasValidID() {
 unsigned int mg::GLTexture::getID() {
 	return this->id;
 }
-bool mg::GLTexture::setData(unsigned char* data) {
-	if(data == nullptr) {
-		printf("GLTexture got nullptr as data\n");
+bool mg::GLTexture::load(const std::string& p) {
+    std::ifstream fileCheck(p);
+    if(!fileCheck.good()) {
+        printf("Tried to load texture %s, but it doesn't exist.\n", p.c_str());
 		return false;
-	}
+    }
+
+	this->ff = FreeImage_GetFileType(p.c_str(), 0);
+
+   	if(this->ff == FIF_UNKNOWN) {
+       this->ff = FreeImage_GetFIFFromFilename(p.c_str());
+   	}
+
+    if(this->ff != FIF_UNKNOWN && FreeImage_FIFSupportsReading(this->ff)) {
+        this->fb = FreeImage_Load(this->ff, p.c_str());
+    } else {
+        printf("Tried to load texture %s, but the format is unsupported by FreeImage.\n", p.c_str());
+		return false;
+    }
+
+	//Textures are always 32 bit colour
+    if(FreeImage_GetBPP(this->fb) != 32) {
+        FIBITMAP* temp = this->fb;
+        this->fb = FreeImage_ConvertTo32Bits(temp);
+        FreeImage_Unload(temp);
+    }
+
+    if(FreeImage_GetBits(this->fb) == nullptr) {
+        printf("Texture %s data is NULL for unknown reason\n", p.c_str());
+		return false;
+    }
+
+    this->resolution 	= 	glm::vec2(FreeImage_GetWidth(this->fb), FreeImage_GetHeight(this->fb));
+    this->bpp 			= 	FreeImage_GetBPP(this->fb);
+    this->path 			= 	p;
+	this->size 			= 	(resolution.x * resolution.y) * 4;
+	this->data 			= 	FreeImage_GetBits(this->fb);
 
     if(!hasValidID()) {
-        printf("GLTexture %s has invalid GL handle.\n", path.c_str());
+        printf("GLTexture %s has invalid GL handle.\n", p.c_str());
         return false;
     }
 
@@ -48,20 +82,20 @@ bool mg::GLTexture::setData(unsigned char* data) {
 		GL_TEXTURE_2D,
     	0,
     	textureFormatToInt(mg::TEXTURE_FORMAT::RGBA8),
-    	resolution.x, resolution.y,
+    	this->resolution.x, this->resolution.y,
     	0,
     	textureFormatToInt(mg::TEXTURE_FORMAT::BGRA),
     	GL_UNSIGNED_BYTE,
-    	(GLvoid*)data
+    	(GLvoid*)this->data
 	);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilterToInt(minFilter));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilterToInt(magFilter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilterToInt(this->minFilter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilterToInt(this->magFilter));
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapToInt(sWrap));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapToInt(tWrap));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapToInt(this->sWrap));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapToInt(this->tWrap));
 
-    if(mipmaps) {
+    if(this->mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
