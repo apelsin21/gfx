@@ -8,30 +8,15 @@ set(CMAKE_CXX_FLAGS "-std=c++11")
 
 add_definitions(-DTEST)
 
-if(WIN32)
-    set(LIBRARIES
-        GLEW
-        freeimage
-        assimp
-    )
-
-    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-    
-    add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp ${SOURCES} ${HEADERS})
-    
-    target_link_libraries(${PROJECT_NAME} ${LIBRARIES})
-endif(WIN32)
-
 if(UNIX)
     #libraries that can be found in default path in unix
     #install through package manager
     set(LIBRARIES
-        GLEW
+		epoxy
         freeimage
         assimp
         GL
         GLU
-		luajit-5.1
     )
     
     INCLUDE(FindPkgConfig)

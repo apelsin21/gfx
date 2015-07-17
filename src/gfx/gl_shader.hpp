@@ -1,8 +1,7 @@
 #ifndef GL_SHADER_HPP
 #define GL_SHADER_HPP
 
-#define GLEW_STATIC
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 
 #include "gfx/shader.hpp"
 

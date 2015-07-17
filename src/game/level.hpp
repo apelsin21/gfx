@@ -8,7 +8,6 @@
 
 #include "gfx/sprite_batch.hpp"
 #include "gfx/gl_texture.hpp"
-#include "gfx/free_image_texture_loader.hpp"
 
 namespace mg {
 	class Level {

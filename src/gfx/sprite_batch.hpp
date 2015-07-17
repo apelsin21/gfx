@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>

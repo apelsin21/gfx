@@ -25,11 +25,11 @@ mg::SDL2Window::SDL2Window() {
 
     sdlContext = SDL_GL_CreateContext(sdlWindow);
 
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    if(err != GLEW_OK) {
-        printf("Failed to initialize GLEW. Error: %s\n", (char*)glewGetErrorString(err));
-    }
+    //glewExperimental = GL_TRUE;
+    //GLenum err = glewInit();
+    //if(err != GLEW_OK) {
+    //    printf("Failed to initialize GLEW. Error: %s\n", (char*)glewGetErrorString(err));
+    //}
 
     sdlWindowID = SDL_GetWindowID(sdlWindow);
 }

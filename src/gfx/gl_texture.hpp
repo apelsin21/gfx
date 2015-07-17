@@ -4,8 +4,7 @@
 #include <string>
 #include <stdio.h>
 
-#define GLEW_STATIC
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 
 #include "gfx/texture.hpp"
 

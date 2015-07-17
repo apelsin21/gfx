@@ -3,8 +3,7 @@
 
 #include "core/window.hpp"
 
-#define GLEW_STATIC
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>

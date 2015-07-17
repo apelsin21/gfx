@@ -5,8 +5,7 @@
 #include <stdexcept>
 #include <chrono>
 
-#define GLEW_STATIC
-#include <GL/glew.h>
+#include <epoxy/gl.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/type_aligned.hpp>
