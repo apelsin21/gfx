@@ -34,6 +34,10 @@ namespace mg {
 			bool isMaximized();
 			bool isFocused();
 
+			unsigned int getNumEvents();
+			mg::WINDOW_EVENT getEvent();
+
+			void pollEvents();
             void swapBuffers();
 	};
 }

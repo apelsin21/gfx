@@ -35,9 +35,11 @@ bool mg::Game::load() {
 }
 
 void mg::Game::run() {
-	while(true) {
+	bool run = true;
+
+	while(run) {
 		if(keyboard.isKeyDown(mg::KEY::ESCAPE)) {
-			break;
+			run = false;
 		}
 	
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -59,6 +61,26 @@ void mg::Game::run() {
 		batch.draw(pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 		batch.drawAll(texture.getID());
 
+		for(unsigned int i = 0; i < window.getNumEvents(); i++) {
+			switch(window.getEvent()) {
+				case mg::WINDOW_EVENT::CLOSED:
+					run = false;
+					break;
+				case mg::WINDOW_EVENT::FOCUS_GAINED:
+					printf("focused\n");
+					break;
+				case mg::WINDOW_EVENT::FOCUS_LOST:
+					printf("not as focused\n");
+					break;
+				case mg::WINDOW_EVENT::RESIZED:
+					printf("resized\n");
+					break;
+				default:
+					break;
+			}
+		}
+
+		window.pollEvents();
 		window.swapBuffers();
 	}
 }

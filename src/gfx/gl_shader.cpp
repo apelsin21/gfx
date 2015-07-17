@@ -50,8 +50,6 @@ GLuint mg::GLShader::loadShader(const std::string& p, GLenum shaderType) {
 
 	    char errorLog[errorLogLength];
 	    glGetShaderInfoLog(shaderID, errorLogLength, NULL, &errorLog[0]);
-		printf("%d\n", errorLogLength);
-
 	    printf("GLShader %s failed to compile. Log:\n%s\n", p.c_str(), errorLog);
 		return 0;
 	}

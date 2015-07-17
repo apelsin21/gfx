@@ -24,13 +24,6 @@ mg::SDL2Window::SDL2Window() {
     }
 
     sdlContext = SDL_GL_CreateContext(sdlWindow);
-
-    //glewExperimental = GL_TRUE;
-    //GLenum err = glewInit();
-    //if(err != GLEW_OK) {
-    //    printf("Failed to initialize GLEW. Error: %s\n", (char*)glewGetErrorString(err));
-    //}
-
     sdlWindowID = SDL_GetWindowID(sdlWindow);
 }
 mg::SDL2Window::~SDL2Window() {
@@ -134,6 +127,75 @@ bool mg::SDL2Window::isMaximized() {
 	return false;
 }
 
+unsigned int mg::SDL2Window::getNumEvents() {
+	return this->events.size();
+}
+mg::WINDOW_EVENT mg::SDL2Window::getEvent() {
+	if(this->events.empty()) {
+		return mg::WINDOW_EVENT::NOTHING;
+	}
+
+	mg::WINDOW_EVENT event = this->events[0];
+
+	this->events.erase(this->events.begin());
+
+	return event;
+}
+void mg::SDL2Window::pollEvents() {
+	while(SDL_PollEvent(&this->sdlEvent)) {
+		if(this->sdlEvent.type != SDL_WINDOWEVENT || this->sdlEvent.window.windowID != this->sdlWindowID) {
+			break;
+		}
+
+		if(this->events.size() >= 512) {
+			this->events.clear();
+		}
+
+		switch(this->sdlEvent.window.event) {
+        case SDL_WINDOWEVENT_SHOWN:
+			this->events.emplace_back(mg::WINDOW_EVENT::SHOWN);
+            break;
+        case SDL_WINDOWEVENT_HIDDEN:
+			this->events.emplace_back(mg::WINDOW_EVENT::HIDDEN);
+            break;
+        case SDL_WINDOWEVENT_EXPOSED:
+			this->events.emplace_back(mg::WINDOW_EVENT::EXPOSED);
+            break;
+        case SDL_WINDOWEVENT_MOVED:
+			this->events.emplace_back(mg::WINDOW_EVENT::MOVED);
+            break;
+        case SDL_WINDOWEVENT_RESIZED:
+			this->events.emplace_back(mg::WINDOW_EVENT::RESIZED);
+			break;
+        case SDL_WINDOWEVENT_MINIMIZED:
+			this->events.emplace_back(mg::WINDOW_EVENT::MINIMIZED);
+            break;
+        case SDL_WINDOWEVENT_MAXIMIZED:
+			this->events.emplace_back(mg::WINDOW_EVENT::MAXIMIZED);
+            break;
+        case SDL_WINDOWEVENT_RESTORED:
+			this->events.emplace_back(mg::WINDOW_EVENT::RESTORED);
+            break;
+        case SDL_WINDOWEVENT_ENTER:
+			this->events.emplace_back(mg::WINDOW_EVENT::ENTERED);
+            break;
+        case SDL_WINDOWEVENT_LEAVE:
+			this->events.emplace_back(mg::WINDOW_EVENT::LEFT);
+            break;
+        case SDL_WINDOWEVENT_FOCUS_GAINED:
+			this->events.emplace_back(mg::WINDOW_EVENT::FOCUS_GAINED);
+            break;
+        case SDL_WINDOWEVENT_FOCUS_LOST:
+			this->events.emplace_back(mg::WINDOW_EVENT::FOCUS_LOST);
+            break;
+        case SDL_WINDOWEVENT_CLOSE:
+			this->events.emplace_back(mg::WINDOW_EVENT::CLOSED);
+            break;
+		default:
+			break;
+		}
+	}
+}
 void mg::SDL2Window::swapBuffers() {
 	if(sdlWindow)
 		SDL_GL_SwapWindow(sdlWindow);
