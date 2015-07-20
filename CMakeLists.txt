@@ -15,6 +15,8 @@ if(UNIX)
 		epoxy
         freeimage
         assimp
+		openal
+		alut
         GL
         GLU
     )

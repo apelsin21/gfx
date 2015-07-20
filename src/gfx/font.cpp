@@ -43,7 +43,7 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
     FT_Library fl;
     FT_GlyphSlot fg;
     FT_Face ff;
-	FT_Matrix fm; //Oh god why
+	FT_Matrix fm;
 
     if(FT_Init_FreeType(&fl)) {
         printf("Freetype failed to initialize loading font %s.\n", path.c_str());
@@ -63,7 +63,6 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
 	}
     fg = ff->glyph;
 
-	//pls to the halp
 	double angle = 3.14f;
   	fm.xx = (FT_Fixed)(glm::cos(angle*2) * 0x10000L);
   	fm.xy = (FT_Fixed)(-glm::sin(angle) * 0x10000L);
