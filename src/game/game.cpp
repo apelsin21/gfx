@@ -63,18 +63,6 @@ void mg::Game::run() {
 
 		for(unsigned int i = 0; i < window.getNumEvents(); i++) {
 			switch(window.getEvent()) {
-				case mg::WINDOW_EVENT::CLOSED:
-					run = false;
-					break;
-				case mg::WINDOW_EVENT::FOCUS_GAINED:
-					printf("focused\n");
-					break;
-				case mg::WINDOW_EVENT::FOCUS_LOST:
-					printf("not as focused\n");
-					break;
-				case mg::WINDOW_EVENT::RESIZED:
-					printf("resized\n");
-					break;
 				default:
 					break;
 			}

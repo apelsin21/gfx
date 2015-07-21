@@ -20,6 +20,10 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/game/game.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/level.cpp
 
+	#sound
+	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound_player.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound.cpp
+
     PARENT_SCOPE
 )
 set(HEADERS
@@ -50,6 +54,10 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/game/game.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/level.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/sprite.hpp
+
+	#sound
+	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound_player.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound.hpp
 
     PARENT_SCOPE
 )
