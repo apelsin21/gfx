@@ -8,11 +8,19 @@ namespace mg {
 		protected:
 			glm::vec3 pos, scale;
 		public:
-			virtual glm::vec3 getPosition() const = 0;
-			virtual glm::vec3 getScale() const = 0;
+			glm::vec3 getPosition() {
+				return this->pos;
+			}
+			glm::vec3 getScale() {
+				return this->scale;
+			}
 
-			virtual void setPosition(const glm::vec3&) = 0;
-			virtual void setScale(const glm::vec3&) = 0;
+			void setPosition(const glm::vec3& p) {
+				this->pos = p;
+			}
+			void setScale(const glm::vec3& s) {
+				this->scale = s;
+			}
 	};
 }
 

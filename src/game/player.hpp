@@ -1,14 +1,18 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "core/sdl2_keyboard.hpp"
+
 #include "game/entity.hpp"
 
-#include "sound/sound_listener.hpp"
-
-namespace {
-	class Player : public Entity {
+namespace mg {
+	class Player : public mg::Entity {
 		protected:
 		public:
+			Player();
+			~Player();
+
+			void update(mg::SDL2Keyboard);
 	};
 }
 

@@ -10,7 +10,7 @@
 #include "core/sdl2_mouse.hpp"
 #include "core/keyboard_keys.hpp"
 
-#include "game/level.hpp"
+#include "game/player.hpp"
 
 #include "gfx/font.hpp"
 #include "gfx/gl_texture.hpp"
@@ -27,8 +27,6 @@ namespace mg {
 			mg::SDL2Keyboard keyboard;
 			mg::SDL2Mouse mouse;
 
-			mg::Level level;
-
 			mg::SpriteBatch batch;
 
 			mg::GLTexture texture;
@@ -39,7 +37,7 @@ namespace mg {
 			
 			mg::Font font;
 
-			glm::vec2 pos;
+			mg::Player player;
 		public:
 			Game();
 			~Game();

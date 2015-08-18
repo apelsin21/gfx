@@ -18,16 +18,10 @@ bool mg::Game::load() {
         return false;
     }
 
-	if(!level.load("data/levels/test.png")) {
-		printf("Level failed to load!\n");
-		return false;
-	}
-
     if(!batch.initialize(shader.getAttribLocation("v_pos"), shader.getAttribLocation("v_uv"))) {
 		printf("Batch failed to initialize!\n");
 		return false;
 	}
-
 
 	if(!sound_player.initialize()) {
 		printf("soundplayer failed to initialize.\n");
@@ -61,22 +55,10 @@ void mg::Game::run() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, window.getResolution().x, window.getResolution().y);
 
-		if(keyboard.isKeyDown(mg::KEY::W)) {
-			player.pos.y += 0.1f;
-		}
-		if(keyboard.isKeyDown(mg::KEY::S)) {
-			player.pos.y -= 0.1f;
-		}
-		if(keyboard.isKeyDown(mg::KEY::A)) {
-			player.pos.x -= 0.1f;
-		}
-		if(keyboard.isKeyDown(mg::KEY::D)) {
-			player.pos.x += 0.1f;
-		}
+		player.update(this->keyboard);
+		this->sound_player.setPosition(player.getPosition());
 
-		this->player.update();
-
-		batch.draw(player.pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		batch.draw(glm::vec2(player.getPosition().x, player.getPosition().y), glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 		batch.drawAll(texture.getID());
 
 		for(unsigned int i = 0; i < window.getNumEvents(); i++) {
