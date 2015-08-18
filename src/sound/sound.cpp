@@ -45,22 +45,22 @@ bool mg::Sound::getError(const char* file, int line) {
 	ALenum error = alGetError();
 
 	if(error != AL_NO_ERROR) {
-		printf("OpenAL error in file %s, on line %u:\n", file, line);
+		fprintf(stderr, "OpenAL error (%s : %u) : ", file, line);
 		switch(error) {
 		case AL_INVALID_NAME:
-			printf("OpenAL error: AL_INVALID_NAME: Invalid name parameter\n");
+			fprintf(stderr, "AL_INVALID_NAME: Invalid name parameter\n");
 			break;
 		case AL_INVALID_ENUM:
-			printf("OpenAL error: AL_INVALID_ENUM: Invalid parameter\n");
+			fprintf(stderr, "AL_INVALID_ENUM: Invalid parameter\n");
 			break;
 		case AL_INVALID_VALUE:
-			printf("OpenAL error: AL_INVALID_VALUE: Invalid enum parameter value\n");
+			fprintf(stderr, "AL_INVALID_VALUE: Invalid enum parameter value\n");
 			break;
 		case AL_INVALID_OPERATION:
-			printf("OpenAL error: AL_INVALID_OPERATION: Illegal call\n");
+			fprintf(stderr, "AL_INVALID_OPERATION: Illegal call\n");
 			break;
 		case AL_OUT_OF_MEMORY:
-			printf("OpenAL error: AL_OUT_OF_MEMORY: Unable to allocate memory\n");
+			fprintf(stderr, "AL_OUT_OF_MEMORY: Unable to allocate memory\n");
 			break;
 		}
 
@@ -74,50 +74,44 @@ bool mg::Sound::load(const std::string& p) {
 	this->getError(__FILE__, __LINE__);
 
 	int error = 0;
-	// Open the file.
 	OggOpusFile* file = op_open_file(p.c_str(), &error);
 
 	if(error) {
-		printf("Failed to open file %s (%d: %s)\n", p.c_str(), error, this->opusErrorToString(error).c_str());
+		fprintf(stderr, "Failed to open file %s (%d: %s)\n", p.c_str(), error, this->opusErrorToString(error).c_str());
 		return error;
 	}
 
 	this->getError(__FILE__, __LINE__);
 
-	// Get the number of channels in the current link.
 	int num_channels = op_channel_count(file,-1);
-	// Get the number of samples (per channel) in the current link.
 	int pcm_size = op_pcm_total(file,-1);
 
-	// We only support stereo and mono, set the openAL format based on channels.
-	// opus always uses signed 16-bit integers, unless the _float functions are called.
+	fprintf(stderr, "%s: %d channels, %d samples (%d seconds)\n", p.c_str(), num_channels, pcm_size, pcm_size/48000);
+
 	ALenum format;
 	if (num_channels == 1) {
 		format = AL_FORMAT_MONO16;
 	} else if (num_channels == 2) {
 		format = AL_FORMAT_STEREO16;
 	} else {
-		printf("File contained more channels than we support (%d).\n", num_channels);
+		fprintf(stderr, "File contained more channels than we support (%d).\n", num_channels);
 		return false;
 	}
 
-	// Allocate a buffer big enough to store the entire uncompressed file.
 	int16_t* buf = new int16_t[pcm_size*num_channels];
 
 	if(!buf) {
-		printf("Could not allocate decode buffer.\n");
+		fprintf(stderr, "Could not allocate decode buffer.\n");
 		return false;
 	}
 
 	int samples_read = 0;
 
-	// Keep reading samples until we have them all.
 	while(samples_read < pcm_size) {
-		// op_read returns number of samples read (per channel), and accepts number of samples which fit in the buffer, not number of bytes.
 		int ns = op_read(file, buf + samples_read*num_channels, pcm_size*num_channels, 0);
 
 		if(ns < 0) {
-			printf("Couldn't decode at offset %d: Error %d (%s)\n", samples_read, ns, opusErrorToString(ns).c_str());
+			fprintf(stderr, "Couldn't decode at offset %d: Error %d (%s)\n", samples_read, ns, this->opusErrorToString(ns).c_str());
 			return ns;
 		}
 
@@ -126,14 +120,18 @@ bool mg::Sound::load(const std::string& p) {
 
 	op_free(file);
 
+	alGenBuffers(1, &this->buffer);
+
+	this->getError(__FILE__, __LINE__);
+
 	if(alIsBuffer(this->buffer) == AL_FALSE) {
-		alGenBuffers(1, &this->buffer);
+		fprintf(stderr, "Opus file %s failed to create OpenAL buffer.\n", p.c_str());
+		return false;
 	}
 
 	this->getError(__FILE__, __LINE__);
 
-	// Send it to OpenAL (which takes bytes).
-	alBufferData(this->buffer, format, buf, samples_read*num_channels*2, 48000);
+	alBufferData(this->buffer, format, (const ALvoid*)buf, (ALsizei)(samples_read*num_channels*2), (ALsizei)48000);
 
 	this->getError(__FILE__, __LINE__);
 

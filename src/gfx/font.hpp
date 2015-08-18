@@ -36,6 +36,8 @@ namespace mg {
 			unsigned int getID();
 
             bool load(const std::string&, unsigned int);
+
+			void render();
     };
 }
 

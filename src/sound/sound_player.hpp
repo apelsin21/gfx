@@ -17,13 +17,17 @@ namespace mg {
 
 			bool initialized;
 			bool getError(const char*, int);
+
+			glm::vec3 listenerPosition;
 		public:
 			SoundPlayer();
 			~SoundPlayer();
 
 			bool initialize();
 
-			bool playSound(mg::Sound&, const glm::vec3&);
+			bool playSound(mg::Sound&);
+
+			void setPosition(const glm::vec3&);
 	};
 }
 

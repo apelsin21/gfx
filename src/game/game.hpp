@@ -17,6 +17,9 @@
 #include "gfx/gl_shader.hpp"
 #include "gfx/sprite_batch.hpp"
 
+#include "sound/sound_player.hpp"
+#include "sound/sound.hpp"
+
 namespace mg {
 	class Game {
 		protected:
@@ -30,6 +33,9 @@ namespace mg {
 
 			mg::GLTexture texture;
 			mg::GLShader shader;
+
+			mg::SoundPlayer sound_player;
+			mg::Sound sound;
 			
 			mg::Font font;
 

@@ -23,22 +23,22 @@ bool mg::SoundPlayer::getError(const char* file, int line) {
 	ALenum error = alGetError();
 
 	if(error != AL_NO_ERROR) {
-		printf("OpenAL error in file %s, on line %u:\n", file, line);
+		fprintf(stderr, "OpenAL error (%s : %u) : ", file, line);
 		switch(error) {
 		case AL_INVALID_NAME:
-			printf("OpenAL error: AL_INVALID_NAME: Invalid name parameter\n");
+			fprintf(stderr, "AL_INVALID_NAME: Invalid name parameter\n");
 			break;
 		case AL_INVALID_ENUM:
-			printf("OpenAL error: AL_INVALID_ENUM: Invalid parameter\n");
+			fprintf(stderr, "AL_INVALID_ENUM: Invalid parameter\n");
 			break;
 		case AL_INVALID_VALUE:
-			printf("OpenAL error: AL_INVALID_VALUE: Invalid enum parameter value\n");
+			fprintf(stderr, "AL_INVALID_VALUE: Invalid enum parameter value\n");
 			break;
 		case AL_INVALID_OPERATION:
-			printf("OpenAL error: AL_INVALID_OPERATION: Illegal call\n");
+			fprintf(stderr, "AL_INVALID_OPERATION: Illegal call\n");
 			break;
 		case AL_OUT_OF_MEMORY:
-			printf("OpenAL error: AL_OUT_OF_MEMORY: Unable to allocate memory\n");
+			fprintf(stderr, "AL_OUT_OF_MEMORY: Unable to allocate memory\n");
 			break;
 		}
 
@@ -51,33 +51,33 @@ bool mg::SoundPlayer::getError(const char* file, int line) {
 bool mg::SoundPlayer::initialize() {
 	getError(__FILE__, __LINE__);
 
-	this->device = alcOpenDevice(NULL);
+	this->device = alcOpenDevice(0);
 
 	getError(__FILE__, __LINE__);
 
-	if(this->device == nullptr) {
-		printf("OpenAL error: Couldn't open device.\n");
+	if(!this->device) {
+		fprintf(stderr, "OpenAL error: Couldn't open device.\n");
 		return false;
 	}
 
-	this->context = alcCreateContext(device, 0);
+	this->context = alcCreateContext(this->device, 0);
 
 	getError(__FILE__, __LINE__);
 
-	if(this->context == nullptr) {
-		printf("OpenAL error: Couldn't open context.\n");
+	if(!this->context) {
+		fprintf(stderr, "OpenAL error: Couldn't open context.\n");
 		alcCloseDevice(this->device);
 		return false;
 	}
 
-	getError(__FILE__, __LINE__);
-
 	alcMakeContextCurrent(context);
 
 	getError(__FILE__, __LINE__);
-
 	alGenSources(1, &this->source);
-
+	getError(__FILE__, __LINE__);
+	alListener3f(AL_POSITION, 0.f, 0.f, 0.f);
+	getError(__FILE__, __LINE__);
+	alListenerf(AL_GAIN, 1.f);
 	getError(__FILE__, __LINE__);
 
 	this->initialized = true;
@@ -85,25 +85,15 @@ bool mg::SoundPlayer::initialize() {
 	return true;
 }
 
-bool mg::SoundPlayer::playSound(mg::Sound& sound, const glm::vec3& pos) {
-	ALuint buffer;
-
-	if(alIsBuffer(sound.getBuffer())) {
-		buffer = sound.getBuffer();
-	} else {
-		printf("Tried to play sound, but got invalid OpenAL buffer.\n");
+bool mg::SoundPlayer::playSound(mg::Sound& sound) {
+	if(alIsBuffer(sound.getBuffer()) == AL_FALSE) {
+		fprintf(stderr, "Tried to play sound, but got invalid OpenAL buffer.\n");
 		return false;
 	}	
 
 	getError(__FILE__, __LINE__);
 
-	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
-	alListenerf(AL_GAIN, 1.0f);
-
-	getError(__FILE__, __LINE__);
-
-	alSourcei(this->source, AL_BUFFER, buffer);
-
+	alSourcei(this->source, AL_BUFFER, sound.getBuffer());
 	alSource3f(this->source, AL_POSITION, 0.0f, 0.0f, 0.0f);
 	alSourcef(this->source, AL_GAIN, 1.0f);
 
@@ -113,12 +103,18 @@ bool mg::SoundPlayer::playSound(mg::Sound& sound, const glm::vec3& pos) {
 
 	getError(__FILE__, __LINE__);
 
-	int sourceState;
-	do {
-		alGetSourcei(this->source, AL_SOURCE_STATE, &sourceState);
-	} while(sourceState != AL_STOPPED);
+	//int sourceState;
+	//do {
+	//	alGetSourcei(this->source, AL_SOURCE_STATE, &sourceState);
+	//} while(sourceState != AL_STOPPED);
 
 	getError(__FILE__, __LINE__);
 
 	return true;
+}
+
+void mg::SoundPlayer::setPosition(const glm::vec3& pos) {
+	alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
+
+	this->listenerPosition = pos;
 }

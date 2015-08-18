@@ -28,6 +28,22 @@ bool mg::Game::load() {
 		return false;
 	}
 
+
+	if(!sound_player.initialize()) {
+		printf("soundplayer failed to initialize.\n");
+		return false;
+	}
+
+	if(!sound.load("data/sounds/test2.opus")) {
+		printf("failed to load sound.\n");
+		return false;
+	}
+
+	if(!sound_player.playSound(sound)) {
+		printf("failed to play sound.\n");
+		return false;
+	}
+
 	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
     shader.bindID();
 
@@ -46,19 +62,21 @@ void mg::Game::run() {
 		glViewport(0, 0, window.getResolution().x, window.getResolution().y);
 
 		if(keyboard.isKeyDown(mg::KEY::W)) {
-			pos.y += 0.1f;
+			player.pos.y += 0.1f;
 		}
 		if(keyboard.isKeyDown(mg::KEY::S)) {
-			pos.y -= 0.1f;
+			player.pos.y -= 0.1f;
 		}
 		if(keyboard.isKeyDown(mg::KEY::A)) {
-			pos.x -= 0.1f;
+			player.pos.x -= 0.1f;
 		}
 		if(keyboard.isKeyDown(mg::KEY::D)) {
-			pos.x += 0.1f;
+			player.pos.x += 0.1f;
 		}
 
-		batch.draw(pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		this->player.update();
+
+		batch.draw(player.pos, glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 		batch.drawAll(texture.getID());
 
 		for(unsigned int i = 0; i < window.getNumEvents(); i++) {
