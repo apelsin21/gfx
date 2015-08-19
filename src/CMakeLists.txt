@@ -13,6 +13,7 @@ set(SOURCES
 
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_vertex_buffer.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sprite_batch.cpp
 
@@ -47,6 +48,7 @@ set(HEADERS
 
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_vertex_buffer.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sprite_batch.hpp
 

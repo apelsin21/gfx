@@ -14,6 +14,9 @@ mg::GLShader::~GLShader() {
 int mg::GLShader::getAttribLocation(const std::string& name) {
 	return glGetAttribLocation(this->id, name.c_str());
 }
+int mg::GLShader::getUniformLocation(const std::string& name) {
+	return glGetUniformLocation(this->id, name.c_str());
+}
 GLuint mg::GLShader::loadShader(const std::string& p, GLenum shaderType) {
 	GLuint shaderID = glCreateShader(shaderType);
 	if(glIsShader(shaderID) == GL_FALSE) {

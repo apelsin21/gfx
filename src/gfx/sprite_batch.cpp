@@ -74,10 +74,8 @@ void mg::SpriteBatch::draw(const glm::vec2& pos, const glm::vec2& scale, const g
 
 	this->current += 8;
 }
-void mg::SpriteBatch::draw(const std::wstring& text, mg::Font& font, const glm::vec2& pos) {
+void mg::SpriteBatch::draw(const std::wstring& text, mg::Font& font, const glm::vec2& pos, float size) {
 	glm::vec2 pen = pos;
-
-	glm::vec2 resolution(800, 600);
 
 	for(unsigned int i = 0; i < text.size(); i++) {
 		mg::Glyph glyph = font.glyphs[text[i]];

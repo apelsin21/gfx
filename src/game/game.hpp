@@ -5,6 +5,11 @@
 #include <cstdio>
 #include <exception>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <epoxy/gl.h>
+
 #include "core/sdl2_window.hpp"
 #include "core/sdl2_keyboard.hpp"
 #include "core/sdl2_mouse.hpp"
@@ -23,21 +28,21 @@
 namespace mg {
 	class Game {
 		protected:
-			mg::SDL2Window window;
-			mg::SDL2Keyboard keyboard;
-			mg::SDL2Mouse mouse;
+			mg::SDL2Window _window;
+			mg::SDL2Keyboard _keyboard;
+			mg::SDL2Mouse _mouse;
 
-			mg::SpriteBatch batch;
+			mg::SpriteBatch _batch;
 
-			mg::GLTexture texture;
-			mg::GLShader shader;
+			mg::GLTexture _texture;
+			mg::GLShader _shader;
 
-			mg::SoundPlayer sound_player;
-			mg::Sound sound;
+			mg::SoundPlayer _soundPlayer;
+			mg::Sound _sound;
 			
-			mg::Font font;
+			mg::Font _font;
 
-			mg::Player player;
+			mg::Player _player;
 		public:
 			Game();
 			~Game();

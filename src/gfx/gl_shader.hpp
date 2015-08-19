@@ -22,6 +22,7 @@ namespace mg {
             bool loadFromFile(const std::string&, const std::string&);
 
 			int getAttribLocation(const std::string&);
+			int getUniformLocation(const std::string&);
 
             bool link();
     };

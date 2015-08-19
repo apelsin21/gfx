@@ -26,7 +26,7 @@ namespace mg {
 			bool initialize(int, int);
 
 			void draw(const glm::vec2&, const glm::vec2&, const glm::vec4&);
-			void draw(const std::wstring&, mg::Font&, const glm::vec2&);
+			void draw(const std::wstring&, mg::Font&, const glm::vec2&, float size);
 
 			void drawAll(unsigned int);
 	};

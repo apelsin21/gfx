@@ -2,19 +2,20 @@
 #define MODERN_GL_RENDERER_HPP
 
 #include "gfx/renderer.hpp"
+#include "gfx/gl_vertex_buffer.hpp"
+
+#include "epoxy/gl.h"
 
 namespace mg {
 	class ModernGLRenderer {
 		protected:
+			GLuint _vao;
+			GLint _maxTextureWidth, _maxTextureHeight;
 		public:
 			ModernGLRenderer();
 			~ModernGLRenderer();
 
-			//drawQuad()?
-			//drawMesh()?
-			//draw..?
-			
-			//draw(raw vertices...?)
+			void drawBuffer(mg::GLVertexBuffer&);
 	};
 }
 
