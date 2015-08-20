@@ -9,23 +9,23 @@
 namespace mg {
 	class GLVertexBuffer {
 		protected:
-			std::vector<float> _vertices;
-			unsigned int _numVertices, _maxVertices, _vbo;
+			unsigned int _vbo;
 			int _usage;
+			std::size_t _size;
 		public:
-			GLVertexBuffer(unsigned int, bool);
+			GLVertexBuffer();
 			~GLVertexBuffer();
 
-			unsigned int getMaxVertices() const;
+			std::size_t getSize() const;
 			unsigned int getGLHandle() const;
+			bool isStatic() const;
 
 			void bind() const;
 			void unbind() const;
 
-			bool setVertices(const std::vector<float>&);
-			bool updateVertices(const std::vector<float>&, unsigned int);
-
-			unsigned int getNumTriangles() const;
+			bool allocate(std::size_t, bool);
+			bool update(const std::vector<float>&);
+			bool updateRegion(const std::vector<float>&, std::size_t, std::size_t);
 	};
 }
 

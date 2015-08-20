@@ -1,6 +1,7 @@
 #ifndef SPRITE_BATCH_HPP
 #define SPRITE_BATCH_HPP
 
+#include <memory>
 #include <vector>
 
 #include <epoxy/gl.h>
@@ -8,16 +9,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "gfx/texture.hpp"
 #include "gfx/font.hpp"
+#include "gfx/gl_vertex_buffer.hpp"
 
 namespace mg {
 	class SpriteBatch {
 		public:
-			GLuint vao, vbo;
-			unsigned int max, current;
-			glm::vec4 defaultUV;
-			float* tempBuffer;
+			GLuint _vao;
+			std::shared_ptr<mg::GLVertexBuffer> _buffer;
+
+			unsigned int _max, _current;
+			glm::vec4 _defaultUV;
+			std::vector<float> _tempBuffer;
 
 			SpriteBatch();
 			SpriteBatch(unsigned int);
@@ -25,8 +28,10 @@ namespace mg {
 
 			bool initialize(int, int);
 
-			void draw(const glm::vec2&, const glm::vec2&, const glm::vec4&);
-			void draw(const std::wstring&, mg::Font&, const glm::vec2&, float size);
+			void add(const glm::vec2&, const glm::vec2&, const glm::vec4&);
+			void add(const std::wstring&, mg::Font&, const glm::vec2&, float size);
+
+			std::shared_ptr<mg::GLVertexBuffer> getBuffer() const;
 
 			void drawAll(unsigned int);
 	};

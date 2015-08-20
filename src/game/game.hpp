@@ -36,6 +36,7 @@ namespace mg {
 
 			mg::GLTexture _texture;
 			mg::GLShader _shader;
+			mg::GLRenderer _renderer;
 
 			mg::SoundPlayer _soundPlayer;
 			mg::Sound _sound;

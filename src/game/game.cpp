@@ -64,8 +64,19 @@ void mg::Game::run() {
 		glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
 		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &projection[0][0]);
 
-		_batch.draw(L"-", this->_font, glm::vec2(32.0f, 0.5f), 0.01f);
-		_batch.drawAll(_font.getID());
+		std::vector<float> triangle = {
+			0.0f, 0.0f, 0.0f, //bottom left
+			0.5f, 1.0f, 0.0f, //middle top
+			1.0f, 0.0f, 0.0f, //bottom right
+		};
+
+		_player.update(_keyboard);
+
+		_batch.add(glm::vec2(_player.getPosition().x, _player.getPosition().y), glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+
+		_batch.update();
+
+		_renderer.draw(batch.getBuffer());
 
 		for(unsigned int i = 0; i < _window.getNumEvents(); i++) {
 			switch(_window.getEvent()) {
