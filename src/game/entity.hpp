@@ -6,20 +6,20 @@
 namespace mg {
 	class Entity {
 		protected:
-			glm::vec3 pos, scale;
+			glm::vec3 _position, _scale, _rotation;
 		public:
 			glm::vec3 getPosition() {
-				return this->pos;
+				return _position;
 			}
 			glm::vec3 getScale() {
-				return this->scale;
+				return _scale;
 			}
 
 			void setPosition(const glm::vec3& p) {
-				this->pos = p;
+				_position = p;
 			}
 			void setScale(const glm::vec3& s) {
-				this->scale = s;
+				_scale = s;
 			}
 	};
 }

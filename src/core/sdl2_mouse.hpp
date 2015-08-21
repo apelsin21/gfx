@@ -8,11 +8,11 @@
 namespace mg {
 	class SDL2Mouse : public Mouse {
 		public:
-			glm::vec2 getPosition();
+			glm::vec2 getPosition() const;
 
-			bool isLeftButtonDown();
-			bool isMiddleButtonDown();
-			bool isRightButtonDown();
+			bool isLeftButtonDown() const;
+			bool isMiddleButtonDown() const;
+			bool isRightButtonDown() const;
 	};
 }
 #endif //SDL2_MOUSE_HPP

@@ -2,35 +2,30 @@
 #define GL_RENDERER_HPP
 
 #include <cstdio>
-#include <cstdilb>
 
 #include <glm/glm.hpp>
 
 #include <epoxy/gl.h>
 
 #include "gfx/renderer.hpp"
-
 #include "gfx/gl_shader.hpp"
+#include "gfx/gl_vertex_buffer.hpp"
 
 namespace mg {
 	class GLRenderer : public Renderer {
 		protected:
-			mg::GLShader _shader2D;
+			GLuint _vao;
 
-			unsigned int numRenderedVertices;
-			GLuint _vao, _vbo;
-			unsigned int _max, _current;
-
-			glm::vec4 _defaultUV;
-
-			float* _pTempBuffer;
+			int _posLocation, _uvLocation, _colorLocation, _normalLocation;
+			static constexpr const char* _posName = "v_pos";
+			static constexpr const char* _uvName = "v_uv";
+			static constexpr const char* _colorName = "v_color";
+			static constexpr const char* _normalName = "v_normal";
 		public:
 			GLRenderer();
 			~GLRenderer();
 
-			bool queue2D(const glm::vec2&, const glm::vec2&, const glm::vec4&);
-
-			bool render();
+			bool render(const mg::GLShader&, const mg::GLVertexBuffer&);
 	};
 }
 

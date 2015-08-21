@@ -11,7 +11,7 @@ mg::SDL2Keyboard::SDL2Keyboard() {
 mg::SDL2Keyboard::~SDL2Keyboard() {
 }
 
-bool mg::SDL2Keyboard::isKeyDown(mg::KEY key) {
+bool mg::SDL2Keyboard::isKeyDown(mg::KEY key) const {
 	if(SDL_WasInit(0) != 0) {
 		SDL_PumpEvents();
 

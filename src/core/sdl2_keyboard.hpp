@@ -17,7 +17,7 @@ namespace mg {
 			SDL2Keyboard();
 			~SDL2Keyboard();
 
-			bool isKeyDown(mg::KEY);
+			bool isKeyDown(mg::KEY) const;
 	};
 }
 

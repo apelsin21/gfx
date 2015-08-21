@@ -23,11 +23,6 @@ bool mg::Game::load() {
 		return false;
 	}
 
-    if(!_batch.initialize(_shader.getAttribLocation("v_pos"), _shader.getAttribLocation("v_uv"))) {
-		printf("Batch failed to initialize!\n");
-		return false;
-	}
-
 	//if(!_soundPlayer.initialize()) {
 	//	printf("soundplayer failed to initialize.\n");
 	//	return false;
@@ -42,9 +37,22 @@ bool mg::Game::load() {
 	//	printf("failed to play sound.\n");
 	//	return false;
 	//}
+	
+	//std::vector<float> vertexData = {
+	//	0.0f, 0.0f, 0.0f, 0.0f, 0.0f, //bottom left
+	//	0.5f, 1.0f, 0.0f, 0.5f, 1.0f, //middle top
+	//	1.0f, 0.0f, 0.0f, 1.0f, 0.0f,//bottom right
+	//};
+
+	//_buffer.allocate(vertexData.size(), true, mg::VertexFormat::PPPTT);
+	//_buffer.update(vertexData);
+
+	if(!_world.generate()) {
+		printf("Failed to generate world.\n");
+		return false;
+	}
 
 	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-    _shader.bindID();
 
 	return true;
 }
@@ -60,23 +68,12 @@ void mg::Game::run() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, _window.getResolution().x, _window.getResolution().y);
 
-		GLint projLocation = _shader.getUniformLocation("projection");
-		glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
-		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &projection[0][0]);
 
-		std::vector<float> triangle = {
-			0.0f, 0.0f, 0.0f, //bottom left
-			0.5f, 1.0f, 0.0f, //middle top
-			1.0f, 0.0f, 0.0f, //bottom right
-		};
+		GLint projLocation = _shader.getUniformLocation("v_projection");
+		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.update(_keyboard, _mouse)[0][0]);
 
-		_player.update(_keyboard);
-
-		_batch.add(glm::vec2(_player.getPosition().x, _player.getPosition().y), glm::vec2(1.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-
-		_batch.update();
-
-		_renderer.draw(batch.getBuffer());
+		_texture.bindID();
+		_renderer.render(_shader, _world.getBuffer());
 
 		for(unsigned int i = 0; i < _window.getNumEvents(); i++) {
 			switch(_window.getEvent()) {

@@ -6,11 +6,11 @@
 namespace mg {
 	class Mouse {
 		public:
-			virtual glm::vec2 getPosition() = 0;
+			virtual glm::vec2 getPosition() const = 0;
 
-			virtual bool isLeftButtonDown() = 0;
-			virtual bool isMiddleButtonDown() = 0;
-			virtual bool isRightButtonDown() = 0;
+			virtual bool isLeftButtonDown() const = 0;
+			virtual bool isMiddleButtonDown() const = 0;
+			virtual bool isRightButtonDown() const = 0;
 	};
 }
 

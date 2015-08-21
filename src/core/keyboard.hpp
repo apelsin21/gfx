@@ -6,7 +6,7 @@
 namespace mg {
 	class Keyboard {
 		public:
-			virtual bool isKeyDown(mg::KEY) = 0;
+			virtual bool isKeyDown(mg::KEY) const = 0;
 	};
 }
 

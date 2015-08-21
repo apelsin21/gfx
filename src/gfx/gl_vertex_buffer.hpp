@@ -7,25 +7,64 @@
 #include <epoxy/gl.h>
 
 namespace mg {
+	//P = position
+	//N = normal 
+	//T = texture coordinate
+	//C = color
+	enum class VertexFormat {
+		P,
+		N,
+		T,
+		C,
+
+		PP,
+		NN,
+		TT,
+		CC,
+
+		PPP,
+		NNN,
+		TTT,
+		CCC,
+
+		PPPP,
+		NNNN,
+		TTTT,
+		CCCC,
+
+		PN,
+		PT,
+		PTC,
+		PNTC,
+
+		PPPTT,
+		PPTTCCC,
+		PPPTTCCC,
+		PPPTTCCCC,
+	};
+
 	class GLVertexBuffer {
 		protected:
-			unsigned int _vbo;
+			unsigned int _vbo, _numVertices, _maxVertices;
 			int _usage;
-			std::size_t _size;
+
+			mg::VertexFormat _format;
 		public:
 			GLVertexBuffer();
 			~GLVertexBuffer();
 
-			std::size_t getSize() const;
+			unsigned int getNumVertices() const;
+			unsigned int getMaxVertices() const;
 			unsigned int getGLHandle() const;
 			bool isStatic() const;
+			mg::VertexFormat getFormat() const;
 
 			void bind() const;
 			void unbind() const;
 
-			bool allocate(std::size_t, bool);
+			bool allocate(unsigned int, bool, mg::VertexFormat);
 			bool update(const std::vector<float>&);
-			bool updateRegion(const std::vector<float>&, std::size_t, std::size_t);
+			bool updateRegion(const std::vector<float>&, unsigned int, unsigned int);
 	};
 }
 

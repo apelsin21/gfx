@@ -14,12 +14,12 @@ set(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_vertex_buffer.cpp
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sprite_batch.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_renderer.cpp
 
 	#game
     ${CMAKE_CURRENT_SOURCE_DIR}/game/game.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/player.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/world.cpp
 
 	#sound
 	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound_player.cpp
@@ -45,16 +45,17 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/camera.hpp
 
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_vertex_buffer.hpp
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/sprite_batch.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_renderer.hpp
 
 	#game
     ${CMAKE_CURRENT_SOURCE_DIR}/game/game.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/entity.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/world.hpp
 
 	#sound
 	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound_player.hpp

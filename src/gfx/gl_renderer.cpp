@@ -1,51 +1,81 @@
 #include "gfx/gl_renderer.hpp"
 
 mg::GLRenderer::GLRenderer() {
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
+
+	//glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 }
 mg::GLRenderer::~GLRenderer() {
+	if(glIsVertexArray(_vao) == GL_TRUE) {
+		glDeleteVertexArrays(1, &_vao);
+	}
 }
 
-bool mg::GLRenderer::initialize() {
-	if(v_pos <= -1 || v_uv <= -1) {
-		printf("SpriteBatch got invalid shader attributes.\n");
+bool mg::GLRenderer::render(const mg::GLShader& shader, const mg::GLVertexBuffer& buffer) {
+	if(buffer.getNumVertices() == 0 || buffer.getMaxVertices() == 0) {
+		printf("Tried to render empty vertex buffer.\n");
 		return false;
 	}
 
-    glGenVertexArrays(1, &this->vao);
-    glGenBuffers(1, &this->vbo);
-	glBindVertexArray(this->vao);
+	//GLint uvLocation = shader.getAttribLocation(_uvName);
+	//GLint colorLocation = shader.getAttribLocation(_colorName);
+	//GLint normalLocation = shader.getAttribLocation(_normalName);
 
-	glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-	int totalBufferSize = (sizeof(float)*8)*this->max;
-	glBufferData(GL_ARRAY_BUFFER, totalBufferSize, NULL, GL_STREAM_DRAW);
+	//if(uvLocation == -1) {
+	//	printf("Failed to find shader attribute %s in shader %i.\n", _uvName, shader.getGLHandle());
+	//	return false;
+	//}
+	//if(colorLocation == -1) {
+	//	printf("Failed to find shader attribute %s in shader %i.\n", _colorName, shader.getGLHandle());
+	//	return false;
+	//}
+	//if(normalLocation == -1) {
+	//	printf("Failed to find shader attribute %s in shader %i.\n", _normalName, shader.getGLHandle());
+	//	return false;
+	//}
 
-    glEnableVertexAttribArray(v_pos);
-    glVertexAttribPointer(v_pos, 4, GL_FLOAT, GL_FALSE, sizeof(float)*8, (GLvoid*)0);
-	glVertexAttribDivisor(v_pos, 1);
+	shader.bind();
+	glBindVertexArray(_vao);
+	buffer.bind();
 
-    glEnableVertexAttribArray(v_uv);
-    glVertexAttribPointer(v_uv, 4, GL_FLOAT, GL_TRUE, sizeof(float)*8, (GLvoid*)(sizeof(float)*4));
-	glVertexAttribDivisor(v_uv, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	return true;
-}
+	switch(buffer.getFormat()) {
+	case mg::VertexFormat::PPP:
+		_posLocation = shader.getAttribLocation(_posName);
 
-bool mg::GLRenderer::render2D(const glm::vec2& p, const glm::vec2& s, const glm::vec4& t) {
-	if((this->current/8) >= this->max) {
-		printf("GLRenderer can't render more than %u sprites\n", _max);
+		if(_posLocation == -1) {
+			printf("Failed to find shader attribute %s in shader %i.\n", _posName, shader.getGLHandle());
+			return false;
+		}
+
+    	glEnableVertexAttribArray(_posLocation);
+
+    	glVertexAttribPointer(_posLocation, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+
+		glDrawArrays(GL_TRIANGLES, 0, buffer.getNumVertices() / 3);
+
+		break;
+	case mg::VertexFormat::PPPTT:
+		_posLocation = shader.getAttribLocation(_posName);
+		_uvLocation = shader.getAttribLocation(_uvName);
+
+		glEnableVertexAttribArray(_posLocation);
+		glEnableVertexAttribArray(_uvLocation);
+
+		glVertexAttribPointer(_posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)0);
+		glVertexAttribPointer(_uvLocation, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
+
+		glDrawArrays(GL_TRIANGLES, 0, buffer.getNumVertices() / 5);
+		break;
+	default:
+		printf("GLRenderer tried to render unimplemented vertex format.\n");
 		return false;
+		break;
 	}
-
-	_tempBuffer[_current] = p.x;
-	_tempBuffer[_current + 1] = p.y;
-	_tempBuffer[_current + 2] = s.x;
-	_tempBuffer[_current + 3] = s.y;
-	_tempBuffer[_current + 4] = t.x;
-	_tempBuffer[_current + 5] = t.y;
-	_tempBuffer[_current + 6] = t.z;
-	_tempBuffer[_current + 7] = t.w;
-
-	_current += 8;
 
 	return true;
 }

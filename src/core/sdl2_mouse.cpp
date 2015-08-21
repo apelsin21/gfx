@@ -1,6 +1,6 @@
 #include "core/sdl2_mouse.hpp"
 
-glm::vec2 mg::SDL2Mouse::getPosition() {
+glm::vec2 mg::SDL2Mouse::getPosition() const {
 	glm::vec2 v;
 
 	if(SDL_WasInit(0) != 0) {
@@ -16,7 +16,7 @@ glm::vec2 mg::SDL2Mouse::getPosition() {
 	return v;
 }
 
-bool mg::SDL2Mouse::isLeftButtonDown() {
+bool mg::SDL2Mouse::isLeftButtonDown() const {
 	if(SDL_WasInit(0) != 0) {
 		SDL_PumpEvents();
 
@@ -27,7 +27,7 @@ bool mg::SDL2Mouse::isLeftButtonDown() {
 
 	return false;
 }
-bool mg::SDL2Mouse::isMiddleButtonDown() {
+bool mg::SDL2Mouse::isMiddleButtonDown() const {
 	if(SDL_WasInit(0) != 0) {
 		SDL_PumpEvents();
 
@@ -38,7 +38,7 @@ bool mg::SDL2Mouse::isMiddleButtonDown() {
 
 	return false;
 }
-bool mg::SDL2Mouse::isRightButtonDown() {
+bool mg::SDL2Mouse::isRightButtonDown() const {
 	if(SDL_WasInit(0) != 0) {
 		SDL_PumpEvents();
 
