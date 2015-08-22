@@ -40,7 +40,7 @@ mg::SDL2Window::~SDL2Window() {
 	}
 }
 
-std::string mg::SDL2Window::getCaption() {
+std::string mg::SDL2Window::getCaption() const {
 	std::string title;
 
 	if(sdlWindow)
@@ -53,7 +53,7 @@ void mg::SDL2Window::setCaption(const std::string& c) {
 		SDL_SetWindowTitle(sdlWindow, c.c_str());
 }
 
-glm::vec2 mg::SDL2Window::getResolution() {
+glm::vec2 mg::SDL2Window::getResolution() const {
 	glm::vec2 r;
 
 	if(sdlWindow) {
@@ -72,7 +72,7 @@ void mg::SDL2Window::setResolution(const glm::vec2& r) {
 		SDL_SetWindowSize(sdlWindow, (int)r.x, (int)r.y);
 }
 
-glm::vec2 mg::SDL2Window::getPosition() {
+glm::vec2 mg::SDL2Window::getPosition() const {
 	glm::vec2 v;
 
 	if(sdlWindow) {
@@ -91,7 +91,7 @@ void mg::SDL2Window::setPosition(const glm::vec2& p) {
 		SDL_SetWindowPosition(sdlWindow, (int)p.x, (int)p.y);
 }
 
-bool mg::SDL2Window::isFullscreen() {
+bool mg::SDL2Window::isFullscreen() const {
 	if(sdlWindow) {
 		unsigned int flags = SDL_GetWindowFlags(sdlWindow);
 
@@ -102,7 +102,7 @@ bool mg::SDL2Window::isFullscreen() {
 
 	return false;
 }
-bool mg::SDL2Window::isFocused() {
+bool mg::SDL2Window::isFocused() const {
 	if(sdlWindow) {
 		unsigned int flags = SDL_GetWindowFlags(sdlWindow);
 
@@ -115,7 +115,7 @@ bool mg::SDL2Window::isFocused() {
 
 	return false;
 }
-bool mg::SDL2Window::isMaximized() {
+bool mg::SDL2Window::isMaximized() const {
 	if(sdlWindow) {
 		unsigned int flags = SDL_GetWindowFlags(sdlWindow);
 
@@ -127,7 +127,7 @@ bool mg::SDL2Window::isMaximized() {
 	return false;
 }
 
-unsigned int mg::SDL2Window::getNumEvents() {
+unsigned int mg::SDL2Window::getNumEvents() const {
 	return this->events.size();
 }
 mg::WINDOW_EVENT mg::SDL2Window::getEvent() {
@@ -199,4 +199,8 @@ void mg::SDL2Window::pollEvents() {
 void mg::SDL2Window::swapBuffers() {
 	if(sdlWindow)
 		SDL_GL_SwapWindow(sdlWindow);
+}
+
+SDL_Window* mg::SDL2Window::getSDLHandle() const {
+	return sdlWindow;
 }

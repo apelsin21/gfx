@@ -3,6 +3,7 @@
 
 #include "core/sdl2_keyboard.hpp"
 #include "core/sdl2_mouse.hpp"
+#include "core/sdl2_window.hpp"
 
 #include "game/entity.hpp"
 
@@ -20,7 +21,7 @@ namespace mg {
 			Player();
 			~Player();
 
-			glm::mat4 update(const mg::SDL2Keyboard&, const mg::SDL2Mouse&);
+			glm::mat4 update(const mg::SDL2Keyboard&, mg::SDL2Mouse&, const mg::SDL2Window&);
 	};
 }
 

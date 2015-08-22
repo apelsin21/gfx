@@ -68,9 +68,8 @@ void mg::Game::run() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, _window.getResolution().x, _window.getResolution().y);
 
-
 		GLint projLocation = _shader.getUniformLocation("v_projection");
-		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.update(_keyboard, _mouse)[0][0]);
+		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.update(_keyboard, _mouse, _window)[0][0]);
 
 		_texture.bindID();
 		_renderer.render(_shader, _world.getBuffer());

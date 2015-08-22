@@ -16,6 +16,20 @@ glm::vec2 mg::SDL2Mouse::getPosition() const {
 	return v;
 }
 
+//void mg::SDL2Mouse::setPosition(const glm::vec2& position) {
+//	if(SDL_WarpMouseGlobal((int)position.x, (int)position.y) < 0) {
+//		printf("Failed to set SDL2Mouse position to %ix%i.\n", (int)position.x, (int)position.y);
+//	}
+//}
+void mg::SDL2Mouse::setPosition(const glm::vec2& position, const mg::SDL2Window& window) {
+	if(window.getSDLHandle() == nullptr) {
+		printf("Failed to set SDL2Mouse position to %ix%i.\n", (int)position.x, (int)position.y);
+		return;
+	}
+
+	SDL_WarpMouseInWindow(window.getSDLHandle(), (int)position.x, (int)position.y);
+}
+
 bool mg::SDL2Mouse::isLeftButtonDown() const {
 	if(SDL_WasInit(0) != 0) {
 		SDL_PumpEvents();
@@ -48,4 +62,13 @@ bool mg::SDL2Mouse::isRightButtonDown() const {
 	}
 
 	return false;
+}
+
+void mg::SDL2Mouse::hide() {
+	if(SDL_ShowCursor(SDL_DISABLE) < 0 ) {
+		printf("Failed to hide cursor.\n");
+	}
+}
+bool mg::SDL2Mouse::isHidden() const {
+	return SDL_ShowCursor(-1) ? true : false;
 }

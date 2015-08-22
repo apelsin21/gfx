@@ -21,21 +21,23 @@ namespace mg {
 			SDL2Window();
 			~SDL2Window();
 
-            std::string getCaption();
+            std::string getCaption() const;
             void setCaption(const std::string&);
 			
-            glm::vec2 getResolution();
+            glm::vec2 getResolution() const;
             void setResolution(const glm::vec2&);
 
-            glm::vec2 getPosition();
+            glm::vec2 getPosition() const;
             void setPosition(const glm::vec2&);
 
-			bool isFullscreen();
-			bool isMaximized();
-			bool isFocused();
+			bool isFullscreen() const;
+			bool isMaximized() const;
+			bool isFocused() const;
 
-			unsigned int getNumEvents();
+			unsigned int getNumEvents() const;
 			mg::WINDOW_EVENT getEvent();
+
+			SDL_Window* getSDLHandle() const;
 
 			void pollEvents();
             void swapBuffers();

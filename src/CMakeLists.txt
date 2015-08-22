@@ -19,6 +19,7 @@ set(SOURCES
 	#game
     ${CMAKE_CURRENT_SOURCE_DIR}/game/game.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/player.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/marching_cubes.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/world.cpp
 
 	#sound
@@ -55,6 +56,7 @@ set(HEADERS
 	#game
     ${CMAKE_CURRENT_SOURCE_DIR}/game/game.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/entity.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/marching_cubes.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/world.hpp
 
 	#sound
