@@ -65,6 +65,8 @@ namespace mg {
 			bool allocate(unsigned int, bool, mg::VertexFormat);
 			bool update(const std::vector<float>&);
 			bool updateRegion(const std::vector<float>&, unsigned int, unsigned int);
+
+			void clear();
 	};
 }
 

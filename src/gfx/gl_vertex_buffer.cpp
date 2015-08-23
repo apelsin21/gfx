@@ -111,3 +111,14 @@ unsigned int mg::GLVertexBuffer::getGLHandle() const {
 mg::VertexFormat mg::GLVertexBuffer::getFormat() const {
 	return _format;
 }
+
+void mg::GLVertexBuffer::clear() {
+	if(glIsBuffer(_vbo) == GL_TRUE) {
+		glDeleteBuffers(1, &this->_vbo);
+	}
+
+	_maxVertices = 0;
+
+	glGenBuffers(1, &_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+}

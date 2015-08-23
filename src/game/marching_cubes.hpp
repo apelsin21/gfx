@@ -10,7 +10,7 @@ struct TRIANGLE {
 
 struct GRIDCELL {
 	glm::vec3 p[8];
-   double val[8];
+	double val[8];
 };
 
 int Polygonise(GRIDCELL, double, TRIANGLE*);

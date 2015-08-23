@@ -48,10 +48,9 @@ bool mg::Game::load() {
 	//_buffer.update(vertexData);
 
 	if(!_world.generate()) {
-		printf("Failed to generate world.\n");
+		printf("failed to generate world.\n");
 		return false;
 	}
-
 	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
 	return true;
@@ -64,7 +63,7 @@ void mg::Game::run() {
 		if(_keyboard.isKeyDown(mg::KEY::ESCAPE)) {
 			run = false;
 		}
-	
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, _window.getResolution().x, _window.getResolution().y);
 
@@ -83,5 +82,7 @@ void mg::Game::run() {
 
 		_window.pollEvents();
 		_window.swapBuffers();
+
+		_lastKey = -1;
 	}
 }

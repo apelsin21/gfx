@@ -46,6 +46,9 @@ namespace mg {
 
 			mg::Player _player;
 			mg::World _world;
+
+			int _lastKey;
+			double _isoLevel;
 		public:
 			Game();
 			~Game();

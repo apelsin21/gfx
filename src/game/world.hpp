@@ -2,9 +2,11 @@
 #define WORLD_HPP
 
 #include <cstdio>
+#include <cstdlib>
+#include <ctime>
+
 #include <string>
 #include <vector>
-#include <ctime>
 #include <cstdlib>
 #include <memory>
 
@@ -31,6 +33,8 @@ namespace mg {
 
 			const mg::GLVertexBuffer& getBuffer() const;
 			std::vector<float> getVertices() const;
+
+			std::vector<float> polygonize(GRIDCELL, double);
 	};
 }
 

@@ -53,6 +53,13 @@ glm::mat4 mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mo
 		_position -= right * _deltaTime * _speed;
 	}
 
+	if(keyboard.isKeyDown(mg::KEY::Q)) {
+		_speed -= 0.5f;
+	}
+	if(keyboard.isKeyDown(mg::KEY::E)) {
+		_speed += 0.5f;
+	}
+
 	glm::mat4 projectionMatrix = glm::perspective(3.1415f * 1.5f, 4.0f / 3.0f, 0.1f, 100.0f);
 	glm::mat4 viewMatrix = glm::lookAt(
 		_position,
