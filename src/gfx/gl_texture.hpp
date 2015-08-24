@@ -29,7 +29,7 @@ namespace mg {
 			bool hasValidID();
 			unsigned int getID();
 
-			bool load(const std::string&);
+			bool load(const std::string&, mg::TEXTURE_FILTER, mg::TEXTURE_WRAP);
     };
 }
 

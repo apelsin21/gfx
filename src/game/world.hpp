@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 #include <string>
 #include <vector>
@@ -11,6 +12,7 @@
 #include <memory>
 
 #include <glm/gtc/noise.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include "gfx/gl_vertex_buffer.hpp"
 #include "gfx/gl_texture.hpp"
@@ -21,7 +23,7 @@
 namespace mg {
 	class World {
 		protected:
-			std::vector<float> _vertices;
+			std::vector<float> _vertices, _noise;
 			mg::GLVertexBuffer _buffer;
 
 			float _calcDensity(const glm::vec3&) const;

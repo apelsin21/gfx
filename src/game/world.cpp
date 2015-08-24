@@ -14,68 +14,32 @@ bool mg::World::generate() {
 	std::srand(std::time(NULL));
 
 	int totalTriangles = 0;
-	//static const unsigned int axisSize = 32;
-	static const unsigned int numX = 64, numY = 1, numZ = 64;
-	//std::array<std::array<std::array<GRIDCELL, axisSize>, axisSize>, axisSize> chunk;
-	std::array<std::array<std::array<GRIDCELL, numZ>, numY>, numX> chunk;
+	float chunkSize = 32.f;
 	GRIDCELL tempVoxel;
-	static const float offset = 0.5f;
+	float step = 1.0f;
 
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		//MAYBE IS WRONG AXIS, PLS. TODO: FIX	
-		
-		//CORRECT XZ, WRONG Y? 
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		//CORRECT XZ, WRONG Y?
-		
-
-	for(unsigned int x = 0; x < numX; x++) {
-		for(unsigned int y = 0; y < numY; y++) {
-			for(unsigned int z = 0; z < numZ; z++) {
-				tempVoxel.p[0] = glm::vec3(x - offset, y - offset, z + offset); // bottom front left
-				tempVoxel.p[1] = glm::vec3(x + offset, y - offset, z + offset); // bottom front right
-				tempVoxel.p[2] = glm::vec3(x + offset, y - offset, z - offset); // bottom back right
-				tempVoxel.p[3] = glm::vec3(x - offset, y - offset, z - offset); // bottom back left
-				tempVoxel.p[4] = glm::vec3(x - offset, y + offset, z + offset); // top front left
-				tempVoxel.p[5] = glm::vec3(x + offset, y + offset, z + offset); // top font right
-				tempVoxel.p[6] = glm::vec3(x + offset, y + offset, z - offset); // top back right
-				tempVoxel.p[7] = glm::vec3(x - offset, y + offset, z - offset); // top back left 
+	for(float x = 0; x <= chunkSize; x += step) {
+		for(float y = 0; y <= chunkSize; y += step) {
+			for(float z =0; z <= chunkSize; z += step) {
+				tempVoxel.p[0] = glm::vec3(x     , y     , z     ); // bottom front left
+				tempVoxel.p[1] = glm::vec3(x+step, y     , z     ); // bottom front right
+				tempVoxel.p[2] = glm::vec3(x+step, y+step, z     ); // bottom back right
+				tempVoxel.p[3] = glm::vec3(x     , y+step, z     ); // bottom back left
+				tempVoxel.p[4] = glm::vec3(x     , y     , z+step); // top front left
+				tempVoxel.p[5] = glm::vec3(x+step, y     , z+step); // top font right
+				tempVoxel.p[6] = glm::vec3(x+step, y+step, z+step); // top back right
+				tempVoxel.p[7] = glm::vec3(x     , y+step, z+step); // top back left 
 				
-				tempVoxel.val[0] = _calcDensity(tempVoxel.p[0]);
-				tempVoxel.val[1] = _calcDensity(tempVoxel.p[1]);
-				tempVoxel.val[2] = _calcDensity(tempVoxel.p[2]);
-				tempVoxel.val[3] = _calcDensity(tempVoxel.p[3]);
-				tempVoxel.val[4] = _calcDensity(tempVoxel.p[4]);
-				tempVoxel.val[5] = _calcDensity(tempVoxel.p[5]);
-				tempVoxel.val[6] = _calcDensity(tempVoxel.p[6]);
-				tempVoxel.val[7] = _calcDensity(tempVoxel.p[7]);
+				tempVoxel.val[0] = _calcDensity(tempVoxel.p[0]); // bottom front left
+				tempVoxel.val[1] = _calcDensity(tempVoxel.p[1]); // bottom front right
+				tempVoxel.val[2] = _calcDensity(tempVoxel.p[2]); // bottom back right
+				tempVoxel.val[3] = _calcDensity(tempVoxel.p[3]); // bottom back left
+				tempVoxel.val[4] = _calcDensity(tempVoxel.p[4]); // top front left
+				tempVoxel.val[5] = _calcDensity(tempVoxel.p[5]); // top font right
+				tempVoxel.val[6] = _calcDensity(tempVoxel.p[6]); // top back right
+				tempVoxel.val[7] = _calcDensity(tempVoxel.p[7]); // top back left 
 
-				chunk[x][y][z] = tempVoxel;
-			}
-		}
-	}
-
-	for(unsigned int x = 0; x < numX; x++) {
-		for(unsigned int y = 0; y < numY; y++) {
-			for(unsigned int z = 0; z < numZ; z++) {
-				tempVoxel = chunk[x][y][z];
-
-				std::vector<float> newFloats = polygonize(tempVoxel, _calcDensity(glm::vec3((float)x, (float)y, (float)z)));
+				std::vector<float> newFloats = polygonize(tempVoxel, 0.0f);
 				totalTriangles += newFloats.size() / 3;
 
 				for(unsigned int i = 0; i < newFloats.size(); i++) {
@@ -109,7 +73,9 @@ bool mg::World::generate() {
 }
 
 float mg::World::_calcDensity(const glm::vec3& p) const {
-	return (-p.y) + glm::simplex(p);
+	float rad = -8.f;
+
+	return rad - glm::length2(p - glm::vec3(0, -rad, 0));
 }
 
 const mg::GLVertexBuffer& mg::World::getBuffer() const {

@@ -33,7 +33,7 @@ bool mg::GLTexture::hasValidID() {
 unsigned int mg::GLTexture::getID() {
 	return this->id;
 }
-bool mg::GLTexture::load(const std::string& p) {
+bool mg::GLTexture::load(const std::string& p, mg::TEXTURE_FILTER filter, mg::TEXTURE_WRAP wrap) {
     std::ifstream fileCheck(p);
     if(!fileCheck.good()) {
         printf("Tried to load texture %s, but it doesn't exist.\n", p.c_str());
@@ -89,11 +89,17 @@ bool mg::GLTexture::load(const std::string& p) {
     	(GLvoid*)this->data
 	);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilterToInt(this->minFilter));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilterToInt(this->magFilter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilterToInt(filter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilterToInt(filter));
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapToInt(this->sWrap));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapToInt(this->tWrap));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapToInt(wrap));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapToInt(wrap));
+
+	this->minFilter = filter;
+	this->magFilter = filter;
+
+	this->sWrap = wrap;
+	this->tWrap = wrap;
 
     if(this->mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);

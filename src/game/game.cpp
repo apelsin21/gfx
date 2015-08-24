@@ -13,7 +13,7 @@ bool mg::Game::load() {
         return false;
     }
 
-	if(!_texture.load("data/textures/terrain.png")) {
+	if(!_texture.load("data/textures/rock_texture.jpg", mg::TEXTURE_FILTER::NEAREST, mg::TEXTURE_WRAP::REPEAT)) {
 		printf("Texture %s failed to load!\n", _texture.path.c_str());
         return false;
     }

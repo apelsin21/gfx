@@ -21,7 +21,7 @@ glm::mat4 mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mo
 	glm::vec2 mousePosition = mouse.getPosition();
 
 	_horizontalAngle += _mouseSpeed * _deltaTime * (resolution.x/2.0f - mousePosition.x);
-	_verticalAngle += _mouseSpeed * _deltaTime * (resolution.y/2.0f - mousePosition.y);
+	_verticalAngle -= _mouseSpeed * _deltaTime * (resolution.y/2.0f - mousePosition.y);
 
 	glm::vec3 direction(
 			glm::cos(_verticalAngle) * glm::sin(_horizontalAngle),
@@ -55,12 +55,20 @@ glm::mat4 mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mo
 
 	if(keyboard.isKeyDown(mg::KEY::Q)) {
 		_speed -= 0.5f;
+
+		if(_speed < 0.0f) {
+			_speed = 0.0f;
+		}
 	}
 	if(keyboard.isKeyDown(mg::KEY::E)) {
 		_speed += 0.5f;
+
+		if(_speed < 0.0f) {
+			_speed = 0.0f;
+		}
 	}
 
-	glm::mat4 projectionMatrix = glm::perspective(3.1415f * 1.5f, 4.0f / 3.0f, 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(3.1415f * 1.5f, 4.0f / 3.0f, 0.001f, 100.0f);
 	glm::mat4 viewMatrix = glm::lookAt(
 		_position,
 		_position + direction,
