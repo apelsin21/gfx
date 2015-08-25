@@ -41,6 +41,8 @@ namespace mg {
 		PPTTCCC,
 		PPPTTCCC,
 		PPPTTCCCC,
+
+		PPPNNN,
 	};
 
 	class GLVertexBuffer {

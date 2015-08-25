@@ -12,7 +12,7 @@ mg::Player::Player() {
 mg::Player::~Player() {
 }
 
-glm::mat4 mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, const mg::SDL2Window& window) {
+void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, const mg::SDL2Window& window) {
 	_lastTime = _currentTime;
 	_currentTime = static_cast<float>(std::clock()) / static_cast<float>(CLOCKS_PER_SEC);
 	_deltaTime = _currentTime - _lastTime;
@@ -68,14 +68,22 @@ glm::mat4 mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mo
 		}
 	}
 
-	glm::mat4 projectionMatrix = glm::perspective(3.1415f * 1.5f, 4.0f / 3.0f, 0.001f, 100.0f);
-	glm::mat4 viewMatrix = glm::lookAt(
+	_projectionMatrix = glm::perspective(3.1415f * 1.5f, 4.0f / 3.0f, 0.001f, 100.0f);
+	_viewMatrix = glm::lookAt(
 		_position,
 		_position + direction,
 		up
 	);
 
 	mouse.setPosition(resolution / 2.0f, window);
+}
 
-	return projectionMatrix * viewMatrix;
+glm::mat4 mg::Player::getModelMatrix() const {
+	return _modelMatrix;
+}
+glm::mat4 mg::Player::getViewMatrix() const {
+	return _viewMatrix;
+}
+glm::mat4 mg::Player::getProjectionMatrix() const {
+	return _projectionMatrix;
 }

@@ -4,7 +4,7 @@ mg::GLRenderer::GLRenderer() {
 	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);
 
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 }
@@ -19,23 +19,6 @@ bool mg::GLRenderer::render(const mg::GLShader& shader, const mg::GLVertexBuffer
 		printf("Tried to render empty vertex buffer.\n");
 		return false;
 	}
-
-	//GLint uvLocation = shader.getAttribLocation(_uvName);
-	//GLint colorLocation = shader.getAttribLocation(_colorName);
-	//GLint normalLocation = shader.getAttribLocation(_normalName);
-
-	//if(uvLocation == -1) {
-	//	printf("Failed to find shader attribute %s in shader %i.\n", _uvName, shader.getGLHandle());
-	//	return false;
-	//}
-	//if(colorLocation == -1) {
-	//	printf("Failed to find shader attribute %s in shader %i.\n", _colorName, shader.getGLHandle());
-	//	return false;
-	//}
-	//if(normalLocation == -1) {
-	//	printf("Failed to find shader attribute %s in shader %i.\n", _normalName, shader.getGLHandle());
-	//	return false;
-	//}
 
 	shader.bind();
 	glBindVertexArray(_vao);
@@ -58,6 +41,18 @@ bool mg::GLRenderer::render(const mg::GLShader& shader, const mg::GLVertexBuffer
 
 		glDrawArrays(GL_TRIANGLES, 0, buffer.getNumVertices() / 3);
 
+		break;
+	case mg::VertexFormat::PPPNNN:
+		_posLocation = shader.getAttribLocation(_posName);
+		_normalLocation = shader.getAttribLocation(_normalName);
+
+		glEnableVertexAttribArray(_posLocation);
+		glEnableVertexAttribArray(_normalLocation);
+
+		glVertexAttribPointer(_posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*)0);
+		glVertexAttribPointer(_normalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*)(sizeof(float) * 3));
+
+		glDrawArrays(GL_TRIANGLES, 0, buffer.getNumVertices() / 6);
 		break;
 	case mg::VertexFormat::PPPTT:
 		_posLocation = shader.getAttribLocation(_posName);

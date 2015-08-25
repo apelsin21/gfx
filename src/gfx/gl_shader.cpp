@@ -15,7 +15,7 @@ int mg::GLShader::getAttribLocation(const std::string& name) const {
 	GLint location = glGetAttribLocation(_id, name.c_str());
 
 	if(location == -1) {
-		printf("Failed to find shader attribute %s in shader %s.\n", name.c_str(), _vsPath);
+		printf("Failed to find shader attribute %s in shader %s.\n", name.c_str(), _vsPath.c_str());
 	}
 	
 	return location;
@@ -24,7 +24,7 @@ int mg::GLShader::getUniformLocation(const std::string& name) const {
 	GLint location = glGetUniformLocation(_id, name.c_str());
 
 	if(location == -1) {
-		printf("Failed to find shader uniform %s in shader %s.\n", name.c_str(), _vsPath);
+		printf("Failed to find shader uniform %s in shader %s.\n", name.c_str(), _vsPath.c_str());
 	}
 
 	return location;

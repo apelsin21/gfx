@@ -3,6 +3,8 @@
 mg::Game::Game() {
 	_window.setCaption("Platformer Game Thing");
 	_window.setResolution(glm::vec2(800, 600));
+	_wireframe = false;
+	_lastKey = -1;
 }
 mg::Game::~Game() {
 }
@@ -13,13 +15,13 @@ bool mg::Game::load() {
         return false;
     }
 
-	if(!_texture.load("data/textures/rock_texture.jpg", mg::TEXTURE_FILTER::NEAREST, mg::TEXTURE_WRAP::REPEAT)) {
+	if(!_texture.load("data/textures/cave_rock.png", mg::TEXTURE_FILTER::NEAREST, mg::TEXTURE_WRAP::REPEAT)) {
 		printf("Texture %s failed to load!\n", _texture.path.c_str());
         return false;
     }
 	
 	if(!_font.load("data/fonts/FreeSans.ttf", 16)) {
-		printf("Font %s failed to load!\n", _font.path);
+		printf("Font %s failed to load!\n", _font.path.c_str());
 		return false;
 	}
 
@@ -38,15 +40,6 @@ bool mg::Game::load() {
 	//	return false;
 	//}
 	
-	//std::vector<float> vertexData = {
-	//	0.0f, 0.0f, 0.0f, 0.0f, 0.0f, //bottom left
-	//	0.5f, 1.0f, 0.0f, 0.5f, 1.0f, //middle top
-	//	1.0f, 0.0f, 0.0f, 1.0f, 0.0f,//bottom right
-	//};
-
-	//_buffer.allocate(vertexData.size(), true, mg::VertexFormat::PPPTT);
-	//_buffer.update(vertexData);
-
 	if(!_world.generate()) {
 		printf("failed to generate world.\n");
 		return false;
@@ -63,12 +56,29 @@ void mg::Game::run() {
 		if(_keyboard.isKeyDown(mg::KEY::ESCAPE)) {
 			run = false;
 		}
+		if(_keyboard.isKeyDown(mg::KEY::P)) {
+			_wireframe = !_wireframe;
+
+			if(_wireframe) {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			} else {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glViewport(0, 0, _window.getResolution().x, _window.getResolution().y);
 
-		GLint projLocation = _shader.getUniformLocation("v_projection");
-		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.update(_keyboard, _mouse, _window)[0][0]);
+		_player.update(_keyboard, _mouse, _window);
+
+		GLint viewLocation = _shader.getUniformLocation("u_view");
+		GLint projLocation = _shader.getUniformLocation("u_projection");
+		GLint timeLocation = _shader.getUniformLocation("u_time");
+
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &_player.getViewMatrix()[0][0]);
+		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.getProjectionMatrix()[0][0]);
+		float time = static_cast<float>(std::clock()) / static_cast<float>(CLOCKS_PER_SEC);
+		glUniform1f(timeLocation, time);
 
 		_texture.bindID();
 		_renderer.render(_shader, _world.getBuffer());
@@ -82,7 +92,5 @@ void mg::Game::run() {
 
 		_window.pollEvents();
 		_window.swapBuffers();
-
-		_lastKey = -1;
 	}
 }

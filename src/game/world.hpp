@@ -23,10 +23,12 @@
 namespace mg {
 	class World {
 		protected:
-			std::vector<float> _vertices, _noise;
+			std::vector<float> _vertices;
 			mg::GLVertexBuffer _buffer;
+			std::vector<GRIDCELL> _voxels;
 
 			float _calcDensity(const glm::vec3&) const;
+			glm::vec3 _calcNormal(const glm::vec3&) const;
 		public:
 			World();
 			~World();
@@ -35,8 +37,6 @@ namespace mg {
 
 			const mg::GLVertexBuffer& getBuffer() const;
 			std::vector<float> getVertices() const;
-
-			std::vector<float> polygonize(GRIDCELL, double);
 	};
 }
 

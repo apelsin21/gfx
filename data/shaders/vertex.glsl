@@ -1,17 +1,20 @@
 #version 330 core
 
 in vec3 v_pos;
-in vec2 v_uv;
+in vec3 v_normal;
 
-uniform mat4 v_projection;
+uniform mat4 u_view;
+uniform mat4 u_projection;
 
-out vec2 f_uv;
 out vec3 f_pos;
-out float f_id;
+out vec3 f_normal;
+//out vec3 f_normal_cameraspace;
+//out vec3 f_eye_direction_cameraspace;
+//out vec3 f_light_direction_cameraspace;
 
 void main() {
-	f_uv = v_uv;
+    gl_Position = u_projection * u_view * vec4(v_pos.xyz, 1.0);
+
 	f_pos = v_pos;
-	f_id = gl_VertexID;
-    gl_Position = v_projection * vec4(v_pos.xyz, 1.0);
+	f_normal = v_normal;
 }

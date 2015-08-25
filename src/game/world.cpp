@@ -13,14 +13,16 @@ bool mg::World::generate() {
 
 	std::srand(std::time(NULL));
 
-	int totalTriangles = 0;
-	float chunkSize = 32.f;
+	unsigned int totalTriangles = 0;
+	float chunkSize = 4.f;
 	GRIDCELL tempVoxel;
-	float step = 1.0f;
+	std::vector<TRIANGLE> triangles((chunkSize*chunkSize*chunkSize)*5);
+	std::vector<glm::vec3> normals((chunkSize*chunkSize*chunkSize)*5);
+	float step = 0.1f;
 
 	for(float x = 0; x <= chunkSize; x += step) {
 		for(float y = 0; y <= chunkSize; y += step) {
-			for(float z =0; z <= chunkSize; z += step) {
+			for(float z = 0; z <= chunkSize; z += step) {
 				tempVoxel.p[0] = glm::vec3(x     , y     , z     ); // bottom front left
 				tempVoxel.p[1] = glm::vec3(x+step, y     , z     ); // bottom front right
 				tempVoxel.p[2] = glm::vec3(x+step, y+step, z     ); // bottom back right
@@ -39,28 +41,70 @@ bool mg::World::generate() {
 				tempVoxel.val[6] = _calcDensity(tempVoxel.p[6]); // top back right
 				tempVoxel.val[7] = _calcDensity(tempVoxel.p[7]); // top back left 
 
-				std::vector<float> newFloats = polygonize(tempVoxel, 0.0f);
-				totalTriangles += newFloats.size() / 3;
+				std::vector<TRIANGLE> tempTriangles(5);
+				int newTriangles = Polygonise(tempVoxel, -0.0001, &tempTriangles[0]);
+				totalTriangles += newTriangles;
 
-				for(unsigned int i = 0; i < newFloats.size(); i++) {
-					_vertices.emplace_back(newFloats[i]);
+				for(unsigned int i = 0; i < newTriangles; i++) {
+					triangles.emplace_back(tempTriangles[i]);
+					normals.emplace_back(glm::normalize(glm::cross(tempTriangles[i].p[1] - tempTriangles[i].p[0], tempTriangles[i].p[2] - tempTriangles[i].p[0])));
 				}
 			}
 		}
 	}
 
-	if(totalTriangles <= 0) {
-		printf("Generated <= 0 triangles.\n");
-		return false;
-	} else {
-		unsigned int size = sizeof(float)*(totalTriangles*9);
-		printf("generated %i triangles, for a size of %i B, %f KB, %f MB.\n",
-			   	totalTriangles, size, size/1024.f, size/1024.f/1024.f);
+	triangles.shrink_to_fit();
+	normals.shrink_to_fit();
+
+	for(unsigned int i = 0; i < triangles.size(); i++) {
+		for(unsigned int j = 0; j < 3; j++) {
+			_vertices.emplace_back(triangles[i].p[j].x);
+			_vertices.emplace_back(triangles[i].p[j].y);
+			_vertices.emplace_back(triangles[i].p[j].z);
+
+			unsigned int numNeighbours = 2;
+			unsigned int start = i - (numNeighbours/2), end = i + (numNeighbours/2);
+
+			if(end > triangles.size()) {
+				end = triangles.size();
+			}
+
+			glm::vec3 sum;
+
+			for(unsigned int l = start; l < end; l++) {
+				bool sharesVertex = false;
+				for(unsigned int m = 0; m < 3; m++) {
+					if(triangles[l].p[m] == triangles[i].p[j]) {
+						sharesVertex = true;
+						break;
+					}
+				}
+
+				if(sharesVertex) {
+					sum += normals[l];
+				}
+			}
+
+			glm::vec3 normal = glm::normalize(glm::vec3(sum.x / numNeighbours, sum.y / numNeighbours, sum.z / numNeighbours));
+
+			_vertices.emplace_back(normal.x);
+			_vertices.emplace_back(normal.y);
+			_vertices.emplace_back(normal.z);
+		}
 	}
 
-	if(!_buffer.allocate(_vertices.size(), true, mg::VertexFormat::PPP)) {
-		unsigned int size = sizeof(float)*(totalTriangles*9);
-		printf("failed to allocate buffer of size: \n", size);
+	if(totalTriangles == 0) {
+		printf("Generated 0 triangles.\n");
+		return false;
+	}
+
+
+	unsigned int size = sizeof(float)*_vertices.size();
+	printf("generated %i triangles, for a size of %u B, %f KB, %f MB.\n",
+		   	totalTriangles, size, size/1024.f, size/1024.f/1024.f);
+
+	if(!_buffer.allocate(_vertices.size(), true, mg::VertexFormat::PPPNNN)) {
+		printf("failed to allocate buffer of %u bytes.\n", size);
 		return false;
 	}
 
@@ -73,9 +117,16 @@ bool mg::World::generate() {
 }
 
 float mg::World::_calcDensity(const glm::vec3& p) const {
-	float rad = -8.f;
-
-	return rad - glm::length2(p - glm::vec3(0, -rad, 0));
+	return glm::simplex(p);
+}
+glm::vec3 mg::World::_calcNormal(const glm::vec3& p) const {
+	// wrong, doesn't work, etc.
+	const float H = 0.001f;
+	const float dx = _calcDensity(p + glm::vec3(H, 0.f, 0.f)) - _calcDensity(p - glm::vec3(H, 0.f, 0.f));
+	const float dy = _calcDensity(p + glm::vec3(0.f, H, 0.f)) - _calcDensity(p - glm::vec3(0.f, H, 0.f));
+	const float dz = _calcDensity(p + glm::vec3(0.f, 0.f, H)) - _calcDensity(p - glm::vec3(0.f, 0.f, H));
+	
+	return glm::normalize(glm::vec3(dx, dy, dz));
 }
 
 const mg::GLVertexBuffer& mg::World::getBuffer() const {
@@ -83,30 +134,4 @@ const mg::GLVertexBuffer& mg::World::getBuffer() const {
 }
 std::vector<float> mg::World::getVertices() const {
 	return _vertices;
-}
-
-std::vector<float> mg::World::polygonize(GRIDCELL cell, double isoLevel) {
-	std::vector<TRIANGLE> triangles(5);
-	int numTriangles = Polygonise(cell, isoLevel, &triangles[0]);
-
-	int numFloats = numTriangles * 9;
-	std::vector<float> floats(numFloats);
-
-	for(unsigned int i = 0; i < numTriangles; i++) {
-		unsigned int floatIndex = i * 9.0f;
-
-		floats[floatIndex+0] = triangles[i].p[0].x;
-		floats[floatIndex+1] = triangles[i].p[0].y;
-		floats[floatIndex+2] = triangles[i].p[0].z;
-
-		floats[floatIndex+3] = triangles[i].p[1].x;
-		floats[floatIndex+4] = triangles[i].p[1].y;
-		floats[floatIndex+5] = triangles[i].p[1].z;
-
-		floats[floatIndex+6] = triangles[i].p[2].x;
-		floats[floatIndex+7] = triangles[i].p[2].y;
-		floats[floatIndex+8] = triangles[i].p[2].z;
-	}
-	
-	return floats;
 }

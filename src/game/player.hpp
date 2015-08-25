@@ -17,11 +17,17 @@ namespace mg {
 			float _horizontalAngle, _verticalAngle, _initialFoV, _speed, _mouseSpeed;
 
 			float _deltaTime, _lastTime, _currentTime;
+
+			glm::mat4 _modelMatrix, _viewMatrix, _projectionMatrix;
 		public:
 			Player();
 			~Player();
 
-			glm::mat4 update(const mg::SDL2Keyboard&, mg::SDL2Mouse&, const mg::SDL2Window&);
+			void update(const mg::SDL2Keyboard&, mg::SDL2Mouse&, const mg::SDL2Window&);
+
+			glm::mat4 getModelMatrix() const;
+			glm::mat4 getViewMatrix() const;
+			glm::mat4 getProjectionMatrix() const;
 	};
 }
 

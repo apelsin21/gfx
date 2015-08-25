@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <exception>
+#include <chrono>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -49,6 +50,7 @@ namespace mg {
 
 			int _lastKey;
 			double _isoLevel;
+			bool _wireframe;
 		public:
 			Game();
 			~Game();
