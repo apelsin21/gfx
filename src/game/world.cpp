@@ -14,15 +14,15 @@ bool mg::World::generate() {
 	std::srand(std::time(NULL));
 
 	unsigned int totalTriangles = 0;
-	float chunkSize = 4.f;
+	static const int numX = 2, numY = 8, numZ = 2;
 	GRIDCELL tempVoxel;
-	std::vector<TRIANGLE> triangles((chunkSize*chunkSize*chunkSize)*5);
-	std::vector<glm::vec3> normals((chunkSize*chunkSize*chunkSize)*5);
+	std::vector<TRIANGLE> triangles((numX*numY*numZ)*5);
+	std::vector<glm::vec3> normals((numX*numY*numZ)*5);
 	float step = 0.1f;
 
-	for(float x = 0; x <= chunkSize; x += step) {
-		for(float y = 0; y <= chunkSize; y += step) {
-			for(float z = 0; z <= chunkSize; z += step) {
+	for(float x = 0; x <= numX; x += step) {
+		for(float y = 0; y <= numY; y += step) {
+			for(float z = 0; z <= numZ; z += step) {
 				tempVoxel.p[0] = glm::vec3(x     , y     , z     ); // bottom front left
 				tempVoxel.p[1] = glm::vec3(x+step, y     , z     ); // bottom front right
 				tempVoxel.p[2] = glm::vec3(x+step, y+step, z     ); // bottom back right
@@ -42,7 +42,7 @@ bool mg::World::generate() {
 				tempVoxel.val[7] = _calcDensity(tempVoxel.p[7]); // top back left 
 
 				std::vector<TRIANGLE> tempTriangles(5);
-				int newTriangles = Polygonise(tempVoxel, -0.0001, &tempTriangles[0]);
+				int newTriangles = Polygonise(tempVoxel, 0.0, &tempTriangles[0]);
 				totalTriangles += newTriangles;
 
 				for(unsigned int i = 0; i < newTriangles; i++) {
@@ -62,7 +62,7 @@ bool mg::World::generate() {
 			_vertices.emplace_back(triangles[i].p[j].y);
 			_vertices.emplace_back(triangles[i].p[j].z);
 
-			unsigned int numNeighbours = 2;
+			unsigned int numNeighbours = 24;
 			unsigned int start = i - (numNeighbours/2), end = i + (numNeighbours/2);
 
 			if(end > triangles.size()) {
