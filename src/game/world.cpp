@@ -3,6 +3,7 @@
 mg::World::World() {
 	_generatedVoxels = false;
 	_generatedVertices = false;
+	_isoLevel = 0.0;
 }
 mg::World::~World() {
 }
@@ -13,42 +14,101 @@ bool mg::World::generateVoxels() {
 		return false;
 	}
 
-	// create an array to hold all voxels
-	_voxels = std::unique_ptr<GRIDCELL[]>(new GRIDCELL[_numVoxels]);
-	GRIDCELL tempVoxel; // is overwritten
+	std::array<std::array<std::array<glm::vec3, _numZ>, _numY>, _numX> positions;
+	std::array<std::array<std::array<float, _numZ>, _numY>, _numX> values;
+	//glm::vec3[_numX][_numY][_numZ] positions;
+	//float[_numX][_numY][_numZ] values;
+	unsigned int numTrue = 0;
 
-	float width = 0.1f;
+	//use volexample as example
+	//generate "c", a.k.a the value of the density function
+	//at the position x, y, z, for the number of voxels you want
+	//
+	//if it's positive, discard that value, for example.
 
-	for(int i = 0; i < _numX; i++) {
-		for(int j = 0; j < _numY; j++) {
-			for(int k = 0; k < _numZ; k++) {
-				// we want the distance between the voxels
-				// to be the same as their width
-				float x = i * width, y = j * width, z = k * width;
+	for(unsigned int z = 0; z < _numZ; z++) {
+		for(unsigned int y = 0; y < _numY; y++) {
+			for(unsigned int x = 0; x < _numX; x++) {
+				glm::vec3 p(x * _scale, y * _scale, z * _scale);
+				float density = _calcDensity(p);
 
-				tempVoxel.p[0] = glm::vec3(x      , y      , z      ); // bottom front left
-				tempVoxel.p[1] = glm::vec3(x+width, y      , z      ); // bottom front right
-				tempVoxel.p[2] = glm::vec3(x+width, y+width, z      ); // bottom back right
-				tempVoxel.p[3] = glm::vec3(x      , y+width, z      ); // bottom back left
-				tempVoxel.p[4] = glm::vec3(x      , y      , z+width); // top front left
-				tempVoxel.p[5] = glm::vec3(x+width, y      , z+width); // top font right
-				tempVoxel.p[6] = glm::vec3(x+width, y+width, z+width); // top back right
-				tempVoxel.p[7] = glm::vec3(x      , y+width, z+width); // top back left 
-				
-				tempVoxel.val[0] = _calcDensity(tempVoxel.p[0]); // bottom front left
-				tempVoxel.val[1] = _calcDensity(tempVoxel.p[1]); // bottom front right
-				tempVoxel.val[2] = _calcDensity(tempVoxel.p[2]); // bottom back right
-				tempVoxel.val[3] = _calcDensity(tempVoxel.p[3]); // bottom back left
-				tempVoxel.val[4] = _calcDensity(tempVoxel.p[4]); // top front left
-				tempVoxel.val[5] = _calcDensity(tempVoxel.p[5]); // top font right
-				tempVoxel.val[6] = _calcDensity(tempVoxel.p[6]); // top back right
-				tempVoxel.val[7] = _calcDensity(tempVoxel.p[7]); // top back left 
-
-				_voxels[i * _numX * _numY + j * _numZ + k] = tempVoxel;
+				positions[x][y][z] = p;
+				values[x][y][z] = density;
+				if(density < 0) {
+					numTrue++;
+				}
 			}
 		}
 	}
 
+	printf("generated %u, max %u\n", numTrue, _numVoxels);
+
+	//ALMOST
+	//if the voxel @ x y z had a positive density value
+	//(i.e a value that is not solid)
+	//DON'T use it below
+	//instead use another value
+	//
+	//... i think
+
+	for(unsigned int x = 0; x < _numX; x++) {
+		for(unsigned int y = 0; y < _numY; y++) {
+			for(unsigned int z = 0; z < _numZ; z++) {
+				GRIDCELL voxel;
+
+				glm::vec3 p = positions[x][y][z];
+				voxel.p[0] = p + glm::vec3(0     , 0.f   , 0.f  ); // bottom front left
+				voxel.p[1] = p + glm::vec3(_scale, 0.f   , 0.f  ); // bottom front right
+				voxel.p[2] = p + glm::vec3(_scale, _scale, 0.f  ); // bottom back right
+				voxel.p[3] = p + glm::vec3(0     , _scale, 0.f  ); // bottom back left
+				voxel.p[4] = p + glm::vec3(0     , 0.f   , _scale); // top front left
+				voxel.p[5] = p + glm::vec3(_scale, 0.f   , _scale); // top font right
+				voxel.p[6] = p + glm::vec3(_scale, _scale, _scale); // top back right
+				voxel.p[7] = p + glm::vec3(0     , _scale, _scale); // top back left 
+				
+				//LOOK AT VOLEXAMPLE LINE 97 to 151
+				voxel.val[0] = values[x  ][y  ][z  ]; // bottom front left
+				voxel.val[1] = values[x+1][y  ][z  ]; // bottom front right
+				voxel.val[2] = values[x+1][y+1][z  ]; // bottom back right
+				voxel.val[3] = values[x  ][y+1][z  ]; // bottom back left
+				voxel.val[4] = values[x  ][y  ][z+1]; // top front left
+				voxel.val[5] = values[x+1][y  ][z+1]; // top font right
+				voxel.val[6] = values[x+1][y+1][z+1]; // top back right
+				voxel.val[7] = values[x  ][y+1][z+1]; // top back left 
+
+				_voxels.emplace_back(voxel);
+			}
+		}
+	}
+
+	//for(int x = 0; x < _numX; x++) {
+	//	for(int y = 0; y < _numY; y++) {
+	//		for(int z = 0; z < _numZ; z++) {
+	//			pos = glm::vec3(x * scale, y * scale, z * scale);
+
+	//			tempVoxel.p[0] = pos + glm::vec3(0    , 0.f   , 0.f  ); // bottom front left
+	//			tempVoxel.p[1] = pos + glm::vec3(scale, 0.f   , 0.f  ); // bottom front right
+	//			tempVoxel.p[2] = pos + glm::vec3(scale, scale , 0.f  ); // bottom back right
+	//			tempVoxel.p[3] = pos + glm::vec3(0    , scale , 0.f  ); // bottom back left
+	//			tempVoxel.p[4] = pos + glm::vec3(0    , 0.f   , scale); // top front left
+	//			tempVoxel.p[5] = pos + glm::vec3(scale, 0.f   , scale); // top font right
+	//			tempVoxel.p[6] = pos + glm::vec3(scale, scale , scale); // top back right
+	//			tempVoxel.p[7] = pos + glm::vec3(0    , scale , scale); // top back left 
+	//			
+	//			tempVoxel.val[0] = _calcDensity(tempVoxel.p[0]); // bottom front left
+	//			tempVoxel.val[1] = _calcDensity(tempVoxel.p[1]); // bottom front right
+	//			tempVoxel.val[2] = _calcDensity(tempVoxel.p[2]); // bottom back right
+	//			tempVoxel.val[3] = _calcDensity(tempVoxel.p[3]); // bottom back left
+	//			tempVoxel.val[4] = _calcDensity(tempVoxel.p[4]); // top front left
+	//			tempVoxel.val[5] = _calcDensity(tempVoxel.p[5]); // top font right
+	//			tempVoxel.val[6] = _calcDensity(tempVoxel.p[6]); // top back right
+	//			tempVoxel.val[7] = _calcDensity(tempVoxel.p[7]); // top back left 
+
+	//			_voxels[x * _numX * _numY + y * _numZ + z] = tempVoxel;
+	//		}
+	//	}
+	//}
+	
 	_generatedVoxels = true;
 
 	return true;
@@ -65,7 +125,7 @@ bool mg::World::generateVertices() {
 		return false;
 	}
 
-	static const unsigned int numPossibleTriangles = _numX*_numY*_numZ*5;
+	static const unsigned int numPossibleTriangles = _voxels.size()*5;
 	std::vector<TRIANGLE> triangles(numPossibleTriangles);
 	std::vector<glm::vec3> normals(numPossibleTriangles);
 
@@ -73,8 +133,8 @@ bool mg::World::generateVertices() {
 	std::array<TRIANGLE, 5> tempTriangles; // is overwritten
 
 	// iterate through all voxels
-	for(unsigned int i = 0; i < _numVoxels; i++) {
-		int numNewTriangles = Polygonise(_voxels[i], 0.0, &tempTriangles[0]);
+	for(unsigned int i = 0; i < _voxels.size(); i++) {
+		int numNewTriangles = Polygonise(_voxels[i], _isoLevel, &tempTriangles[0]);
 
 		// iterate through all new triangles for the voxel
 		// and add them and their normals to their respective lists
@@ -158,8 +218,8 @@ bool mg::World::generateVertices() {
 	}
 
 	unsigned int size = sizeof(float)*numFloats;
-	float maxPossibleSize = _numVoxels * 5 * 27 * 4 / 1024.f / 1024.f;
-	printf("%i voxels generated %i triangles, for a size of %u B, %f KB, %f MB.\n", _numVoxels,
+	float maxPossibleSize = _voxels.size() * 5 * 27 * 4 / 1024.f / 1024.f;
+	printf("%i voxels generated %i triangles, for a size of %u B, %f KB, %f MB.\n", _voxels.size(),
 		   	totalTriangles, size, size/1024.f, size/1024.f/1024.f);
 
 	printf("max possible size: %f MB.\n", maxPossibleSize);
@@ -175,7 +235,9 @@ bool mg::World::generateVertices() {
 }
 
 float mg::World::_calcDensity(const glm::vec3& p) const {
-	return glm::simplex(p);
+	glm::vec3 origin((_numX*_scale) / 2.0f, (_numY*_scale) / 2.0f, (_numZ*_scale) / 2.0f);
+
+	return glm::length(p - origin) - ((_numX*0.1f)/2.0f);
 }
 
 const mg::GLVertexBuffer& mg::World::getBuffer() const {

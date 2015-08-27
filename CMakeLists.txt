@@ -5,7 +5,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
 set(CMAKE_CXX_FLAGS "-std=c++14")
-SET(CMAKE_CXX_FLAGS_DISTRIBUTION "-O3")
 SET(CMAKE_BUILD_TYPE Release)
 
 find_path(FREETYPE_INCLUDE_DIRS freetype/freetype.h HINTS /usr/include/freetype2)

@@ -48,6 +48,7 @@ bool mg::Game::load() {
 		printf("Failed to generate vertices.\n");
 		return false;
 	}
+
 	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
 	return true;
@@ -77,10 +78,12 @@ void mg::Game::run() {
 
 		GLint viewLocation = _shader.getUniformLocation("u_view");
 		GLint projLocation = _shader.getUniformLocation("u_projection");
+		GLint timeLocation = _shader.getUniformLocation("u_time");
 		GLint eyeLocation = _shader.getUniformLocation("u_eye_pos");
 
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &_player.getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.getProjectionMatrix()[0][0]);
+		glUniform1f(timeLocation, static_cast<float>(std::clock()) / static_cast<float>(CLOCKS_PER_SEC));
 		glUniform3fv(eyeLocation, 1, &_player.getPosition()[0]);
 
 		_texture.bindID();

@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include <chrono>
+#include <map>
 
 #include <glm/gtc/noise.hpp>
 #include <glm/gtx/norm.hpp>
@@ -20,10 +21,12 @@ namespace mg {
 	class World {
 		protected:
 			std::vector<float> _vertices;
-			std::unique_ptr<GRIDCELL[]> _voxels;
+			std::vector<GRIDCELL> _voxels;
 			mg::GLVertexBuffer _buffer;
 
-			static constexpr int _numX = 32, _numY = 32, _numZ = 32;
+			double _isoLevel;
+			static constexpr float _scale = 0.1f;
+			static constexpr int _numX = 4, _numY = 4, _numZ = 4;
 			static constexpr int _numVoxels = _numX * _numY * _numZ;
 			float _calcDensity(const glm::vec3&) const;
 

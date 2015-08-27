@@ -4,7 +4,7 @@ mg::GLRenderer::GLRenderer() {
 	glGenVertexArrays(1, &_vao);
 	glBindVertexArray(_vao);
 
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 }

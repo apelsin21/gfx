@@ -1,11 +1,10 @@
 #include "game/marching_cubes.hpp"
 
-
 // Given a grid cell and an isolevel, calculate the triangles
 // required to represent the isosurface through the cell.
 // Return the number of triangels, the array "triangles"
-// will be loaded up with the vertices at most 5 triangels.
-// 
+// will be loaded up with the vertices of at most 5 triangels.
+//
 // 0 will be returned if the grid cell is either totally above
 // of totally below the isolevel.
 int Polygonise(GRIDCELL grid, float isolevel, TRIANGLE* triangles) {

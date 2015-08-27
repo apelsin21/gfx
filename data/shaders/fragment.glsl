@@ -7,6 +7,7 @@ in vec3 light_direction_cameraspace;
 
 uniform sampler2D u_sampler;
 uniform vec3 u_eye_pos;
+uniform float u_time;
 
 void main() {
 
@@ -21,9 +22,9 @@ void main() {
   	vec2 coord2 = f_pos.zx;
   	vec2 coord3 = f_pos.xy;
   
-  	vec4 col1 = texture2D(u_sampler, coord1);
-  	vec4 col2 = texture2D(u_sampler, coord2);
-  	vec4 col3 = texture2D(u_sampler, coord3);
+  	vec4 col1 = texture2D(u_sampler, coord1) * sqrt(u_time);
+  	vec4 col2 = texture2D(u_sampler, coord2) * sqrt(u_time);
+  	vec4 col3 = texture2D(u_sampler, coord3) * sqrt(u_time);
   
   	vec4 tex_color = 
 		col1.rgba * blend_weights.xxxx +
@@ -37,16 +38,14 @@ void main() {
 	float cos_theta = clamp(dot(n, l), 0, 1);
 	float distance = length(u_eye_pos - f_pos);
 
-	vec4 light_color = vec4(1, 1, 1, 1);
+	vec4 light_color = vec4(1);
 	vec4 ambient_color = vec4(0.1, 0.1, 0.1, 1.0) * tex_color;
-	float light_power = 0.2f;
 
 	// mixing the above
 	gl_FragColor = 
 		ambient_color + 
 		tex_color * 
 		light_color * 
-		light_power *
 		cos_theta / 
 		(distance*distance)
 	;
