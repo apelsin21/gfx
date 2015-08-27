@@ -45,15 +45,14 @@ bool mg::GLVertexBuffer::allocate(unsigned int max, bool is_static, mg::VertexFo
 	_maxVertices = max;
 	return true;
 }
-bool mg::GLVertexBuffer::update(const std::vector<float>& vertices) {
+bool mg::GLVertexBuffer::update(const std::vector<float>& vertices, bool is_static, mg::VertexFormat format) {
 	if(vertices.empty()) {
 		printf("GLVertexBuffer tried to upload empty vertex list\n");
 		return 0;
 	}
-	if(vertices.size() != _maxVertices) {
-		printf("GLVertexBuffer tried to update buffer with wrong size.\n");
-		return false;
-	}
+
+	_usage = is_static ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW;
+	_format = format;
 
 	this->bind();
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), (GLvoid*)&vertices[0], this->_usage);
@@ -80,7 +79,7 @@ bool mg::GLVertexBuffer::updateRegion(const std::vector<float>& vertices, unsign
 	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * offset, sizeof(float) * numVertices, (GLvoid*)&vertices[0]);
 
 	if(_numVertices != _maxVertices) {
-		if(offset >= 0 && offset <= _numVertices) {
+		if(offset > 0 && offset <= _numVertices) {
 			if(offset + numVertices > _numVertices) {
 				_numVertices += offset + numVertices - (_numVertices);
 			}

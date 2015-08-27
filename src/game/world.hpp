@@ -2,14 +2,10 @@
 #define WORLD_HPP
 
 #include <cstdio>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
-
 #include <string>
 #include <vector>
-#include <cstdlib>
 #include <memory>
+#include <chrono>
 
 #include <glm/gtc/noise.hpp>
 #include <glm/gtx/norm.hpp>
@@ -24,16 +20,20 @@ namespace mg {
 	class World {
 		protected:
 			std::vector<float> _vertices;
+			std::unique_ptr<GRIDCELL[]> _voxels;
 			mg::GLVertexBuffer _buffer;
-			std::vector<GRIDCELL> _voxels;
 
+			static constexpr int _numX = 32, _numY = 32, _numZ = 32;
+			static constexpr int _numVoxels = _numX * _numY * _numZ;
 			float _calcDensity(const glm::vec3&) const;
-			glm::vec3 _calcNormal(const glm::vec3&) const;
+
+			bool _generatedVoxels, _generatedVertices;
 		public:
 			World();
 			~World();
 
-			bool generate();
+			bool generateVoxels();
+			bool generateVertices();
 
 			const mg::GLVertexBuffer& getBuffer() const;
 			std::vector<float> getVertices() const;

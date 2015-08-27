@@ -20,10 +20,10 @@ bool mg::Game::load() {
         return false;
     }
 	
-	if(!_font.load("data/fonts/FreeSans.ttf", 16)) {
-		printf("Font %s failed to load!\n", _font.path.c_str());
-		return false;
-	}
+	//if(!_font.load("data/fonts/FreeSans.ttf", 16)) {
+	//	printf("Font %s failed to load!\n", _font.path.c_str());
+	//	return false;
+	//}
 
 	//if(!_soundPlayer.initialize()) {
 	//	printf("soundplayer failed to initialize.\n");
@@ -40,11 +40,15 @@ bool mg::Game::load() {
 	//	return false;
 	//}
 	
-	if(!_world.generate()) {
-		printf("failed to generate world.\n");
+	if(!_world.generateVoxels()) {
+		printf("Failed to generate voxels.\n");
 		return false;
 	}
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	if(!_world.generateVertices()) {
+		printf("Failed to generate vertices.\n");
+		return false;
+	}
+	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
 	return true;
 }
