@@ -439,6 +439,19 @@ namespace mg {
     	    case mg::KEY::NUM_0:
     	        sdlKey = SDL_SCANCODE_0;
     	        break;
+
+    	    case mg::KEY::UP:
+    	        sdlKey = SDL_SCANCODE_UP;
+    	        break;
+    	    case mg::KEY::DOWN:
+    	        sdlKey = SDL_SCANCODE_DOWN;
+    	        break;
+    	    case mg::KEY::LEFT:
+    	        sdlKey = SDL_SCANCODE_LEFT;
+    	        break;
+    	    case mg::KEY::RIGHT:
+    	        sdlKey = SDL_SCANCODE_RIGHT;
+    	        break;
     	    default:
     	        break;
     	}

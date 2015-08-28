@@ -24,10 +24,11 @@ namespace mg {
 			std::vector<GRIDCELL> _voxels;
 			mg::GLVertexBuffer _buffer;
 
-			double _isoLevel;
 			static constexpr float _scale = 0.1f;
-			static constexpr int _numX = 4, _numY = 4, _numZ = 4;
+			static constexpr double _isoLevel = 0.0;
+			static constexpr int _numX = 8, _numY = 8, _numZ = 8;
 			static constexpr int _numVoxels = _numX * _numY * _numZ;
+
 			float _calcDensity(const glm::vec3&) const;
 
 			bool _generatedVoxels, _generatedVertices;

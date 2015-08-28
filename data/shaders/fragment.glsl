@@ -10,7 +10,6 @@ uniform vec3 u_eye_pos;
 uniform float u_time;
 
 void main() {
-
 	// texturing
   	vec3 blend_weights = abs(f_normal);
   	

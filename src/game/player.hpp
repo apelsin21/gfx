@@ -1,6 +1,8 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include <chrono>
+
 #include "core/sdl2_keyboard.hpp"
 #include "core/sdl2_mouse.hpp"
 #include "core/sdl2_window.hpp"
@@ -8,13 +10,12 @@
 #include "game/entity.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
-
-#include <chrono>
+#include <glm/gtc/constants.hpp>
 
 namespace mg {
 	class Player : public mg::Entity {
 		protected:
-			float _horizontalAngle, _verticalAngle, _initialFoV, _speed, _mouseSpeed;
+			float _horizontalAngle, _verticalAngle, _initialFoV, _speed, _turningSpeed;
 
 			float _deltaTime, _lastTime, _currentTime;
 

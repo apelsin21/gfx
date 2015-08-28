@@ -1,12 +1,13 @@
 #include "game/player.hpp"
 
 mg::Player::Player() {
+	_position = glm::vec3(0.0f, 0.5f, 0.0f);
 	_scale = glm::vec3(1.0f, 1.0f, 1.0f);
-	_horizontalAngle = 3.1415f;
-	_verticalAngle = 0.0f;
-	_initialFoV = 60.0f;
+	_horizontalAngle = glm::quarter_pi<float>();
+	_verticalAngle = 0.f;
+	_initialFoV = 60.f;
 	_speed = 30.0f;
-	_mouseSpeed = 0.5f;
+	_turningSpeed = 0.5f;
 	_lastTime = static_cast<float>(std::clock()) / static_cast<float>(CLOCKS_PER_SEC);
 }
 mg::Player::~Player() {
@@ -19,9 +20,36 @@ void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, 
 
 	glm::vec2 resolution = window.getResolution();
 	glm::vec2 mousePosition = mouse.getPosition();
+	mouse.setPosition(resolution / 2.0f, window);
 
-	_horizontalAngle += _mouseSpeed * _deltaTime * (resolution.x/2.0f - mousePosition.x);
-	_verticalAngle -= _mouseSpeed * _deltaTime * (resolution.y/2.0f - mousePosition.y);
+	if(keyboard.isKeyDown(mg::KEY::UP)) {
+		_verticalAngle += _turningSpeed * _deltaTime * 100.f;
+	}
+	if(keyboard.isKeyDown(mg::KEY::DOWN)) {
+		_verticalAngle -= _turningSpeed * _deltaTime * 100.f;
+	}
+	if(keyboard.isKeyDown(mg::KEY::LEFT)) {
+		_horizontalAngle -= _turningSpeed * _deltaTime * 100.f;
+	}
+	if(keyboard.isKeyDown(mg::KEY::RIGHT)) {
+		_horizontalAngle += _turningSpeed * _deltaTime * 100.f;
+	}
+
+	_horizontalAngle += _turningSpeed * _deltaTime * (resolution.x/2.0f - mousePosition.x);
+	_verticalAngle   += _turningSpeed * _deltaTime * (resolution.y/2.0f - mousePosition.y);
+
+	_verticalAngle = glm::clamp(
+			_verticalAngle,
+			-glm::half_pi<float>(),
+			glm::half_pi<float>()
+	);
+
+	if(_horizontalAngle < 0.f) {
+		_horizontalAngle += glm::pi<float>() * 2.f;
+	}
+	if(_horizontalAngle > glm::pi<float>()) {
+		_horizontalAngle -= glm::pi<float>() * 2.f;
+	}
 
 	glm::vec3 direction(
 			glm::cos(_verticalAngle) * glm::sin(_horizontalAngle),
@@ -29,16 +57,14 @@ void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, 
 			glm::cos(_verticalAngle) * glm::cos(_horizontalAngle)
 	);
 
+	printf("pos: %fx%fx%fx, vertical: %f, horizontal: %f\n", _position.x, _position.y, _position.z, _verticalAngle, _horizontalAngle);
 	mouse.hide();
 
 	glm::vec3 right(
-			glm::sin(_horizontalAngle - 3.1415f/2.0f),
+			glm::sin(_horizontalAngle - glm::half_pi<float>()),
 			0.0f,
-			glm::cos(_horizontalAngle - 3.1415f/2.0f)
+			glm::cos(_horizontalAngle - glm::half_pi<float>())
 	);
-
-	glm::vec3 up = glm::cross(right, direction);
-
 
 	if(keyboard.isKeyDown(mg::KEY::W)) {
 		_position += direction * _deltaTime * _speed;
@@ -47,10 +73,10 @@ void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, 
 		_position -= direction * _deltaTime * _speed;
 	}
 	if(keyboard.isKeyDown(mg::KEY::A)) {
-		_position += right * _deltaTime * _speed;
+		_position -= right * _deltaTime * _speed;
 	}
 	if(keyboard.isKeyDown(mg::KEY::D)) {
-		_position -= right * _deltaTime * _speed;
+		_position += right * _deltaTime * _speed;
 	}
 
 	if(keyboard.isKeyDown(mg::KEY::Q)) {
@@ -68,14 +94,18 @@ void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, 
 		}
 	}
 
-	_projectionMatrix = glm::perspective(3.1415f * 1.5f, 4.0f / 3.0f, 0.001f, 100.0f);
+	_projectionMatrix = glm::perspective(
+		glm::radians(_initialFoV),
+		static_cast<float>(resolution.x) / static_cast<float>(resolution.y),
+		0.01f,
+		100.0f
+	);
 	_viewMatrix = glm::lookAt(
 		_position,
 		_position + direction,
-		up
+		glm::cross(right, direction)
 	);
 
-	mouse.setPosition(resolution / 2.0f, window);
 }
 
 glm::mat4 mg::Player::getModelMatrix() const {
