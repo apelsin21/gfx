@@ -37,7 +37,7 @@ void main() {
 	float cos_theta = clamp(dot(n, l), 0, 1);
 	float distance = length(u_eye_pos - f_pos);
 
-	vec4 light_color = vec4(1);
+	vec4 light_color = vec4(0.1, 0.1, 0.1, 1.0);
 	vec4 ambient_color = vec4(0.1, 0.1, 0.1, 1.0) * tex_color;
 
 	// mixing the above

@@ -22,6 +22,7 @@ bool mg::World::generateVoxels() {
 		for(unsigned int y = 0; y < _numY; y++) {
 			for(unsigned int z = 0; z < _numZ; z++) {
 				float density = _calcDensity(glm::vec3(x*scale, y*scale, z*scale));
+
 				values[x * _numX * _numY + y * _numZ + z] = density;
 			}
 		}
@@ -162,6 +163,12 @@ bool mg::World::generateVertices() {
 }
 
 float mg::World::_calcDensity(const glm::vec3& p) const {
+	if(p.x == 0 || p.y == 0 || p.z == 0) {
+		return 0.f;
+	} else if(p.x >= (_numX-1)*scale || p.y >= (_numY-1)*scale || p.z >= (_numZ-1)*scale) {
+		return 0.f;
+	}
+
 	return glm::simplex(p);
 }
 

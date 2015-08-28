@@ -1,7 +1,6 @@
 #include "game/player.hpp"
 
 mg::Player::Player() {
-	_position = glm::vec3(0.0f, 0.5f, 0.0f);
 	_scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	_horizontalAngle = glm::quarter_pi<float>();
 	_verticalAngle = 0.f;
