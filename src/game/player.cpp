@@ -29,10 +29,10 @@ void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, 
 		_verticalAngle -= _turningSpeed * _deltaTime * 100.f;
 	}
 	if(keyboard.isKeyDown(mg::KEY::LEFT)) {
-		_horizontalAngle -= _turningSpeed * _deltaTime * 100.f;
+		_horizontalAngle += _turningSpeed * _deltaTime * 100.f;
 	}
 	if(keyboard.isKeyDown(mg::KEY::RIGHT)) {
-		_horizontalAngle += _turningSpeed * _deltaTime * 100.f;
+		_horizontalAngle -= _turningSpeed * _deltaTime * 100.f;
 	}
 
 	_horizontalAngle += _turningSpeed * _deltaTime * (resolution.x/2.0f - mousePosition.x);
@@ -57,7 +57,6 @@ void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, 
 			glm::cos(_verticalAngle) * glm::cos(_horizontalAngle)
 	);
 
-	printf("pos: %fx%fx%fx, vertical: %f, horizontal: %f\n", _position.x, _position.y, _position.z, _verticalAngle, _horizontalAngle);
 	mouse.hide();
 
 	glm::vec3 right(

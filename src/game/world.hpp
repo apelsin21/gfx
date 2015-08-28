@@ -20,18 +20,20 @@
 namespace mg {
 	class World {
 		protected:
+			static constexpr double _isoLevel = 0.0;
+			static constexpr int _numX = 64, _numY = 64, _numZ = 64;
+			static constexpr int _numVoxels = _numX * _numY * _numZ;
+			static constexpr float _scale = 0.1f;
+			float scale;
+
 			std::vector<float> _vertices;
 			std::vector<GRIDCELL> _voxels;
 			mg::GLVertexBuffer _buffer;
 
-			static constexpr float _scale = 0.1f;
-			static constexpr double _isoLevel = 0.0;
-			static constexpr int _numX = 8, _numY = 8, _numZ = 8;
-			static constexpr int _numVoxels = _numX * _numY * _numZ;
+			bool _generatedVoxels, _generatedVertices;
 
 			float _calcDensity(const glm::vec3&) const;
 
-			bool _generatedVoxels, _generatedVertices;
 		public:
 			World();
 			~World();

@@ -3,6 +3,7 @@
 mg::World::World() {
 	_generatedVoxels = false;
 	_generatedVertices = false;
+	scale = 0.1f;
 }
 mg::World::~World() {
 }
@@ -13,48 +14,42 @@ bool mg::World::generateVoxels() {
 		return false;
 	}
 
-	//std::array<std::array<std::array<glm::vec3, _numZ>, _numY>, _numX> positions;
-	//std::array<std::array<std::array<float, _numZ>, _numY>, _numX> values;
-
 	_voxels = std::vector<GRIDCELL>(_numVoxels);
-	std::vector<float> values(_numVoxels);
+	std::array<float, _numVoxels> values;
+	//std::array<std::array<std::array<float, _numZ>, _numY>, _numX> values;
 
 	for(unsigned int x = 0; x < _numX; x++) {
 		for(unsigned int y = 0; y < _numY; y++) {
 			for(unsigned int z = 0; z < _numZ; z++) {
-				float density = _calcDensity(glm::vec3(x*_scale, y*_scale, z*_scale));
+				float density = _calcDensity(glm::vec3(x*scale, y*scale, z*scale));
 				values[x * _numX * _numY + y * _numZ + z] = density;
 			}
 		}
 	}
 
-	GRIDCELL voxel;
+	for(unsigned int x = 0; x < _numX-1; x++) {
+		for(unsigned int y = 0; y < _numY-1; y++) {
+			for(unsigned int z = 0; z < _numZ-1; z++) {
+				glm::vec3 p = glm::vec3(x * scale, y * scale, z * scale);
 
-	for(unsigned int x = 0; x < _numX; x++) {
-		for(unsigned int y = 0; y < _numY; y++) {
-			for(unsigned int z = 0; z < _numZ; z++) {
+				unsigned int index = x * _numX * _numY + y * _numZ + z;
+				_voxels[index].p[0] = p + glm::vec3(0.0	, 0.0f , 0.0f );
+				_voxels[index].p[1] = p + glm::vec3(scale, 0.0f , 0.0f );
+				_voxels[index].p[2] = p + glm::vec3(scale, scale, 0.0f );
+				_voxels[index].p[3] = p + glm::vec3(0.0f	, scale, 0.0f );
+				_voxels[index].p[4] = p + glm::vec3(0.0f	, 0.0f , scale);
+				_voxels[index].p[5] = p + glm::vec3(scale, 0.0f , scale);
+				_voxels[index].p[6] = p + glm::vec3(scale, scale, scale);
+				_voxels[index].p[7] = p + glm::vec3(0.0f	, scale, scale);
 
-				glm::vec3 p = glm::vec3(x * _scale, y * _scale, z * _scale);
-
-				voxel.p[0] = p + glm::vec3(0.0f  , 0.0f  , 0.0f  );
-				voxel.p[1] = p + glm::vec3(_scale, 0.0f  , 0.0f  );
-				voxel.p[2] = p + glm::vec3(_scale, _scale, 0.0f  );
-				voxel.p[3] = p + glm::vec3(0.0f  , _scale, 0.0f  );
-				voxel.p[4] = p + glm::vec3(0.0f  , 0.0f  , _scale);
-				voxel.p[5] = p + glm::vec3(_scale, 0.0f  , _scale);
-				voxel.p[6] = p + glm::vec3(_scale, _scale, _scale);
-				voxel.p[7] = p + glm::vec3(0.0f  , _scale, _scale);
-
-				voxel.val[0] = values[x   * _numX * _numY + y   * _numZ + z  ];
-				voxel.val[1] = values[x+1 * _numX * _numY + y   * _numZ + z  ];
-				voxel.val[2] = values[x+1 * _numX * _numY + y+1 * _numZ + z  ];
-				voxel.val[3] = values[x   * _numX * _numY + y+1 * _numZ + z  ];
-				voxel.val[4] = values[x   * _numX * _numY + y   * _numZ + z+1];
-				voxel.val[5] = values[x+1 * _numX * _numY + y   * _numZ + z+1];
-				voxel.val[6] = values[x+1 * _numX * _numY + y+1 * _numZ + z+1];
-				voxel.val[7] = values[x   * _numX * _numY + y+1 * _numZ + z+1];
-				
-				_voxels[x * _numX * _numY + y * _numZ + z] = voxel;
+				_voxels[index].val[0] = values[x     * _numX * _numY + y     * _numZ + z    ];
+				_voxels[index].val[1] = values[(x+1) * _numX * _numY + y     * _numZ + z    ];
+				_voxels[index].val[2] = values[(x+1) * _numX * _numY + (y+1) * _numZ + z    ];
+				_voxels[index].val[3] = values[x     * _numX * _numY + (y+1) * _numZ + z    ];
+				_voxels[index].val[4] = values[x     * _numX * _numY + y     * _numZ + (z+1)];
+				_voxels[index].val[5] = values[(x+1) * _numX * _numY + y     * _numZ + (z+1)];
+				_voxels[index].val[6] = values[(x+1) * _numX * _numY + (y+1) * _numZ + (z+1)];
+				_voxels[index].val[7] = values[x     * _numX * _numY + (y+1) * _numZ + (z+1)];
 			}
 		}
 	}
@@ -142,7 +137,7 @@ bool mg::World::generateVertices() {
 				)
 			);
 
-			int index = (i*18) + (j*6);
+			int index = i*18 + j*6;
 			_vertices[index+0] = triangles[i].p[j].x;
 			_vertices[index+1] = triangles[i].p[j].y;
 			_vertices[index+2] = triangles[i].p[j].z;
@@ -167,10 +162,6 @@ bool mg::World::generateVertices() {
 }
 
 float mg::World::_calcDensity(const glm::vec3& p) const {
-	//glm::vec3 origin((_numX*_scale) / 2.0f, (_numY*_scale) / 2.0f, (_numZ*_scale) / 2.0f);
-
-	//return glm::length(p - origin) - ((_numX*0.1f)/2.0f);
-	
 	return glm::simplex(p);
 }
 
