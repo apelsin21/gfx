@@ -3,7 +3,13 @@
 mg::World::World() {
 	_generatedVoxels = false;
 	_generatedVertices = false;
-	scale = 0.1f;
+
+	_isoLevel = 0;
+	_numX = 64;
+	_numY = 64;
+	_numZ = 64;
+	_numVoxels = _numX*_numY*_numZ;
+	_voxelSize = 0.1f;
 }
 mg::World::~World() {
 }
@@ -14,43 +20,14 @@ bool mg::World::generateVoxels() {
 		return false;
 	}
 
-	_voxels = std::vector<GRIDCELL>(_numVoxels);
-	std::array<float, _numVoxels> values;
-	//std::array<std::array<std::array<float, _numZ>, _numY>, _numX> values;
+	_voxels = std::vector<float>(_numVoxels);
 
 	for(unsigned int x = 0; x < _numX; x++) {
 		for(unsigned int y = 0; y < _numY; y++) {
 			for(unsigned int z = 0; z < _numZ; z++) {
-				float density = _calcDensity(glm::vec3(x*scale, y*scale, z*scale));
+				float density = _calcDensity(glm::vec3(x*_voxelSize, y*_voxelSize, z*_voxelSize));
 
-				values[x * _numX * _numY + y * _numZ + z] = density;
-			}
-		}
-	}
-
-	for(unsigned int x = 0; x < _numX-1; x++) {
-		for(unsigned int y = 0; y < _numY-1; y++) {
-			for(unsigned int z = 0; z < _numZ-1; z++) {
-				glm::vec3 p = glm::vec3(x * scale, y * scale, z * scale);
-
-				unsigned int index = x * _numX * _numY + y * _numZ + z;
-				_voxels[index].p[0] = p + glm::vec3(0.0	, 0.0f , 0.0f );
-				_voxels[index].p[1] = p + glm::vec3(scale, 0.0f , 0.0f );
-				_voxels[index].p[2] = p + glm::vec3(scale, scale, 0.0f );
-				_voxels[index].p[3] = p + glm::vec3(0.0f	, scale, 0.0f );
-				_voxels[index].p[4] = p + glm::vec3(0.0f	, 0.0f , scale);
-				_voxels[index].p[5] = p + glm::vec3(scale, 0.0f , scale);
-				_voxels[index].p[6] = p + glm::vec3(scale, scale, scale);
-				_voxels[index].p[7] = p + glm::vec3(0.0f	, scale, scale);
-
-				_voxels[index].val[0] = values[x     * _numX * _numY + y     * _numZ + z    ];
-				_voxels[index].val[1] = values[(x+1) * _numX * _numY + y     * _numZ + z    ];
-				_voxels[index].val[2] = values[(x+1) * _numX * _numY + (y+1) * _numZ + z    ];
-				_voxels[index].val[3] = values[x     * _numX * _numY + (y+1) * _numZ + z    ];
-				_voxels[index].val[4] = values[x     * _numX * _numY + y     * _numZ + (z+1)];
-				_voxels[index].val[5] = values[(x+1) * _numX * _numY + y     * _numZ + (z+1)];
-				_voxels[index].val[6] = values[(x+1) * _numX * _numY + (y+1) * _numZ + (z+1)];
-				_voxels[index].val[7] = values[x     * _numX * _numY + (y+1) * _numZ + (z+1)];
+				_voxels[x * _numX * _numY + y * _numZ + z] = density;
 			}
 		}
 	}
@@ -59,14 +36,13 @@ bool mg::World::generateVoxels() {
 
 	return true;
 }
-
 bool mg::World::generateVertices() {
 	if(!_generatedVoxels) {
 		printf("world tried to generate vertices from no voxels.\n");
 		return false;
 	}
-	if(_generatedVertices) {
-		printf("world tried to regenerate vertices from voxels.\n");
+	if(_voxels.empty()) {
+		printf("world can't generate vertices from no voxels.\n");
 		return false;
 	}
 
@@ -76,23 +52,49 @@ bool mg::World::generateVertices() {
 
 	unsigned int totalTriangles = 0;
 	std::array<TRIANGLE, 5> tempTriangles;
+	GRIDCELL cell;
 
-	for(unsigned int i = 0; i < _voxels.size(); i++) {
-		int numNewTriangles = Polygonise(_voxels[i], _isoLevel, &tempTriangles[0]);
+	for(unsigned int x = 0; x < _numX-1; x++) {
+		for(unsigned int y = 0; y < _numY-1; y++) {
+			for(unsigned int z = 0; z < _numZ-1; z++) {
 
-		for(unsigned int j = 0; j < numNewTriangles; j++) {
-			int index = totalTriangles + j;
-			triangles[index] = tempTriangles[j];
+				unsigned int index = x * _numX * _numY + y * _numZ + z;
+				glm::vec3 p = glm::vec3(x * _voxelSize, y * _voxelSize, z * _voxelSize);
 
-			normals[index] = glm::normalize(
-				glm::cross(
-					triangles[index].p[1] - triangles[index].p[0],
-			   		triangles[index].p[2] - triangles[index].p[0]
-				)
-			);
+				cell.p[0] = p + glm::vec3(0.0	, 0.0f  , 0.0f  );
+				cell.p[1] = p + glm::vec3(_voxelSize, 0.0f  , 0.0f  );
+				cell.p[2] = p + glm::vec3(_voxelSize, _voxelSize, 0.0f  );
+				cell.p[3] = p + glm::vec3(0.0f	, _voxelSize, 0.0f  );
+				cell.p[4] = p + glm::vec3(0.0f	, 0.0f  , _voxelSize);
+				cell.p[5] = p + glm::vec3(_voxelSize, 0.0f  , _voxelSize);
+				cell.p[6] = p + glm::vec3(_voxelSize, _voxelSize, _voxelSize);
+				cell.p[7] = p + glm::vec3(0.0f	, _voxelSize, _voxelSize);
+
+				cell.val[0] = _voxels[x     * _numX * _numY + y     * _numZ + z    ];
+				cell.val[1] = _voxels[(x+1) * _numX * _numY + y     * _numZ + z    ];
+				cell.val[2] = _voxels[(x+1) * _numX * _numY + (y+1) * _numZ + z    ];
+				cell.val[3] = _voxels[x     * _numX * _numY + (y+1) * _numZ + z    ];
+				cell.val[4] = _voxels[x     * _numX * _numY + y     * _numZ + (z+1)];
+				cell.val[5] = _voxels[(x+1) * _numX * _numY + y     * _numZ + (z+1)];
+				cell.val[6] = _voxels[(x+1) * _numX * _numY + (y+1) * _numZ + (z+1)];
+				cell.val[7] = _voxels[x     * _numX * _numY + (y+1) * _numZ + (z+1)];
+
+				int numNewTriangles = Polygonise(cell, _isoLevel, &tempTriangles[0]);
+				for(unsigned int j = 0; j < numNewTriangles; j++) {
+					int index = totalTriangles + j;
+					triangles[index] = tempTriangles[j];
+
+					normals[index] = glm::normalize(
+						glm::cross(
+							triangles[index].p[1] - triangles[index].p[0],
+					   		triangles[index].p[2] - triangles[index].p[0]
+						)
+					);
+				}
+
+				totalTriangles += numNewTriangles;
+			}
 		}
-
-		totalTriangles += numNewTriangles;
 	}
 
 	triangles.shrink_to_fit();
@@ -148,11 +150,6 @@ bool mg::World::generateVertices() {
 		}
 	}
 
-	if(totalTriangles == 0) {
-		printf("Generated 0 triangles.\n");
-		return false;
-	}
-
 	if(!_buffer.update(_vertices, true, mg::VertexFormat::PPPNNN)) {
 		return false;
 	}
@@ -161,15 +158,53 @@ bool mg::World::generateVertices() {
 
 	return true;
 }
+void mg::World::reset() {
+	this->_voxels.clear();
 
-float mg::World::_calcDensity(const glm::vec3& p) const {
-	if(p.x == 0 || p.y == 0 || p.z == 0) {
-		return 0.f;
-	} else if(p.x >= (_numX-1)*scale || p.y >= (_numY-1)*scale || p.z >= (_numZ-1)*scale) {
-		return 0.f;
+	_generatedVoxels = false;
+	_generatedVertices = false;
+}
+
+bool mg::World::setVoxel(unsigned int index, float density) {
+	if(_voxels.empty()) {
+		printf("failed to modify voxel %u, because there are no \
+			voxels in that chunk.\n", index);
+		return false;
 	}
 
-	return glm::simplex(p);
+	printf("index: %i\n", index);
+
+	if(index > _numVoxels) {
+		printf("tried to edit out of bounds voxel %u\n", index);
+		return false;
+	}
+
+	_voxels[index] = density;
+
+	_generatedVoxels = true;
+
+	return true;
+}
+unsigned int mg::World::getIndex(const glm::vec3& p) const {
+	if(_voxelSize == 0.f) {
+		printf("tried to get index from position \
+				@ %fx%fx%f, but voxel size is zero.\n", p.x, p.y, p.z);
+		return 0;
+	}
+
+	unsigned int x = p.x / _voxelSize;
+	unsigned int y = p.y / _voxelSize;
+	unsigned int z = p.z / _voxelSize;
+
+	return (x * _numX * _numY) + (y * _numZ) + z;
+}
+bool mg::World::setSphere(const glm::vec3& p, unsigned int radius, float density) {
+	setVoxel(getIndex(p), density);
+	return true;
+}
+
+float mg::World::_calcDensity(const glm::vec3& p) const {
+	return -p.y;
 }
 
 const mg::GLVertexBuffer& mg::World::getBuffer() const {

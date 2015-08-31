@@ -64,10 +64,8 @@ bool mg::SDL2Mouse::isRightButtonDown() const {
 	return false;
 }
 
-void mg::SDL2Mouse::hide() {
-	if(SDL_ShowCursor(SDL_DISABLE) < 0 ) {
-		printf("Failed to hide cursor.\n");
-	}
+void mg::SDL2Mouse::hide(bool hide) {
+	SDL_ShowCursor(hide ? SDL_DISABLE : SDL_ENABLE);
 }
 bool mg::SDL2Mouse::isHidden() const {
 	return SDL_ShowCursor(-1) ? true : false;

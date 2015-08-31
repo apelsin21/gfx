@@ -1,6 +1,7 @@
 #include "game/player.hpp"
 
 mg::Player::Player() {
+	_position = glm::vec3(0.25f, 0.25f, 0.25f);
 	_scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	_horizontalAngle = glm::quarter_pi<float>();
 	_verticalAngle = 0.f;
@@ -55,8 +56,6 @@ void mg::Player::update(const mg::SDL2Keyboard& keyboard, mg::SDL2Mouse& mouse, 
 			glm::sin(_verticalAngle),
 			glm::cos(_verticalAngle) * glm::cos(_horizontalAngle)
 	);
-
-	mouse.hide();
 
 	glm::vec3 right(
 			glm::sin(_horizontalAngle - glm::half_pi<float>()),

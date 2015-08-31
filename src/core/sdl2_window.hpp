@@ -34,6 +34,9 @@ namespace mg {
 			bool isMaximized() const;
 			bool isFocused() const;
 
+			void grabInput(bool);
+			bool isInputGrabbed() const;
+
 			unsigned int getNumEvents() const;
 			mg::WINDOW_EVENT getEvent();
 

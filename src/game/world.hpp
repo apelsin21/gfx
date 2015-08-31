@@ -20,26 +20,30 @@
 namespace mg {
 	class World {
 		protected:
-			static constexpr double _isoLevel = 0.0;
-			static constexpr int _numX = 64, _numY = 64, _numZ = 64;
-			static constexpr int _numVoxels = _numX * _numY * _numZ;
-			static constexpr float _scale = 0.1f;
-			float scale;
+			double _isoLevel;
+			int _numX, _numY, _numZ;
+			int _numVoxels;
+			float _voxelSize;
 
-			std::vector<float> _vertices;
-			std::vector<GRIDCELL> _voxels;
+			std::vector<float> _vertices, _voxels;
 			mg::GLVertexBuffer _buffer;
 
 			bool _generatedVoxels, _generatedVertices;
 
 			float _calcDensity(const glm::vec3&) const;
-
 		public:
 			World();
 			~World();
 
 			bool generateVoxels();
 			bool generateVertices();
+			void reset();
+
+			bool addVoxels(const glm::vec3&);
+			bool removeVoxels(const glm::vec3&);
+			bool setVoxel(unsigned int, float);
+			bool setSphere(const glm::vec3&, unsigned int, float);
+			unsigned int getIndex(const glm::vec3&) const;
 
 			const mg::GLVertexBuffer& getBuffer() const;
 			std::vector<float> getVertices() const;

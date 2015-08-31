@@ -103,6 +103,16 @@ bool mg::SDL2Window::isFullscreen() const {
 
 	return false;
 }
+
+void mg::SDL2Window::grabInput(bool g) {
+	SDL_bool grab = g ? SDL_TRUE : SDL_FALSE;
+	SDL_SetWindowGrab(sdlWindow, grab);
+}
+bool mg::SDL2Window::isInputGrabbed() const {
+	if(SDL_GetWindowGrab(sdlWindow) == SDL_TRUE) {
+		return true;
+	}
+}
 bool mg::SDL2Window::isFocused() const {
 	if(sdlWindow) {
 		unsigned int flags = SDL_GetWindowFlags(sdlWindow);
@@ -113,9 +123,11 @@ bool mg::SDL2Window::isFocused() const {
 			return true;
 		}
 	}
+	
 
 	return false;
 }
+
 bool mg::SDL2Window::isMaximized() const {
 	if(sdlWindow) {
 		unsigned int flags = SDL_GetWindowFlags(sdlWindow);

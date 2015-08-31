@@ -16,7 +16,7 @@ namespace mg {
 			//void setPosition(const glm::vec2&);
 			void setPosition(const glm::vec2&, const mg::SDL2Window&);
 
-			void hide();
+			void hide(bool);
 			bool isHidden() const;
 
 			bool isLeftButtonDown() const;

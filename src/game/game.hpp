@@ -48,9 +48,10 @@ namespace mg {
 			mg::Player _player;
 			mg::World _world;
 
-			int _lastKey;
+			int _lastKey, _timesRendered;
 			double _isoLevel;
-			bool _wireframe;
+			bool _wireframe, _windowIsFocused;
+			std::clock_t _lastTime, _currentTime;
 		public:
 			Game();
 			~Game();
