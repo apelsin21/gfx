@@ -29,15 +29,6 @@
 #include "sound/sound_player.hpp"
 #include "sound/sound.hpp"
 
-#include <Gwen/Gwen.h>
-#include <Gwen/Skins/Simple.h>
-#include <Gwen/Skins/TexturedBase.h>
-#include <Gwen/Renderers/OpenGL.h>
-#include <Gwen/Controls/Button.h>
-#include <Gwen/Controls/StatusBar.h>
-#include <Gwen/Controls/Label.h>
-#include <Gwen/UnitTest/UnitTest.h>
-
 namespace mg {
 	class Game {
 		protected:
@@ -57,12 +48,6 @@ namespace mg {
 
 			mg::Player _player;
 			mg::World _world;
-
-			Gwen::Renderer::OpenGL* _gwenRenderer;
-			Gwen::Skin::Simple* _gwenSkin;
-			Gwen::Controls::Canvas* _gwenCanvas;
-			Gwen::Controls::Label* _gwenLabel;
-			Gwen::Controls::StatusBar* _gwenBar;
 
 			int _lastKey, _timesRendered;
 			double _isoLevel;

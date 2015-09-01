@@ -19,7 +19,6 @@ pkg_search_module(OPUSFILE REQUIRED opusfile)
 pkg_search_module(EPOXY REQUIRED epoxy)
 
 include_directories(
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/include
 	${OPENGL_INCLUDE_DIR}
 	${OPENAL_INCLUDE_DIR}
 	${BULLET_INCLUDE_DIR}
@@ -49,7 +48,4 @@ target_link_libraries(${PROJECT_NAME}
 	opus
 	opusfile
 	${SDL2_LIBRARIES}
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/lib/linux/gmake/libunittest.a
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/lib/linux/gmake/libgwen_static.a
-	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/lib/linux/gmake/libGWEN-Renderer-OpenGL.a
 )
