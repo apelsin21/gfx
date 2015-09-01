@@ -13,13 +13,16 @@ include(FindPackageHandleStandardArgs)
 find_package(Freetype REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(OpenAL REQUIRED)
+find_package(Bullet REQUIRED)
 pkg_search_module(SDL2 REQUIRED sdl2)
 pkg_search_module(OPUSFILE REQUIRED opusfile)
 pkg_search_module(EPOXY REQUIRED epoxy)
 
 include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/include
 	${OPENGL_INCLUDE_DIR}
 	${OPENAL_INCLUDE_DIR}
+	${BULLET_INCLUDE_DIR}
 	${FREETYPE_INCLUDE_DIRS}
 	${EPOXY_INCLUDE_DIRS}
 	${OPUS_INCLUDE_DIRS}
@@ -39,10 +42,14 @@ target_link_libraries(${PROJECT_NAME}
 	${EPOXY_LIBRARIES}
 	${OPENGL_LIBRARY}
 	${OPENAL_LIBRARY}
+	${BULLET_LIBRARY}
 	freeimage
 	${FREETYPE_LIBRARIES}
 	${FREEIMAGE_LIBRARIES}
 	opus
 	opusfile
 	${SDL2_LIBRARIES}
+	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/lib/linux/gmake/libunittest.a
+	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/lib/linux/gmake/libgwen_static.a
+	${CMAKE_CURRENT_SOURCE_DIR}/deps/gwen/lib/linux/gmake/libGWEN-Renderer-OpenGL.a
 )

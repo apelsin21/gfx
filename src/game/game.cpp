@@ -7,8 +7,14 @@ mg::Game::Game() {
 	_windowIsFocused = false;
 	_lastKey = -1;
 	_timesRendered = 0;
+
 }
 mg::Game::~Game() {
+	//delete _gwenBar;
+	//delete _gwenLabel;
+	//delete _gwenCanvas;
+	//delete _gwenSkin;
+	//delete _gwenRenderer;
 }
 
 bool mg::Game::load() {
@@ -21,27 +27,28 @@ bool mg::Game::load() {
 		printf("Texture %s failed to load!\n", _texture.path.c_str());
         return false;
     }
-	
+
 	//if(!_font.load("data/fonts/FreeSans.ttf", 16)) {
-	//	printf("Font %s failed to load!\n", _font.path.c_str());
+	//	printf("failed to load font.\n");
 	//	return false;
 	//}
 
-	//if(!_soundPlayer.initialize()) {
-	//	printf("soundplayer failed to initialize.\n");
-	//	return false;
-	//}
+	//_gwenRenderer = new Gwen::Renderer::OpenGL();
+	//_gwenRenderer->Init();
 
-	//if(!_sound.load("data/sounds/test2.opus")) {
-	//	printf("failed to load sound.\n");
-	//	return false;
-	//}
+	//_gwenSkin = new Gwen::Skin::Simple(_gwenRenderer);
+	//_gwenSkin->SetRender(_gwenRenderer);
 
-	//if(!_soundPlayer.playSound(_sound)) {
-	//	printf("failed to play sound.\n");
-	//	return false;
-	//}
-	
+	//_gwenCanvas = new Gwen::Controls::Canvas(_gwenSkin);
+	//_gwenCanvas->SetSize(800, 600);
+	//_gwenCanvas->SetBackgroundColor(Gwen::Color(255, 0, 0, 255));
+	//_gwenCanvas->SetDrawBackground(true);
+
+	//_gwenBar = new Gwen::Controls::StatusBar(_gwenCanvas);
+
+	//_gwenLabel = new Gwen::Controls::Label(_gwenBar);
+	//_gwenLabel->SetWidth(400);
+
 	_lastTime = std::clock();
 	if(!_world.generateVoxels()) {
 		printf("Failed to generate voxels.\n");
@@ -58,8 +65,6 @@ bool mg::Game::load() {
 	_currentTime = std::clock();
 	float vertexSeconds = (_currentTime - _lastTime) / static_cast<float>(CLOCKS_PER_SEC);
 	printf("generateVertices(): %f seconds\n", vertexSeconds);
-
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
 	return true;
 }
@@ -109,10 +114,6 @@ void mg::Game::run() {
 				printf("failed to re-generate voxels.\n");
 			}
 		}
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0, 0, _window.getResolution().x, _window.getResolution().y);
-
 		if(_window.isInputGrabbed()) {
 			_player.update(_keyboard, _mouse, _window);
 		}
@@ -125,11 +126,9 @@ void mg::Game::run() {
 		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.getProjectionMatrix()[0][0]);
 		glUniform3fv(eyeLocation, 1, &_player.getPosition()[0]);
 
-		_texture.bindID();
-
 		_currentTime = std::clock();
 		float elapsedSeconds = (_currentTime - _lastTime) / static_cast<float>(CLOCKS_PER_SEC);
-		//printf("elapsed: %f\n", elapsedSeconds);
+
 		if(elapsedSeconds > 0.1f) {
 			printf("times rendered per second: %u\n", _timesRendered);
 			_timesRendered = 0;
@@ -137,6 +136,10 @@ void mg::Game::run() {
 		}
 
 		_timesRendered++;
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, _window.getResolution().x, _window.getResolution().y);
+		_texture.bindID();
 		_renderer.render(_shader, _world.getBuffer());
 
 		for(unsigned int i = 0; i < _window.getNumEvents(); i++) {

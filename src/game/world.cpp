@@ -54,9 +54,9 @@ bool mg::World::generateVertices() {
 	std::array<TRIANGLE, 5> tempTriangles;
 	GRIDCELL cell;
 
-	for(unsigned int x = 0; x < _numX-1; x++) {
-		for(unsigned int y = 0; y < _numY-1; y++) {
-			for(unsigned int z = 0; z < _numZ-1; z++) {
+	for(unsigned int x = 0; x < _numX; x++) {
+		for(unsigned int y = 0; y < _numY; y++) {
+			for(unsigned int z = 0; z < _numZ; z++) {
 
 				unsigned int index = x * _numX * _numY + y * _numZ + z;
 				glm::vec3 p = glm::vec3(x * _voxelSize, y * _voxelSize, z * _voxelSize);
@@ -200,10 +200,21 @@ unsigned int mg::World::getIndex(const glm::vec3& p) const {
 }
 bool mg::World::setSphere(const glm::vec3& p, unsigned int radius, float density) {
 	setVoxel(getIndex(p), density);
+
 	return true;
 }
 
 float mg::World::_calcDensity(const glm::vec3& p) const {
+	if(p.x == 0.f || p.x >= _numX) {
+		return 0.f;
+	}
+	if(p.y == 0.f || p.y >= _numY) {
+		return 0.f;
+	}
+	if(p.z == 0.f || p.z >= _numZ) {
+		return 0.f;
+	}
+
 	return -p.y;
 }
 
