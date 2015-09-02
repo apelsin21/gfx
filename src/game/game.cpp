@@ -33,38 +33,20 @@ bool mg::Game::load() {
 	//	return false;
 	//}
 
-	//_gwenRenderer = new Gwen::Renderer::OpenGL();
-	//_gwenRenderer->Init();
-
-	//_gwenSkin = new Gwen::Skin::Simple(_gwenRenderer);
-	//_gwenSkin->SetRender(_gwenRenderer);
-
-	//_gwenCanvas = new Gwen::Controls::Canvas(_gwenSkin);
-	//_gwenCanvas->SetSize(800, 600);
-	//_gwenCanvas->SetBackgroundColor(Gwen::Color(255, 0, 0, 255));
-	//_gwenCanvas->SetDrawBackground(true);
-
-	//_gwenBar = new Gwen::Controls::StatusBar(_gwenCanvas);
-
-	//_gwenLabel = new Gwen::Controls::Label(_gwenBar);
-	//_gwenLabel->SetWidth(400);
-
-	_lastTime = std::clock();
 	if(!_world.generateVoxels()) {
 		printf("Failed to generate voxels.\n");
 		return false;
 	}
-	_currentTime = std::clock();
-	float voxelSeconds = (_currentTime - _lastTime) / static_cast<float>(CLOCKS_PER_SEC);
-	printf("generateVoxels(): %f seconds\n", voxelSeconds);
-
 	if(!_world.generateVertices()) {
 		printf("Failed to generate vertices.\n");
 		return false;
 	}
-	_currentTime = std::clock();
-	float vertexSeconds = (_currentTime - _lastTime) / static_cast<float>(CLOCKS_PER_SEC);
-	printf("generateVertices(): %f seconds\n", vertexSeconds);
+
+	_mesh.setVertexFormat(mg::VertexFormat::PPPNNN);
+	if(!mesh.setData(_world.getVertices())) {
+		printf("failed to set mesh data.\n");
+		return false;
+	}
 
 	return true;
 }
@@ -118,36 +100,30 @@ void mg::Game::run() {
 			_player.update(_keyboard, _mouse, _window);
 		}
 
-		GLint viewLocation = _shader.getUniformLocation("u_view");
-		GLint projLocation = _shader.getUniformLocation("u_projection");
-		GLint eyeLocation = _shader.getUniformLocation("u_eye_pos");
+		// these can be set on a frame by frame basis
+		_uniforms.set("u_view", 		&_player.getViewMatrix()[0][0]);
+		_uniforms.set("u_projection", 	&_player.getProjectionMatrix()[0][0]);
+		_uniforms.set("u_eye_pos", 		&_player.getPosition()[0][0]);
 
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &_player.getViewMatrix()[0][0]);
-		glUniformMatrix4fv(projLocation, 1, GL_FALSE, &_player.getProjectionMatrix()[0][0]);
-		glUniform3fv(eyeLocation, 1, &_player.getPosition()[0]);
+		// a batch is a draw commmand that contains
+		// all information needed for it to be rendered.
+		// the shader, the vertices, the uniforms, the texture
+		// it uses.
+		//
+		// it is not necessary to update the batch every frame,
+		// but since the uniforms are updated that often,
+		// the batch will need to be, too.
+		//
+		// it will automatically detect any changed parameter
+		// and only change necessary state.
+		_batch.set(_mesh, _uniforms, _shader, _texture);
 
-		_currentTime = std::clock();
-		float elapsedSeconds = (_currentTime - _lastTime) / static_cast<float>(CLOCKS_PER_SEC);
-
-		if(elapsedSeconds > 0.1f) {
-			printf("times rendered per second: %u\n", _timesRendered);
-			_timesRendered = 0;
-			_lastTime = _currentTime;
-		}
-
-		_timesRendered++;
-
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glViewport(0, 0, _window.getResolution().x, _window.getResolution().y);
-		_texture.bindID();
-		_renderer.render(_shader, _world.getBuffer());
-
-		for(unsigned int i = 0; i < _window.getNumEvents(); i++) {
-			switch(_window.getEvent()) {
-				default:
-					break;
-			}
-		}
+		_renderer.setClearColor(mg::Color::Black);
+		_renderer.setSize(_window.getResolution());
+		// this could later be changed to renderer.queue(batch)
+		// and require a later renderer.render(mg::FrameBuffer)
+		// for added efficiency
+		_renderer.render(_batch);
 
 		_window.pollEvents();
 		_window.swapBuffers();

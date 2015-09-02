@@ -1,9 +1,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <exception>
 #include <cstdlib>
 #include <cstdio>
-#include <exception>
 #include <chrono>
 #include <memory>
 
@@ -12,19 +12,24 @@
 
 #include <epoxy/gl.h>
 
-#include "core/sdl2_window.hpp"
-#include "core/sdl2_keyboard.hpp"
-#include "core/sdl2_mouse.hpp"
 #include "core/keyboard_keys.hpp"
+#include "core/sdl2_keyboard.hpp"
+#include "core/sdl2_window.hpp"
+#include "core/sdl2_mouse.hpp"
 
 #include "game/player.hpp"
 #include "game/world.hpp"
 
-#include "gfx/gl_texture.hpp"
-#include "gfx/gl_shader.hpp"
 #include "gfx/gl_vertex_buffer.hpp"
 #include "gfx/gl_renderer.hpp"
+#include "gfx/gl_texture.hpp"
+#include "gfx/gl_shader.hpp"
+
+#include "gfx/shader_uniforms.hpp"
+#include "gfx/batch.hpp"
 #include "gfx/font.hpp"
+#include "gfx/mesh.hpp"
+#include "gfx/color.hpp"
 
 #include "sound/sound_player.hpp"
 #include "sound/sound.hpp"
@@ -39,18 +44,18 @@ namespace mg {
 			mg::GLTexture _texture;
 			mg::GLShader _shader;
 			mg::GLRenderer _renderer;
-			mg::GLVertexBuffer _buffer;
+			mg::Font _font;
+			mg::Batch _batch;
+			mg::ShaderUniforms _uniforms;
+			mg::Mesh _mesh;
 
 			mg::SoundPlayer _soundPlayer;
 			mg::Sound _sound;
-			
-			mg::Font _font;
 
 			mg::Player _player;
 			mg::World _world;
 
 			int _lastKey, _timesRendered;
-			double _isoLevel;
 			bool _wireframe, _windowIsFocused;
 			std::clock_t _lastTime, _currentTime;
 		public:
