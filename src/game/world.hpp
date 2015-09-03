@@ -11,7 +11,6 @@
 #include <glm/gtc/noise.hpp>
 #include <glm/gtx/norm.hpp>
 
-#include "gfx/gl_vertex_buffer.hpp"
 #include "gfx/gl_texture.hpp"
 #include "gfx/gl_shader.hpp"
 
@@ -25,8 +24,7 @@ namespace mg {
 			int _numVoxels;
 			float _voxelSize;
 
-			std::vector<float> _vertices, _voxels;
-			mg::GLVertexBuffer _buffer;
+			std::vector<float> _voxels, _vertices;
 
 			bool _generatedVoxels, _generatedVertices;
 
@@ -45,8 +43,7 @@ namespace mg {
 			bool setSphere(const glm::vec3&, unsigned int, float);
 			unsigned int getIndex(const glm::vec3&) const;
 
-			const mg::GLVertexBuffer& getBuffer() const;
-			std::vector<float> getVertices() const;
+			const std::vector<float>& getVertices() const;
 	};
 }
 

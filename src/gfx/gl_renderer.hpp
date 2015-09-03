@@ -4,12 +4,17 @@
 #include <cstdio>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <epoxy/gl.h>
 
-#include "gfx/renderer.hpp"
 #include "gfx/gl_shader.hpp"
-#include "gfx/gl_vertex_buffer.hpp"
+#include "gfx/gl_texture.hpp"
+#include "gfx/renderer.hpp"
+#include "gfx/batch.hpp"
+#include "gfx/color.hpp"
+#include "gfx/mesh.hpp"
+#include "gfx/shader_uniforms.hpp"
 
 namespace mg {
 	class GLRenderer : public Renderer {
@@ -21,11 +26,20 @@ namespace mg {
 			static constexpr const char* _uvName = "v_uv";
 			static constexpr const char* _colorName = "v_color";
 			static constexpr const char* _normalName = "v_normal";
+
+			glm::vec2 _res;
+			mg::Color _clearColor;
 		public:
 			GLRenderer();
 			~GLRenderer();
 
-			bool render(const mg::GLShader&, const mg::GLVertexBuffer&);
+			void setClearColor(const mg::Color&);
+			mg::Color getClearColor() const;
+
+			void setSize(const glm::vec2&);
+			glm::vec2 getSize() const;
+
+			bool render(const std::shared_ptr<mg::Batch>&);
 	};
 }
 

@@ -10,10 +10,13 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/mesh.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader_uniforms.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/batch.cpp
 
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_vertex_buffer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_renderer.cpp
 
 	#game
@@ -47,6 +50,9 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/shader.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/font.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/camera.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/mesh.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/gfx/color.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gfx/vertex_format.hpp
 
 	${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_texture.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gfx/gl_shader.hpp

@@ -1,6 +1,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include <memory>
 #include <chrono>
 
 #include "core/sdl2_keyboard.hpp"

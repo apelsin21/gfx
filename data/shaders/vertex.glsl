@@ -5,7 +5,6 @@ in vec3 v_normal;
 
 uniform mat4 u_view;
 uniform mat4 u_projection;
-uniform vec3 u_eye_pos;
 
 out vec3 f_pos;
 out vec3 f_normal;

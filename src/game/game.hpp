@@ -9,6 +9,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <epoxy/gl.h>
 
@@ -41,13 +42,13 @@ namespace mg {
 			mg::SDL2Keyboard _keyboard;
 			mg::SDL2Mouse _mouse;
 
-			mg::GLTexture _texture;
-			mg::GLShader _shader;
 			mg::GLRenderer _renderer;
 			mg::Font _font;
-			mg::Batch _batch;
-			mg::ShaderUniforms _uniforms;
-			mg::Mesh _mesh;
+			std::shared_ptr<mg::Batch> _batch;
+			std::shared_ptr<mg::ShaderUniforms> _uniforms;
+			std::shared_ptr<mg::Mesh> _mesh;
+			std::shared_ptr<mg::GLTexture> _texture;
+			std::shared_ptr<mg::GLShader> _shader;
 
 			mg::SoundPlayer _soundPlayer;
 			mg::Sound _sound;

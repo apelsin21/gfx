@@ -150,10 +150,6 @@ bool mg::World::generateVertices() {
 		}
 	}
 
-	if(!_buffer.update(_vertices, true, mg::VertexFormat::PPPNNN)) {
-		return false;
-	}
-
 	_generatedVertices = true;
 
 	return true;
@@ -218,9 +214,6 @@ float mg::World::_calcDensity(const glm::vec3& p) const {
 	return -p.y;
 }
 
-const mg::GLVertexBuffer& mg::World::getBuffer() const {
-	return _buffer;
-}
-std::vector<float> mg::World::getVertices() const {
+const std::vector<float>& mg::World::getVertices() const {
 	return _vertices;
 }

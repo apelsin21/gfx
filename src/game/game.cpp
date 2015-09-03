@@ -8,23 +8,23 @@ mg::Game::Game() {
 	_lastKey = -1;
 	_timesRendered = 0;
 
+	_batch = std::make_shared<mg::Batch>();
+	_uniforms = std::make_shared<mg::ShaderUniforms>();
+	_mesh = std::make_shared<mg::Mesh>();
+	_texture = std::make_shared<mg::GLTexture>();
+	_shader = std::make_shared<mg::GLShader>();
 }
 mg::Game::~Game() {
-	//delete _gwenBar;
-	//delete _gwenLabel;
-	//delete _gwenCanvas;
-	//delete _gwenSkin;
-	//delete _gwenRenderer;
 }
 
 bool mg::Game::load() {
-    if(!_shader.loadFromFile("data/shaders/vertex.glsl", "data/shaders/fragment.glsl")) {
+    if(!_shader->loadFromFile("data/shaders/vertex.glsl", "data/shaders/fragment.glsl")) {
 		printf("Shader failed to load!\n");
         return false;
     }
 
-	if(!_texture.load("data/textures/cave_rock.png", mg::TEXTURE_FILTER::NEAREST, mg::TEXTURE_WRAP::REPEAT)) {
-		printf("Texture %s failed to load!\n", _texture.path.c_str());
+	if(!_texture->load("data/textures/cave_rock.png", mg::TEXTURE_FILTER::NEAREST, mg::TEXTURE_WRAP::REPEAT)) {
+		printf("Texture %s failed to load!\n", _texture->path.c_str());
         return false;
     }
 
@@ -42,11 +42,14 @@ bool mg::Game::load() {
 		return false;
 	}
 
-	_mesh.setVertexFormat(mg::VertexFormat::PPPNNN);
-	if(!mesh.setData(_world.getVertices())) {
+	_mesh->setVertexFormat(mg::VertexFormat::PPPNNN);
+	if(!_mesh->setData(_world.getVertices())) {
 		printf("failed to set mesh data.\n");
 		return false;
 	}
+
+	_renderer.setClearColor(mg::Color(0.0f, 1.0f, 1.0f, 1.0f));
+
 
 	return true;
 }
@@ -89,6 +92,9 @@ void mg::Game::run() {
 			if(!_world.generateVertices()) {
 				printf("world failed to generate vertices.\n");
 			}
+			if(!_mesh->setData(_world.getVertices())) {
+				printf("failed to set mesh data.\n");
+			}
 		}
 		if(_keyboard.isKeyDown(mg::KEY::R)) {
 			_world.reset();
@@ -100,29 +106,28 @@ void mg::Game::run() {
 			_player.update(_keyboard, _mouse, _window);
 		}
 
-		// these can be set on a frame by frame basis
-		_uniforms.set("u_view", 		&_player.getViewMatrix()[0][0]);
-		_uniforms.set("u_projection", 	&_player.getProjectionMatrix()[0][0]);
-		_uniforms.set("u_eye_pos", 		&_player.getPosition()[0][0]);
+		_uniforms->add("u_view", 		&_player.getViewMatrix()[0][0]);
+		_uniforms->add("u_projection", 	&_player.getProjectionMatrix()[0][0]);
+		_uniforms->add("u_eye_pos", 	std::make_shared<glm::vec3>(_player.getPosition()));
 
 		// a batch is a draw commmand that contains
 		// all information needed for it to be rendered.
 		// the shader, the vertices, the uniforms, the texture
 		// it uses.
 		//
-		// it is not necessary to update the batch every frame,
+		// it is not necessary to update all batches every frame,
 		// but since the uniforms are updated that often,
-		// the batch will need to be, too.
+		// this batch will need to be, too.
 		//
 		// it will automatically detect any changed parameter
 		// and only change necessary state.
-		_batch.set(_mesh, _uniforms, _shader, _texture);
+		_batch->set(_mesh, _uniforms, _texture, _shader);
 
-		_renderer.setClearColor(mg::Color::Black);
 		_renderer.setSize(_window.getResolution());
+
 		// this could later be changed to renderer.queue(batch)
 		// and require a later renderer.render(mg::FrameBuffer)
-		// for added efficiency
+		// for added efficiency and flexibility
 		_renderer.render(_batch);
 
 		_window.pollEvents();

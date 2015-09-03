@@ -14,63 +14,71 @@ mg::GLRenderer::~GLRenderer() {
 	}
 }
 
-bool mg::GLRenderer::render(const mg::GLShader& shader, const mg::GLVertexBuffer& buffer) {
-	if(buffer.getNumVertices() == 0 || buffer.getMaxVertices() == 0) {
-		printf("Tried to render empty vertex buffer.\n");
-		return false;
-	}
+void mg::GLRenderer::setClearColor(const mg::Color& color) {
+	_clearColor = color;
 
-	shader.bind();
-	glBindVertexArray(_vao);
-	buffer.bind();
+	glClearColor(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
+}
+mg::Color mg::GLRenderer::getClearColor() const {
+	return _clearColor;
+}
 
+void mg::GLRenderer::setSize(const glm::vec2& res) {
+	_res = res;
+	glViewport(0, 0, _res.x, _res.y);
+}
+glm::vec2 mg::GLRenderer::getSize() const {
+	return _res;
+}
+
+bool mg::GLRenderer::render(const std::shared_ptr<mg::Batch>& batch) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	switch(buffer.getFormat()) {
-	case mg::VertexFormat::PPP:
-		_posLocation = shader.getAttribLocation(_posName);
+	glUseProgram(batch->getShader()->getGLHandle());
 
-		if(_posLocation == -1) {
-			printf("Failed to find shader attribute %s in shader %i.\n", _posName, shader.getGLHandle());
-			return false;
-		}
-
-    	glEnableVertexAttribArray(_posLocation);
-
-    	glVertexAttribPointer(_posLocation, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-
-		glDrawArrays(GL_TRIANGLES, 0, buffer.getNumVertices() / 3);
-
-		break;
-	case mg::VertexFormat::PPPNNN:
-		_posLocation = shader.getAttribLocation(_posName);
-		_normalLocation = shader.getAttribLocation(_normalName);
-
-		glEnableVertexAttribArray(_posLocation);
-		glEnableVertexAttribArray(_normalLocation);
-
-		glVertexAttribPointer(_posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*)0);
-		glVertexAttribPointer(_normalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*)(sizeof(float) * 3));
-
-		glDrawArrays(GL_TRIANGLES, 0, buffer.getNumVertices() / 6);
-		break;
-	case mg::VertexFormat::PPPTT:
-		_posLocation = shader.getAttribLocation(_posName);
-		_uvLocation = shader.getAttribLocation(_uvName);
-
-		glEnableVertexAttribArray(_posLocation);
-		glEnableVertexAttribArray(_uvLocation);
-
-		glVertexAttribPointer(_posLocation, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)0);
-		glVertexAttribPointer(_uvLocation, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (GLvoid*)(sizeof(float) * 3));
-
-		glDrawArrays(GL_TRIANGLES, 0, buffer.getNumVertices() / 5);
-		break;
-	default:
-		printf("GLRenderer tried to render unimplemented vertex format.\n");
-		return false;
-		break;
+	for(const auto &pair : batch->getUniforms()->getFloats()) {
+		glUniform1f(
+			batch->getShader()->getUniformLocation(pair.first),
+			*pair.second.get()
+		);
 	}
+	for(const auto &pair : batch->getUniforms()->getVec2s()) {
+		glUniform2f(
+			batch->getShader()->getUniformLocation(pair.first),
+			pair.second->x,
+			pair.second->y
+		);
+	}
+	for(const auto &pair : batch->getUniforms()->getVec3s()) {
+		glUniform3f(
+			batch->getShader()->getUniformLocation(pair.first),
+			pair.second->x,
+			pair.second->y,
+			pair.second->z
+		);
+	}
+	for(const auto &pair : batch->getUniforms()->getVec4s()) {
+		glUniform4f(
+			batch->getShader()->getUniformLocation(pair.first),
+			pair.second->x,
+			pair.second->y,
+			pair.second->z,
+			pair.second->w
+		);
+	}
+	for(const auto &pair : batch->getUniforms()->getMatrices()) {
+		glUniformMatrix4fv(
+			batch->getShader()->getUniformLocation(pair.first),
+			1,
+			GL_FALSE,
+			pair.second
+		);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getID());
+
+	//GET DATA
+	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getData().size() / 5);
 
 	return true;
 }
