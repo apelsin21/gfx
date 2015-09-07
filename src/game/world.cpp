@@ -2,7 +2,7 @@
 
 mg::World::World() {
 	_generatedVoxels = false;
-	_generatedVertices = false;
+	_generatedMesh = false;
 
 	_isoLevel = 0;
 	_numX = 64;
@@ -10,6 +10,9 @@ mg::World::World() {
 	_numZ = 64;
 	_numVoxels = _numX*_numY*_numZ;
 	_voxelSize = 0.1f;
+
+	_mesh = std::shared_ptr<mg::Mesh>(new mg::Mesh());
+	_mesh->setVertexFormat(mg::VertexFormat::PPPNNN);
 }
 mg::World::~World() {
 }
@@ -36,7 +39,7 @@ bool mg::World::generateVoxels() {
 
 	return true;
 }
-bool mg::World::generateVertices() {
+bool mg::World::generateMesh() {
 	if(!_generatedVoxels) {
 		printf("world tried to generate vertices from no voxels.\n");
 		return false;
@@ -150,15 +153,16 @@ bool mg::World::generateVertices() {
 		}
 	}
 
-	_generatedVertices = true;
+	printf("world mesh generated vertex data is of size %f MB\n.", (sizeof(float)*_vertices.size())/1024.f/1024.f);
+	_mesh->uploadVertexData(_vertices);
+
+	_generatedMesh = true;
 
 	return true;
 }
 void mg::World::reset() {
-	this->_voxels.clear();
-
 	_generatedVoxels = false;
-	_generatedVertices = false;
+	_generatedMesh = false;
 }
 
 bool mg::World::setVoxel(unsigned int index, float density) {
@@ -201,19 +205,9 @@ bool mg::World::setSphere(const glm::vec3& p, unsigned int radius, float density
 }
 
 float mg::World::_calcDensity(const glm::vec3& p) const {
-	if(p.x == 0.f || p.x >= _numX) {
-		return 0.f;
-	}
-	if(p.y == 0.f || p.y >= _numY) {
-		return 0.f;
-	}
-	if(p.z == 0.f || p.z >= _numZ) {
-		return 0.f;
-	}
-
-	return -p.y;
+	return glm::simplex(p);
 }
 
-const std::vector<float>& mg::World::getVertices() const {
-	return _vertices;
+std::shared_ptr<mg::Mesh> mg::World::getMesh() const {
+	return _mesh;
 }

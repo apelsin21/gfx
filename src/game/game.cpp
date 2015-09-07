@@ -8,48 +8,43 @@ mg::Game::Game() {
 	_lastKey = -1;
 	_timesRendered = 0;
 
-	_batch = std::make_shared<mg::Batch>();
 	_uniforms = std::make_shared<mg::ShaderUniforms>();
-	_mesh = std::make_shared<mg::Mesh>();
-	_texture = std::make_shared<mg::GLTexture>();
-	_shader = std::make_shared<mg::GLShader>();
+
+	_worldBatch = std::make_shared<mg::Batch>();
+	_worldTexture = std::make_shared<mg::Texture>();
+	_worldShader = std::make_shared<mg::GLShader>();
+
+	//_jeepBatch = std::make_shared<mg::Batch>();
+	//_jeepMesh = std::make_shared<mg::Mesh>();
+	//_jeepShader = std::make_shared<mg::GLShader>();
+	//_jeepTexture = std::make_shared<mg::Texture>();
 }
 mg::Game::~Game() {
 }
 
 bool mg::Game::load() {
-    if(!_shader->loadFromFile("data/shaders/vertex.glsl", "data/shaders/fragment.glsl")) {
-		printf("Shader failed to load!\n");
+    if(!_worldShader->loadFromFile("data/shaders/vertex.glsl", "data/shaders/fragment.glsl")) {
+        return false;
+    }
+	if(!_textureLoader.load("data/textures/cave_rock.png", _worldTexture)) {
         return false;
     }
 
-	if(!_texture->load("data/textures/cave_rock.png", mg::TEXTURE_FILTER::NEAREST, mg::TEXTURE_WRAP::REPEAT)) {
-		printf("Texture %s failed to load!\n", _texture->path.c_str());
-        return false;
-    }
+	if(!_world.generateVoxels()) {
+		return false;
+	}
+	if(!_world.generateMesh()) {
+		return false;
+	}
 
-	//if(!_font.load("data/fonts/FreeSans.ttf", 16)) {
-	//	printf("failed to load font.\n");
+    //if(!_jeepShader->loadFromFile("data/shaders/jeepv.glsl", "data/shaders/jeepf.glsl")) {
+    //    return false;
+    //}
+	//if(!_meshLoader.load("data/meshes/jeep1.ms3d", _jeepMesh, _jeepTexture)) {
 	//	return false;
 	//}
 
-	if(!_world.generateVoxels()) {
-		printf("Failed to generate voxels.\n");
-		return false;
-	}
-	if(!_world.generateVertices()) {
-		printf("Failed to generate vertices.\n");
-		return false;
-	}
-
-	_mesh->setVertexFormat(mg::VertexFormat::PPPNNN);
-	if(!_mesh->setData(_world.getVertices())) {
-		printf("failed to set mesh data.\n");
-		return false;
-	}
-
 	_renderer.setClearColor(mg::Color(0.0f, 1.0f, 1.0f, 1.0f));
-
 
 	return true;
 }
@@ -89,11 +84,8 @@ void mg::Game::run() {
 			}
 		}
 		if(_keyboard.isKeyDown(mg::KEY::G)) {
-			if(!_world.generateVertices()) {
+			if(!_world.generateMesh()) {
 				printf("world failed to generate vertices.\n");
-			}
-			if(!_mesh->setData(_world.getVertices())) {
-				printf("failed to set mesh data.\n");
 			}
 		}
 		if(_keyboard.isKeyDown(mg::KEY::R)) {
@@ -109,26 +101,15 @@ void mg::Game::run() {
 		_uniforms->add("u_view", 		&_player.getViewMatrix()[0][0]);
 		_uniforms->add("u_projection", 	&_player.getProjectionMatrix()[0][0]);
 		_uniforms->add("u_eye_pos", 	std::make_shared<glm::vec3>(_player.getPosition()));
+		_uniforms->add("u_time",		std::make_shared<float>((float)(std::clock()) / (float)(CLOCKS_PER_SEC)));
 
-		// a batch is a draw commmand that contains
-		// all information needed for it to be rendered.
-		// the shader, the vertices, the uniforms, the texture
-		// it uses.
-		//
-		// it is not necessary to update all batches every frame,
-		// but since the uniforms are updated that often,
-		// this batch will need to be, too.
-		//
-		// it will automatically detect any changed parameter
-		// and only change necessary state.
-		_batch->set(_mesh, _uniforms, _texture, _shader);
+		_worldBatch->set(_world.getMesh(), _uniforms, _worldTexture, _worldShader);
+		//_jeepBatch->set(_jeepMesh, _uniforms, _jeepTexture, _jeepShader);
 
 		_renderer.setSize(_window.getResolution());
 
-		// this could later be changed to renderer.queue(batch)
-		// and require a later renderer.render(mg::FrameBuffer)
-		// for added efficiency and flexibility
-		_renderer.render(_batch);
+		_renderer.render(_worldBatch);
+		//_renderer.render(_jeepBatch);
 
 		_window.pollEvents();
 		_window.swapBuffers();

@@ -43,6 +43,7 @@ target_link_libraries(${PROJECT_NAME}
 	${OPENAL_LIBRARY}
 	${BULLET_LIBRARY}
 	freeimage
+	assimp
 	${FREETYPE_LIBRARIES}
 	${FREEIMAGE_LIBRARIES}
 	opus

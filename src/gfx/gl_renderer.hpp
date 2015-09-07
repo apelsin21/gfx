@@ -9,7 +9,7 @@
 #include <epoxy/gl.h>
 
 #include "gfx/gl_shader.hpp"
-#include "gfx/gl_texture.hpp"
+#include "gfx/texture.hpp"
 #include "gfx/renderer.hpp"
 #include "gfx/batch.hpp"
 #include "gfx/color.hpp"

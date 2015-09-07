@@ -13,7 +13,7 @@ mg::Batch::~Batch() {
 bool mg::Batch::set(
 		const std::shared_ptr<mg::Mesh>& mesh,
 		const std::shared_ptr<mg::ShaderUniforms>& uniforms,
-		const std::shared_ptr<mg::GLTexture>& texture,
+		const std::shared_ptr<mg::Texture>& texture,
 		const std::shared_ptr<mg::GLShader>& shader) {
 
 	if(mesh == nullptr) {
@@ -46,7 +46,7 @@ bool mg::Batch::set(
 	glEnableVertexAttribArray(pos);
 	glEnableVertexAttribArray(normal);
 
-	glBindBuffer(GL_ARRAY_BUFFER, _mesh->getGLHandle());
+	glBindBuffer(GL_ARRAY_BUFFER, _mesh->getVertexBuffer());
 
 	switch(_mesh->getVertexFormat()) {
 	case mg::VertexFormat::PPPNNN:
@@ -82,7 +82,7 @@ std::shared_ptr<mg::Mesh> mg::Batch::getMesh() const {
 std::shared_ptr<mg::ShaderUniforms> mg::Batch::getUniforms() const {
 	return _uniforms;
 }
-std::shared_ptr<mg::GLTexture> mg::Batch::getTexture() const {
+std::shared_ptr<mg::Texture> mg::Batch::getTexture() const {
 	return _texture;
 }
 std::shared_ptr<mg::GLShader> mg::Batch::getShader() const {

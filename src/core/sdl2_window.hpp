@@ -8,12 +8,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 
-#include <stdexcept>
-
 namespace mg {
 	class SDL2Window : public Window {
 		protected:
-            SDL_Window* sdlWindow;
+			SDL_Window* sdlWindow;
             SDL_GLContext sdlContext;
             SDL_Event sdlEvent;
             unsigned int sdlWindowID;

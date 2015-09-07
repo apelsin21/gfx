@@ -1,93 +1,42 @@
-#include "gfx/gl_texture.hpp"
+#include "gfx/texture.hpp"
 
-mg::GLTexture::GLTexture() : Texture() {
-	this->fb = nullptr;
+mg::Texture::Texture() {
     createID();
 }
-mg::GLTexture::~GLTexture() {
+mg::Texture::~Texture() {
     deleteID();
-	FreeImage_Unload(this->fb);
 }
 
-void mg::GLTexture::createID() {
+void mg::Texture::createID() {
     if(!hasValidID()) {
-        glGenTextures(1, &this->id);
+        glGenTextures(1, &_id);
         bindID();
     }
 }
-void mg::GLTexture::deleteID() {
+void mg::Texture::deleteID() {
     if(hasValidID()) {
-        glDeleteTextures(1, &this->id);
+        glDeleteTextures(1, &_id);
     }
 }
-void mg::GLTexture::bindID() {
-    glBindTexture(GL_TEXTURE_2D, this->id);
+void mg::Texture::bindID() {
+    glBindTexture(GL_TEXTURE_2D, _id);
 }
-bool mg::GLTexture::hasValidID() {
-    if(glIsTexture(this->id) == GL_TRUE) {
+bool mg::Texture::hasValidID() {
+    if(glIsTexture(_id) == GL_TRUE) {
         return true;
     } else {
         return false;
     }
 }
-unsigned int mg::GLTexture::getID() {
-	return this->id;
+unsigned int mg::Texture::getID() {
+	return _id;
 }
-bool mg::GLTexture::load(const std::string& p, mg::TEXTURE_FILTER filter, mg::TEXTURE_WRAP wrap) {
-    std::ifstream fileCheck(p);
-    if(!fileCheck.good()) {
-        printf("Tried to load texture %s, but it doesn't exist.\n", p.c_str());
-		return false;
-    }
-
-	this->ff = FreeImage_GetFileType(p.c_str(), 0);
-
-   	if(this->ff == FIF_UNKNOWN) {
-       this->ff = FreeImage_GetFIFFromFilename(p.c_str());
-   	}
-
-    if(this->ff != FIF_UNKNOWN && FreeImage_FIFSupportsReading(this->ff)) {
-        this->fb = FreeImage_Load(this->ff, p.c_str());
-    } else {
-        printf("Tried to load texture %s, but the format is unsupported by FreeImage.\n", p.c_str());
-		return false;
-    }
-
-	//Textures are always 32 bit colour
-    if(FreeImage_GetBPP(this->fb) != 32) {
-        FIBITMAP* temp = this->fb;
-        this->fb = FreeImage_ConvertTo32Bits(temp);
-        FreeImage_Unload(temp);
-    }
-
-    if(FreeImage_GetBits(this->fb) == nullptr) {
-        printf("Texture %s data is NULL for unknown reason\n", p.c_str());
-		return false;
-    }
-
-    this->resolution 	= 	glm::vec2(FreeImage_GetWidth(this->fb), FreeImage_GetHeight(this->fb));
-    this->bpp 			= 	FreeImage_GetBPP(this->fb);
-    this->path 			= 	p;
-	this->size 			= 	(resolution.x * resolution.y) * 4;
-	this->data 			= 	FreeImage_GetBits(this->fb);
-
-    if(!hasValidID()) {
-        printf("GLTexture %s has invalid GL handle.\n", p.c_str());
-        return false;
-    }
-
+void mg::Texture::setData(unsigned char* data) {
+	_data = data;
+}
+bool mg::Texture::load() {
     bindID();
 
-    glTexImage2D(
-		GL_TEXTURE_2D,
-    	0,
-    	textureFormatToInt(mg::TEXTURE_FORMAT::RGBA8),
-    	this->resolution.x, this->resolution.y,
-    	0,
-    	textureFormatToInt(mg::TEXTURE_FORMAT::BGRA),
-    	GL_UNSIGNED_BYTE,
-    	(GLvoid*)this->data
-	);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, textureFilterToInt(filter));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, textureFilterToInt(filter));
@@ -101,14 +50,11 @@ bool mg::GLTexture::load(const std::string& p, mg::TEXTURE_FILTER filter, mg::TE
 	this->sWrap = wrap;
 	this->tWrap = wrap;
 
-    if(this->mipmaps) {
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
 
 	return true;
 }
 
-int mg::GLTexture::textureFilterToInt(TEXTURE_FILTER t) {
+int mg::Texture::textureFilterToInt(TEXTURE_FILTER t) {
     switch(t) {
     case TEXTURE_FILTER::NEAREST:
         return GL_NEAREST;
@@ -116,7 +62,7 @@ int mg::GLTexture::textureFilterToInt(TEXTURE_FILTER t) {
         return GL_LINEAR;
     }
 }
-int mg::GLTexture::textureWrapToInt(TEXTURE_WRAP t) {
+int mg::Texture::textureWrapToInt(TEXTURE_WRAP t) {
     switch(t) {
     case TEXTURE_WRAP::REPEAT:
         return GL_REPEAT;
@@ -128,7 +74,7 @@ int mg::GLTexture::textureWrapToInt(TEXTURE_WRAP t) {
         return GL_CLAMP_TO_BORDER;
     }
 }
-int mg::GLTexture::textureFormatToInt(TEXTURE_FORMAT format) {
+int mg::Texture::textureFormatToInt(TEXTURE_FORMAT format) {
     switch(format) {
 	case TEXTURE_FORMAT::RGBA8:
         return GL_RGBA8;

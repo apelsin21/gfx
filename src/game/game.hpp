@@ -23,14 +23,16 @@
 
 #include "gfx/gl_vertex_buffer.hpp"
 #include "gfx/gl_renderer.hpp"
-#include "gfx/gl_texture.hpp"
 #include "gfx/gl_shader.hpp"
 
 #include "gfx/shader_uniforms.hpp"
 #include "gfx/batch.hpp"
 #include "gfx/font.hpp"
-#include "gfx/mesh.hpp"
 #include "gfx/color.hpp"
+#include "gfx/mesh.hpp"
+#include "gfx/mesh_loader.hpp"
+#include "gfx/texture.hpp"
+#include "gfx/texture_loader.hpp"
 
 #include "sound/sound_player.hpp"
 #include "sound/sound.hpp"
@@ -44,11 +46,19 @@ namespace mg {
 
 			mg::GLRenderer _renderer;
 			mg::Font _font;
-			std::shared_ptr<mg::Batch> _batch;
+			mg::TextureLoader _textureLoader;
+			mg::MeshLoader _meshLoader;
+
 			std::shared_ptr<mg::ShaderUniforms> _uniforms;
-			std::shared_ptr<mg::Mesh> _mesh;
-			std::shared_ptr<mg::GLTexture> _texture;
-			std::shared_ptr<mg::GLShader> _shader;
+
+			std::shared_ptr<mg::Batch> _worldBatch;
+			std::shared_ptr<mg::Texture> _worldTexture;
+			std::shared_ptr<mg::GLShader> _worldShader;
+
+			std::shared_ptr<mg::Batch> _jeepBatch;
+			std::shared_ptr<mg::Mesh> _jeepMesh;
+			std::shared_ptr<mg::Texture> _jeepTexture;
+			std::shared_ptr<mg::GLShader> _jeepShader;
 
 			mg::SoundPlayer _soundPlayer;
 			mg::Sound _sound;

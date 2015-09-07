@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <stdexcept>
 
 #include <epoxy/gl.h>
 
@@ -13,9 +14,8 @@ namespace mg {
 		protected:
 			mg::VertexFormat _format;
 
-			std::vector<float> _data;
-
-			unsigned int _vbo;
+			GLuint _vbo, _ibo;
+			unsigned int _vboSize, _iboSize;
 		public:
 			Mesh();
 			~Mesh();
@@ -23,10 +23,14 @@ namespace mg {
 			void setVertexFormat(mg::VertexFormat);
 			mg::VertexFormat getVertexFormat() const;
 
-			bool setData(const std::vector<float>&);
-			const std::vector<float>& getData() const;
+			bool uploadVertexData(const std::vector<float>&);
+			bool uploadIndexData(const std::vector<int>&);
 
-			unsigned int getGLHandle() const;
+			GLuint getVertexBuffer() const;
+			GLuint getIndexBuffer() const;
+
+			unsigned int getVertexBufferSize() const;
+			unsigned int getIndexBufferSize() const;
 	};
 }
 

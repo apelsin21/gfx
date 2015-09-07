@@ -75,10 +75,8 @@ bool mg::GLRenderer::render(const std::shared_ptr<mg::Batch>& batch) {
 		);
 	}
 
-	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getID());
-
-	//GET DATA
-	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getData().size() / 5);
+	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getGLHandle());
+	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getVertexBufferSize() / 5);
 
 	return true;
 }
