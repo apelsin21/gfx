@@ -1,12 +1,12 @@
 #ifndef SDL2_WINDOW_HPP
 #define SDL2_WINDOW_HPP
 
-#include "core/window.hpp"
-
 #include <epoxy/gl.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+
+#include "core/window.hpp"
 
 namespace mg {
 	class SDL2Window : public Window {

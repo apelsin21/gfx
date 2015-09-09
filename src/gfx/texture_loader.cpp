@@ -37,11 +37,14 @@ bool mg::TextureLoader::load(const std::string& p, std::shared_ptr<mg::Texture> 
 		return false;
 	}
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
     out_texture->setResolution(glm::vec2(FreeImage_GetWidth(fb), FreeImage_GetHeight(fb)));
     out_texture->setBPP(FreeImage_GetBPP(fb));
     out_texture->setPath(p);
-	out_texture->setSize((FreeImage_GetWidth(fb) * FreeImage_GetHeight(fb)) * 4);
-	out_texture->setData(FreeImage_GetBits(fb));
+	out_texture->setSize((FreeImage_GetWidth(fb) * FreeImage_GetHeight(fb)) * (out_texture->getBPP()/8));
+	out_texture->setFormat(mg::TextureFormat::RGBA8);
+	out_texture->setInternalFormat(mg::TextureFormat::BGRA);
+	out_texture->upload(FreeImage_GetBits(fb));
 	FreeImage_Unload(fb);
 
 	return true;

@@ -4,6 +4,7 @@ mg::Mesh::Mesh() {
 	_format = mg::VertexFormat::PPP;
 	_vboSize = 0;
 	_iboSize = 0;
+	_numFloats = 0;
 
 	glGenBuffers(1, &_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -36,6 +37,7 @@ bool mg::Mesh::uploadVertexData(const std::vector<float>& vertexData) {
 	}
 	
 	_vboSize = sizeof(float) * vertexData.size();
+	_numFloats = vertexData.size();
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferData(
@@ -78,4 +80,7 @@ unsigned int mg::Mesh::getVertexBufferSize() const {
 }
 unsigned int mg::Mesh::getIndexBufferSize() const {
 	return _iboSize;
+}
+unsigned int mg::Mesh::getNumFloats() const {
+	return _numFloats;
 }

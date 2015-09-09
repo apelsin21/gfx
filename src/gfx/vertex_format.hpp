@@ -38,6 +38,8 @@ namespace mg {
 		PPPTTCCCC,
 	
 		PPPNNN,
+
+		PPTT,
 	};
 }
 

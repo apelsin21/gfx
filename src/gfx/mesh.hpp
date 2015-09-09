@@ -15,7 +15,7 @@ namespace mg {
 			mg::VertexFormat _format;
 
 			GLuint _vbo, _ibo;
-			unsigned int _vboSize, _iboSize;
+			unsigned int _vboSize, _iboSize, _numFloats;
 		public:
 			Mesh();
 			~Mesh();
@@ -29,6 +29,7 @@ namespace mg {
 			GLuint getVertexBuffer() const;
 			GLuint getIndexBuffer() const;
 
+			unsigned int getNumFloats() const;
 			unsigned int getVertexBufferSize() const;
 			unsigned int getIndexBufferSize() const;
 	};

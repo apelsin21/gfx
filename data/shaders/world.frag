@@ -7,7 +7,6 @@ in vec3 light_direction_cameraspace;
 
 uniform sampler2D u_sampler;
 uniform vec3 u_eye_pos;
-uniform float u_time;
 
 void main() {
 	// texturing
@@ -21,9 +20,9 @@ void main() {
   	vec2 coord2 = f_pos.zx;
   	vec2 coord3 = f_pos.xy;
   
-  	vec4 col1 = texture2D(u_sampler, coord1 * sin(u_time));
-  	vec4 col2 = texture2D(u_sampler, coord2 * sin(u_time));
-  	vec4 col3 = texture2D(u_sampler, coord3 * sin(u_time));
+  	vec4 col1 = texture2D(u_sampler, coord1);
+  	vec4 col2 = texture2D(u_sampler, coord2);
+  	vec4 col3 = texture2D(u_sampler, coord3);
   
   	vec4 tex_color = 
 		col1.rgba * blend_weights.xxxx +

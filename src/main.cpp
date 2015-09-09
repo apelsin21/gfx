@@ -1,7 +1,6 @@
-#include "game/game.hpp"
+#include <stdio.h>
 
-#include "gfx/modern_gl_renderer.hpp"
-#include "gfx/gl_vertex_buffer.hpp"
+#include "game/game.hpp"
 
 int main(void) {
 	mg::Game game;
@@ -10,7 +9,9 @@ int main(void) {
 		return -1;
 	}
 
-	game.run();
+	if(!game.run()) {
+		return false;
+	}
 
 	return 0;
 }

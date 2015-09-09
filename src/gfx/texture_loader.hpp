@@ -2,7 +2,6 @@
 #define TEXTURE_LOADER_HPP
 
 #include <string>
-#include <cstdio>
 #include <memory>
 
 #include <FreeImage.h>

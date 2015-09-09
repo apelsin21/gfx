@@ -6,6 +6,8 @@ mg::Texture::Texture() {
 	_size = 0;
 	_id = 0;
 
+	_format = mg::TextureFormat::RGBA8;
+	_internalFormat = mg::TextureFormat::BGRA;
     _filter = mg::TextureFilter::Nearest;
     _wrap = mg::TextureWrap::Repeat;
 
@@ -18,26 +20,22 @@ mg::Texture::~Texture() {
 	}
 }
 
-bool mg::Texture::setData(unsigned char* data) {
-	if(data == nullptr) {
-		printf("tried to set texture data to nullptr.\n");
-		return false;
-	}
+bool mg::Texture::upload(unsigned char* data) {
 	glBindTexture(GL_TEXTURE_2D, _id);
 
     glTexImage2D(
 		GL_TEXTURE_2D,
     	0,
-    	_textureFormatToInt(mg::TextureFormat::RGBA8),
+    	_textureFormatToInt(_format),
     	_resolution.x, _resolution.y,
     	0,
-    	_textureFormatToInt(mg::TextureFormat::BGRA),
+    	_textureFormatToInt(_internalFormat),
     	GL_UNSIGNED_BYTE,
     	(GLvoid*)data
 	);
 
-	setTextureFilter(_filter);
-	setTextureWrap(_wrap);
+	setFilter(_filter);
+	setWrap(_wrap);
 
     if(_mipmaps) {
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -74,7 +72,7 @@ glm::vec2 mg::Texture::getResolution() const {
 	return _resolution;
 }
 
-void mg::Texture::setTextureFilter(mg::TextureFilter filter) {
+void mg::Texture::setFilter(mg::TextureFilter filter) {
 	_filter = filter;
 
 	glBindTexture(GL_TEXTURE_2D, _id);
@@ -83,11 +81,11 @@ void mg::Texture::setTextureFilter(mg::TextureFilter filter) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _textureFilterToInt(_filter));
 
 }
-mg::TextureFilter mg::Texture::getTextureFilter() const {
+mg::TextureFilter mg::Texture::getFilter() const {
 	return _filter;
 }
 
-void mg::Texture::setTextureWrap(mg::TextureWrap wrap) {
+void mg::Texture::setWrap(mg::TextureWrap wrap) {
 	_wrap = wrap;
 
 	glBindTexture(GL_TEXTURE_2D, _id);
@@ -95,15 +93,21 @@ void mg::Texture::setTextureWrap(mg::TextureWrap wrap) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _textureWrapToInt(_wrap));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _textureWrapToInt(_wrap));
 }
-mg::TextureWrap mg::Texture::getTextureWrap() const {
+mg::TextureWrap mg::Texture::getWrap() const {
 	return _wrap;
 }
 
-void mg::Texture::setTextureFormat(mg::TextureFormat format) {
+void mg::Texture::setFormat(mg::TextureFormat format) {
 	_format = format;
 }
-mg::TextureFormat mg::Texture::getTextureFormat() const {
+mg::TextureFormat mg::Texture::getFormat() const {
 	return _format;
+}
+void mg::Texture::setInternalFormat(mg::TextureFormat internalFormat) {
+	_internalFormat = internalFormat;
+}
+mg::TextureFormat mg::Texture::getInternalFormat() const {
+	return _internalFormat;
 }
 
 void mg::Texture::setIsMipMapped(bool mipmaps) {
@@ -145,6 +149,10 @@ int mg::Texture::_textureFormatToInt(mg::TextureFormat format) {
         return GL_RGBA8;
 	case mg::TextureFormat::BGRA:
         return GL_BGRA;
+	case mg::TextureFormat::RGB:
+        return GL_RGB;
+	case mg::TextureFormat::RGBA:
+        return GL_RGBA;
 	default:
 		printf("got unhandled texture format %i, returning GL_RGBA8.\n", (int)format);
 		return GL_RGBA8;

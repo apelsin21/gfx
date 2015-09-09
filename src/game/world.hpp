@@ -1,18 +1,12 @@
 #ifndef WORLD_HPP
 #define WORLD_HPP
 
-#include <cstdio>
-#include <string>
 #include <vector>
 #include <memory>
-#include <chrono>
-#include <map>
 
 #include <glm/gtc/noise.hpp>
 #include <glm/gtx/norm.hpp>
 
-#include "gfx/gl_texture.hpp"
-#include "gfx/gl_shader.hpp"
 #include "gfx/vertex_format.hpp"
 #include "gfx/mesh.hpp"
 

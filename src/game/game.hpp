@@ -1,12 +1,6 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <exception>
-#include <cstdlib>
-#include <cstdio>
-#include <chrono>
-#include <memory>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -21,18 +15,16 @@
 #include "game/player.hpp"
 #include "game/world.hpp"
 
-#include "gfx/gl_vertex_buffer.hpp"
-#include "gfx/gl_renderer.hpp"
-#include "gfx/gl_shader.hpp"
-
+#include "gfx/renderer.hpp"
 #include "gfx/shader_uniforms.hpp"
 #include "gfx/batch.hpp"
 #include "gfx/font.hpp"
-#include "gfx/color.hpp"
 #include "gfx/mesh.hpp"
 #include "gfx/mesh_loader.hpp"
 #include "gfx/texture.hpp"
 #include "gfx/texture_loader.hpp"
+#include "gfx/shader.hpp"
+#include "gfx/framebuffer.hpp"
 
 #include "sound/sound_player.hpp"
 #include "sound/sound.hpp"
@@ -44,21 +36,21 @@ namespace mg {
 			mg::SDL2Keyboard _keyboard;
 			mg::SDL2Mouse _mouse;
 
-			mg::GLRenderer _renderer;
+			mg::Renderer _renderer;
 			mg::Font _font;
 			mg::TextureLoader _textureLoader;
 			mg::MeshLoader _meshLoader;
+			mg::FrameBuffer _fbo;
 
 			std::shared_ptr<mg::ShaderUniforms> _uniforms;
 
 			std::shared_ptr<mg::Batch> _worldBatch;
 			std::shared_ptr<mg::Texture> _worldTexture;
-			std::shared_ptr<mg::GLShader> _worldShader;
+			std::shared_ptr<mg::Shader> _worldShader;
 
-			std::shared_ptr<mg::Batch> _jeepBatch;
-			std::shared_ptr<mg::Mesh> _jeepMesh;
-			std::shared_ptr<mg::Texture> _jeepTexture;
-			std::shared_ptr<mg::GLShader> _jeepShader;
+			std::shared_ptr<mg::Shader> _screenShader;
+			std::shared_ptr<mg::Batch> _screenBatch;
+			std::shared_ptr<mg::Mesh> _screenMesh;
 
 			mg::SoundPlayer _soundPlayer;
 			mg::Sound _sound;
@@ -74,7 +66,7 @@ namespace mg {
 			~Game();
 
 			bool load();
-			void run();
+			bool run();
 	};
 }
 

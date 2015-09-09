@@ -9,21 +9,19 @@ mg::Game::Game() {
 	_timesRendered = 0;
 
 	_uniforms = std::make_shared<mg::ShaderUniforms>();
-
 	_worldBatch = std::make_shared<mg::Batch>();
 	_worldTexture = std::make_shared<mg::Texture>();
-	_worldShader = std::make_shared<mg::GLShader>();
+	_worldShader = std::make_shared<mg::Shader>();
 
-	//_jeepBatch = std::make_shared<mg::Batch>();
-	//_jeepMesh = std::make_shared<mg::Mesh>();
-	//_jeepShader = std::make_shared<mg::GLShader>();
-	//_jeepTexture = std::make_shared<mg::Texture>();
+	_screenBatch = std::make_shared<mg::Batch>();
+	_screenShader = std::make_shared<mg::Shader>();
+	_screenMesh = std::make_shared<mg::Mesh>();
 }
 mg::Game::~Game() {
 }
 
 bool mg::Game::load() {
-    if(!_worldShader->loadFromFile("data/shaders/vertex.glsl", "data/shaders/fragment.glsl")) {
+    if(!_worldShader->loadFromFile("data/shaders/world.vert", "data/shaders/world.frag")) {
         return false;
     }
 	if(!_textureLoader.load("data/textures/cave_rock.png", _worldTexture)) {
@@ -37,19 +35,36 @@ bool mg::Game::load() {
 		return false;
 	}
 
-    //if(!_jeepShader->loadFromFile("data/shaders/jeepv.glsl", "data/shaders/jeepf.glsl")) {
-    //    return false;
-    //}
-	//if(!_meshLoader.load("data/meshes/jeep1.ms3d", _jeepMesh, _jeepTexture)) {
-	//	return false;
-	//}
+	if(!_screenShader->loadFromFile("data/shaders/screen.vert", "data/shaders/screen.frag")) {
+		return false;
+	}
 
-	_renderer.setClearColor(mg::Color(0.0f, 1.0f, 1.0f, 1.0f));
+	std::vector<float> quad = {
+    	-1.0f,  1.0f,  0.0f, 1.0f,
+    	 1.0f,  1.0f,  1.0f, 1.0f,
+    	 1.0f, -1.0f,  1.0f, 0.0f,
+
+    	 1.0f, -1.0f,  1.0f, 0.0f,
+    	-1.0f, -1.0f,  0.0f, 0.0f,
+    	-1.0f,  1.0f,  0.0f, 1.0f
+	};
+
+	_screenMesh->setVertexFormat(mg::VertexFormat::PPTT);
+	if(!_screenMesh->uploadVertexData(quad)) {
+		return false;
+	}
+
+	if(!_fbo.createColorTexture(glm::vec2(800, 600))) {
+		printf("failed to create FBO color texture.\n");
+		return false;
+	}
+
+	_renderer.setClearColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
 
 	return true;
 }
 
-void mg::Game::run() {
+bool mg::Game::run() {
 	bool run = true;
 
 	while(run) {
@@ -101,15 +116,27 @@ void mg::Game::run() {
 		_uniforms->add("u_view", 		&_player.getViewMatrix()[0][0]);
 		_uniforms->add("u_projection", 	&_player.getProjectionMatrix()[0][0]);
 		_uniforms->add("u_eye_pos", 	std::make_shared<glm::vec3>(_player.getPosition()));
-		_uniforms->add("u_time",		std::make_shared<float>((float)(std::clock()) / (float)(CLOCKS_PER_SEC)));
 
-		_worldBatch->set(_world.getMesh(), _uniforms, _worldTexture, _worldShader);
-		//_jeepBatch->set(_jeepMesh, _uniforms, _jeepTexture, _jeepShader);
+		if(!_worldBatch->set(_world.getMesh(), _uniforms, _worldTexture, _worldShader)) {
+			printf("failed to set worldBatch.\n");
+			return false;
+		}
 
 		_renderer.setSize(_window.getResolution());
+		if(!_renderer.render(_fbo, _worldBatch)) {
+			printf("failed to render world.\n");
+			return false;
+		}
 
-		_renderer.render(_worldBatch);
-		//_renderer.render(_jeepBatch);
+		if(!_screenBatch->set(_screenMesh, nullptr, _fbo.getColorTexture(), _screenShader)) {
+			printf("failed to set screenBatch.\n");
+			return false;
+		}
+
+		if(!_renderer.render(_screenBatch)) {
+			printf("failed to render screen.\n");
+			return false;
+		}
 
 		_window.pollEvents();
 		_window.swapBuffers();

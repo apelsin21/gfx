@@ -2,7 +2,6 @@
 #define TEXTURE_HPP
 
 #include <string>
-#include <stdio.h>
 #include <fstream>
 #include <memory>
 
@@ -26,6 +25,8 @@ namespace mg {
     enum class TextureFormat {
         RGBA8,
         BGRA,
+		RGB,
+		RGBA,
     };
 
     class Texture {
@@ -37,7 +38,7 @@ namespace mg {
 
 			mg::TextureFilter _filter;
             mg::TextureWrap _wrap;
-            mg::TextureFormat _format;
+            mg::TextureFormat _format, _internalFormat;
             glm::vec2 _resolution;
             std::string _path;
 			unsigned int _size, _bpp;
@@ -46,7 +47,7 @@ namespace mg {
             Texture();
 			~Texture();
 
-			bool setData(unsigned char*);
+			bool upload(unsigned char*);
 
 			void setSize(unsigned int);
 			unsigned int getSize() const;
@@ -60,14 +61,17 @@ namespace mg {
 			void setResolution(const glm::vec2&);
 			glm::vec2 getResolution() const;
 
-			void setTextureFilter(mg::TextureFilter);
-			mg::TextureFilter getTextureFilter() const;
+			void setFilter(mg::TextureFilter);
+			mg::TextureFilter getFilter() const;
 
-			void setTextureWrap(mg::TextureWrap);
-			mg::TextureWrap getTextureWrap() const;
+			void setWrap(mg::TextureWrap);
+			mg::TextureWrap getWrap() const;
 
-			void setTextureFormat(mg::TextureFormat);
-			mg::TextureFormat getTextureFormat() const;
+			void setFormat(mg::TextureFormat);
+			mg::TextureFormat getFormat() const;
+
+			void setInternalFormat(mg::TextureFormat);
+			mg::TextureFormat getInternalFormat() const;
 
 			void setIsMipMapped(bool);
 			bool isMipMapped() const;
