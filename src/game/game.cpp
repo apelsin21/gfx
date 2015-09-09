@@ -141,4 +141,6 @@ bool mg::Game::run() {
 		_window.pollEvents();
 		_window.swapBuffers();
 	}
+
+	return true;
 }

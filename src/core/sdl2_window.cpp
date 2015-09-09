@@ -111,6 +111,8 @@ bool mg::SDL2Window::isInputGrabbed() const {
 	if(SDL_GetWindowGrab(sdlWindow) == SDL_TRUE) {
 		return true;
 	}
+
+	return false;
 }
 bool mg::SDL2Window::isFocused() const {
 	if(sdlWindow) {
