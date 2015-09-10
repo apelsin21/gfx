@@ -29,6 +29,8 @@
 #include "sound/sound_player.hpp"
 #include "sound/sound.hpp"
 
+#include "net/server.hpp"
+
 namespace mg {
 	class Game {
 		protected:
@@ -57,6 +59,8 @@ namespace mg {
 
 			mg::Player _player;
 			mg::World _world;
+
+			mg::Server _server;
 
 			int _lastKey, _timesRendered;
 			bool _wireframe, _windowIsFocused;

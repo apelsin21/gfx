@@ -29,6 +29,10 @@ set(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound_player.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound.cpp
 
+	#net
+	${CMAKE_CURRENT_SOURCE_DIR}/net/server.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/net/client.cpp
+
     PARENT_SCOPE
 )
 set(HEADERS
@@ -66,6 +70,10 @@ set(HEADERS
 	#sound
 	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound_player.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/sound/sound.hpp
+
+	#net
+	${CMAKE_CURRENT_SOURCE_DIR}/net/server.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/net/client.hpp
 
     PARENT_SCOPE
 )

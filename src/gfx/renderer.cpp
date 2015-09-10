@@ -48,7 +48,7 @@ bool mg::Renderer::render(std::shared_ptr<mg::FrameBuffer> fbo, std::shared_ptr<
 	}
 
 	glm::vec2 res(fbo->getColorTexture()->getResolution());
-	
+
 	glViewport(
 		0,
 		0,
@@ -114,7 +114,7 @@ bool mg::Renderer::render(std::shared_ptr<mg::FrameBuffer> fbo, std::shared_ptr<
 	}
 	
 	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getGLHandle());
-	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getNumFloats() / 5);
+	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getNumFloats() / 6);
 
 	return true;
 }

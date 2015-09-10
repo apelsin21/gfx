@@ -48,5 +48,6 @@ target_link_libraries(${PROJECT_NAME}
 	freeimage
 	opus
 	opusfile
+	enet
 	${SDL2_LIBRARIES}
 )

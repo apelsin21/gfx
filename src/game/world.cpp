@@ -5,9 +5,9 @@ mg::World::World() {
 	_generatedMesh = false;
 
 	_isoLevel = 0;
-	_numX = 8;
-	_numY = 8;
-	_numZ = 8;
+	_numX = 32;
+	_numY = 32;
+	_numZ = 32;
 	_numVoxels = _numX*_numY*_numZ;
 	_voxelSize = 0.1f;
 
