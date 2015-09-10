@@ -24,10 +24,10 @@ namespace mg {
 			~Batch();
 
 			bool set(
-				const std::shared_ptr<mg::Mesh>&,
-				const std::shared_ptr<mg::ShaderUniforms>&,
-				const std::shared_ptr<mg::Texture>&,
-				const std::shared_ptr<mg::Shader>&
+				std::shared_ptr<mg::Mesh>,
+				std::shared_ptr<mg::ShaderUniforms>,
+				std::shared_ptr<mg::Texture>,
+				std::shared_ptr<mg::Shader>
 			);
 
 			GLuint getVAO() const;

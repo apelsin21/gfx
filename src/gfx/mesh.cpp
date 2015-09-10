@@ -5,11 +5,12 @@ mg::Mesh::Mesh() {
 	_vboSize = 0;
 	_iboSize = 0;
 	_numFloats = 0;
+	_numInts = 0;
 
 	glGenBuffers(1, &_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 
-	glGenBuffers(1, &_vbo);
+	glGenBuffers(1, &_ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 }
 mg::Mesh::~Mesh() {
@@ -35,15 +36,15 @@ bool mg::Mesh::uploadVertexData(const std::vector<float>& vertexData) {
 		printf("tried to upload empty vertex data.\n");
 		return false;
 	}
-	
-	_vboSize = sizeof(float) * vertexData.size();
+
 	_numFloats = vertexData.size();
+	_vboSize = _numFloats * sizeof(float);
 
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		sizeof(float) * vertexData.size(),
-		(GLvoid*)&vertexData[0],
+		_vboSize,
+		&vertexData[0],
 		GL_STATIC_DRAW
 	);
 
@@ -55,13 +56,14 @@ bool mg::Mesh::uploadIndexData(const std::vector<int>& indexData) {
 		return false;
 	}
 
-	_iboSize = sizeof(int) * indexData.size();
+	_numInts = indexData.size();
+	_iboSize = _numInts * sizeof(int);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
 	glBufferData(
 		GL_ELEMENT_ARRAY_BUFFER,
-		sizeof(int) * indexData.size(),
-		(GLvoid*)&indexData[0],
+		_iboSize,
+		&indexData[0],
 		GL_STATIC_DRAW
 	);
 
@@ -83,4 +85,7 @@ unsigned int mg::Mesh::getIndexBufferSize() const {
 }
 unsigned int mg::Mesh::getNumFloats() const {
 	return _numFloats;
+}
+unsigned int mg::Mesh::getNumInts() const {
+	return _numInts;
 }

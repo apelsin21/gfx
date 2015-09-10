@@ -1,4 +1,4 @@
-#version 130
+#version 330 core
 
 in vec3 f_pos;
 in vec3 f_normal;
@@ -40,11 +40,11 @@ void main() {
 	vec4 ambient_color = vec4(0.1, 0.1, 0.1, 1.0) * tex_color;
 
 	// mixing the above
-	gl_FragColor = 
+	gl_FragColor = vec4(
 		ambient_color + 
 		tex_color * 
 		light_color * 
 		cos_theta / 
 		distance
-	;
+	);
 }

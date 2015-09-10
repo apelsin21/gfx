@@ -8,7 +8,9 @@ mg::Game::Game() {
 	_lastKey = -1;
 	_timesRendered = 0;
 
+	_fbo = std::make_shared<mg::FrameBuffer>();
 	_uniforms = std::make_shared<mg::ShaderUniforms>();
+
 	_worldBatch = std::make_shared<mg::Batch>();
 	_worldTexture = std::make_shared<mg::Texture>();
 	_worldShader = std::make_shared<mg::Shader>();
@@ -54,7 +56,7 @@ bool mg::Game::load() {
 		return false;
 	}
 
-	if(!_fbo.createColorTexture(glm::vec2(800, 600))) {
+	if(!_fbo->createColorTexture(glm::vec2(800, 600))) {
 		printf("failed to create FBO color texture.\n");
 		return false;
 	}
@@ -117,18 +119,19 @@ bool mg::Game::run() {
 		_uniforms->add("u_projection", 	&_player.getProjectionMatrix()[0][0]);
 		_uniforms->add("u_eye_pos", 	std::make_shared<glm::vec3>(_player.getPosition()));
 
+		_renderer.setSize(_window.getResolution());
+
 		if(!_worldBatch->set(_world.getMesh(), _uniforms, _worldTexture, _worldShader)) {
 			printf("failed to set worldBatch.\n");
 			return false;
 		}
 
-		_renderer.setSize(_window.getResolution());
 		if(!_renderer.render(_fbo, _worldBatch)) {
 			printf("failed to render world.\n");
 			return false;
 		}
 
-		if(!_screenBatch->set(_screenMesh, nullptr, _fbo.getColorTexture(), _screenShader)) {
+		if(!_screenBatch->set(_screenMesh, nullptr, _fbo->getColorTexture(), _screenShader)) {
 			printf("failed to set screenBatch.\n");
 			return false;
 		}

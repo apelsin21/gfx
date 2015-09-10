@@ -1,8 +1,13 @@
 #include "gfx/renderer.hpp"
 
 mg::Renderer::Renderer() {
+	glGenVertexArrays(1, &_vao);
+	glBindVertexArray(_vao);
 }
 mg::Renderer::~Renderer() {
+	if(glIsVertexArray(_vao) == GL_TRUE) {
+		glDeleteVertexArrays(1, &_vao);
+	}
 }
 
 void mg::Renderer::setClearColor(const glm::vec4& color) {
@@ -23,35 +28,45 @@ glm::vec2 mg::Renderer::getSize() const {
 }
 
 
-bool mg::Renderer::render(mg::FrameBuffer& fbo, const std::shared_ptr<mg::Batch>& batch) {
+bool mg::Renderer::render(std::shared_ptr<mg::FrameBuffer> fbo, std::shared_ptr<mg::Batch> batch) {
 	if(batch == nullptr) {
 		printf("renderer tried to render uninstanced batch.\n");
 		return false;
 	}
 
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
-	if(fbo.isComplete()) {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo.getGLHandle());
+	if(fbo->isComplete()) {
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo->getGLHandle());
+		glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getGLHandle());
+		glBindVertexArray(batch->getVAO());
 	} else {
 		printf("renderer tried to render to incomplete FBO.\n");
 		return false;
 	}
+
+	glm::vec2 res(fbo->getColorTexture()->getResolution());
 	
 	glViewport(
 		0,
 		0,
-		fbo.getColorTexture()->getResolution().x, 
-		fbo.getColorTexture()->getResolution().y
+		res.x,
+		res.y
 	);
 
-	glClearColor(1.f, 0.f, 0.f, 1.0f);
+	glClearColor(0.f, 1.f, 1.f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBindVertexArray(batch->getVAO());
-	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getGLHandle());
+	if(glIsProgram(batch->getShader()->getGLHandle()) == GL_FALSE) {
+		printf("renderer batch got invalid shaderprogram.\n");
+		return false;
+	}
+
+	const GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
+	glDrawBuffers(1, buffers);
+
 	glUseProgram(batch->getShader()->getGLHandle());
 	
 	if(batch->getUniforms() != nullptr) {
@@ -93,13 +108,17 @@ bool mg::Renderer::render(mg::FrameBuffer& fbo, const std::shared_ptr<mg::Batch>
 				pair.second
 			);
 		}
+	} else {
+		printf("shader uniforms are nullptr.\n");
+		return false;
 	}
 	
-	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getNumFloats() / 6);
+	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getGLHandle());
+	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getNumFloats() / 5);
 
 	return true;
 }
-bool mg::Renderer::render(const std::shared_ptr<mg::Batch>& batch) {
+bool mg::Renderer::render(std::shared_ptr<mg::Batch> batch) {
 	if(batch == nullptr) {
 		printf("renderer tried to render uninstanced batch.\n");
 		return false;
@@ -108,18 +127,17 @@ bool mg::Renderer::render(const std::shared_ptr<mg::Batch>& batch) {
 	glDisable(GL_DEPTH_TEST);
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getGLHandle());
+	glBindVertexArray(batch->getVAO());
 
 	glViewport(0, 0, _res.x, _res.y);
 
-	glClearColor(0.f, 1.f, 0.f, 1.0f);
+	glClearColor(0.f, 0.f, 0.f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glBindVertexArray(batch->getVAO());
-	glBindTexture(GL_TEXTURE_2D, batch->getTexture()->getGLHandle());
-
 	glUseProgram(batch->getShader()->getGLHandle());
-	
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDrawArrays(GL_TRIANGLES, 0, batch->getMesh()->getNumFloats() / 4);
 
 	return true;
 }

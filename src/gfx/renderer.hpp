@@ -22,6 +22,8 @@ namespace mg {
 		protected:
 			glm::vec2 _res;
 			glm::vec4 _clearColor;
+
+			GLuint _vao;
 		public:
 			Renderer();
 			~Renderer();
@@ -32,8 +34,8 @@ namespace mg {
 			void setSize(const glm::vec2&);
 			glm::vec2 getSize() const;
 
-			bool render(mg::FrameBuffer&, const std::shared_ptr<mg::Batch>&);
-			bool render(const std::shared_ptr<mg::Batch>&);
+			bool render(std::shared_ptr<mg::FrameBuffer>, std::shared_ptr<mg::Batch>);
+			bool render(std::shared_ptr<mg::Batch>);
 	};
 }
 

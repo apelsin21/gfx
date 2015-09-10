@@ -40,8 +40,8 @@ namespace mg {
 			mg::Font _font;
 			mg::TextureLoader _textureLoader;
 			mg::MeshLoader _meshLoader;
-			mg::FrameBuffer _fbo;
 
+			std::shared_ptr<mg::FrameBuffer> _fbo;
 			std::shared_ptr<mg::ShaderUniforms> _uniforms;
 
 			std::shared_ptr<mg::Batch> _worldBatch;

@@ -27,10 +27,12 @@ bool mg::FrameBuffer::isComplete() const {
 }
 
 bool mg::FrameBuffer::createColorTexture(const glm::vec2& resolution) {
-	glGenFramebuffers(1, &_fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+	if(glIsFramebuffer(_fbo) == GL_FALSE) {
+		glGenFramebuffers(1, &_fbo);
+	}
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
 
-	_colorTexture = std::shared_ptr<mg::Texture>(new mg::Texture());
+	_colorTexture = std::make_shared<mg::Texture>();
 	_colorTexture->setResolution(resolution);
 	_colorTexture->setBPP(32);
 	_colorTexture->setSize((resolution.x * resolution.y) * (_colorTexture->getBPP() / 8));
@@ -49,58 +51,70 @@ bool mg::FrameBuffer::createColorTexture(const glm::vec2& resolution) {
 		resolution.y
 	);
 	glFramebufferRenderbuffer(
-		GL_FRAMEBUFFER,
+		GL_DRAW_FRAMEBUFFER,
 		GL_DEPTH_ATTACHMENT,
 		GL_RENDERBUFFER,
 		_rboDepth
 	);
 
 	glFramebufferTexture2D(
-		GL_FRAMEBUFFER,
+		GL_DRAW_FRAMEBUFFER,
 		GL_COLOR_ATTACHMENT0,
 		GL_TEXTURE_2D,
 		_colorTexture->getGLHandle(),
 		0
 	);
 
-	GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+	GLint result;
+
+	glGetFramebufferAttachmentParameteriv(
+		GL_DRAW_FRAMEBUFFER,
+		GL_COLOR_ATTACHMENT0,
+		GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
+		&result
+	);
+
+	switch(result) {
+		case GL_NONE:
+			printf("framebuffer color attachment is GL_NONE.\n");
+			return false;
+			break;
+		case GL_FRAMEBUFFER_DEFAULT:
+			printf("framebuffer color attachment is GL_FRAMEBUFFER_DEFAULT.\n");
+			break;
+		case GL_TEXTURE:
+			glGetFramebufferAttachmentParameteriv(
+				GL_DRAW_FRAMEBUFFER,
+				GL_COLOR_ATTACHMENT0,
+				GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME,
+				&result
+			);
+
+			if(result != _colorTexture->getGLHandle()) {
+				printf("but it doesn't match the texture name!\n");
+				return false;
+			}
+
+			break;
+		case GL_RENDERBUFFER:
+			printf("framebuffer color attachment is GL_RENDERBUFFER.\n");
+			break;
+		default:
+			printf("framebuffer has unhandled color attachment type.\n");
+			return false;
+			break;
+	}
+
+	const GLenum drawBuffers[] = {
+		GL_COLOR_ATTACHMENT0
+	};
+
 	glDrawBuffers(1, drawBuffers);
-	
-//	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
-//
-//	glGenRenderbuffers(1, &_rboColor);
-//	glBindRenderbuffer(GL_RENDERBUFFER, _rboColor);
-//	glRenderbufferStorage(
-//		GL_RENDERBUFFER,
-//		GL_RGBA,
-//		resolution.x,
-//		resolution.y
-//	);
-//
-//	glGenRenderbuffers(1, &_rboDepthStencil);
-//	glBindRenderbuffer(GL_RENDERBUFFER, _rboDepthStencil);
-//	glRenderbufferStorage(
-//		GL_RENDERBUFFER,
-//		GL_DEPTH_COMPONENT24,
-//		resolution.x,
-//		resolution.y
-//	);
-//
-//	glFramebufferRenderbuffer(
-//		GL_FRAMEBUFFER,
-//		GL_COLOR_ATTACHMENT0,
-//		GL_RENDERBUFFER,
-//		_rboColor
-//	);
-//
-//	glFramebufferRenderbuffer(
-//		GL_FRAMEBUFFER,
-//		GL_DEPTH_ATTACHMENT,
-//		GL_RENDERBUFFER,
-//		_rboDepthStencil
-//	);
-//
-//	glEnable(GL_DEPTH_TEST);
+
+	if(glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		printf("framebuffer is incomplete.\n");
+		return false;
+	}
 
 	return true;
 }

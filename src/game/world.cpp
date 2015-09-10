@@ -5,9 +5,9 @@ mg::World::World() {
 	_generatedMesh = false;
 
 	_isoLevel = 0;
-	_numX = 64;
-	_numY = 64;
-	_numZ = 64;
+	_numX = 8;
+	_numY = 8;
+	_numZ = 8;
 	_numVoxels = _numX*_numY*_numZ;
 	_voxelSize = 0.1f;
 
@@ -64,14 +64,14 @@ bool mg::World::generateMesh() {
 				unsigned int index = x * _numX * _numY + y * _numZ + z;
 				glm::vec3 p = glm::vec3(x * _voxelSize, y * _voxelSize, z * _voxelSize);
 
-				cell.p[0] = p + glm::vec3(0.0	, 0.0f  , 0.0f  );
-				cell.p[1] = p + glm::vec3(_voxelSize, 0.0f  , 0.0f  );
-				cell.p[2] = p + glm::vec3(_voxelSize, _voxelSize, 0.0f  );
-				cell.p[3] = p + glm::vec3(0.0f	, _voxelSize, 0.0f  );
-				cell.p[4] = p + glm::vec3(0.0f	, 0.0f  , _voxelSize);
-				cell.p[5] = p + glm::vec3(_voxelSize, 0.0f  , _voxelSize);
+				cell.p[0] = p + glm::vec3(0.0		, 0.0f  	, 0.0f  	);
+				cell.p[1] = p + glm::vec3(_voxelSize, 0.0f  	, 0.0f  	);
+				cell.p[2] = p + glm::vec3(_voxelSize, _voxelSize, 0.0f  	);
+				cell.p[3] = p + glm::vec3(0.0f		, _voxelSize, 0.0f  	);
+				cell.p[4] = p + glm::vec3(0.0f		, 0.0f  	, _voxelSize);
+				cell.p[5] = p + glm::vec3(_voxelSize, 0.0f  	, _voxelSize);
 				cell.p[6] = p + glm::vec3(_voxelSize, _voxelSize, _voxelSize);
-				cell.p[7] = p + glm::vec3(0.0f	, _voxelSize, _voxelSize);
+				cell.p[7] = p + glm::vec3(0.0f		, _voxelSize, _voxelSize);
 
 				cell.val[0] = _voxels[x     * _numX * _numY + y     * _numZ + z    ];
 				cell.val[1] = _voxels[(x+1) * _numX * _numY + y     * _numZ + z    ];
@@ -153,7 +153,6 @@ bool mg::World::generateMesh() {
 		}
 	}
 
-	printf("world mesh generated vertex data is of size %f MB\n.", (sizeof(float)*_vertices.size())/1024.f/1024.f);
 	_mesh->uploadVertexData(_vertices);
 
 	_generatedMesh = true;
