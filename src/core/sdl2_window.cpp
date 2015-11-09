@@ -36,7 +36,7 @@ mg::SDL2Window::~SDL2Window() {
         SDL_DestroyWindow(sdlWindow);
     }
     
-	if(SDL_WasInit(0) != 0) {
+	if(SDL_WasInit(SDL_INIT_VIDEO) != 0) {
     	SDL_Quit();
 	}
 }

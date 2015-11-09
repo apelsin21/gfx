@@ -1,7 +1,8 @@
 #include "net/server.hpp"
 
 mg::Server::Server() {
-	_host = nullptr;
+	_address.host = ENET_HOST_ANY;
+	_address.port = 1234;
 }
 mg::Server::~Server() {
 	if(_host != nullptr) {
@@ -10,11 +11,6 @@ mg::Server::~Server() {
 }
 
 bool mg::Server::initialize() {
-	if(_hostString == "") {
-		printf("tried to initialize server with empty address.\n");
-		return false;
-	}
-
 	_host = enet_host_create(
 		&_address,
 		32,
@@ -30,14 +26,8 @@ bool mg::Server::initialize() {
 
 	return true;
 }
-
-void mg::Server::setAddress(const std::string& address, unsigned short port) {
-	_hostString = address;
-	enet_address_set_host(&_address, _hostString.c_str());
-	_address.port = port;
-}
-std::string mg::Server::getAddress() const {
-	return _hostString;
+unsigned short mg::Server::getPort() const {
+	return _address.port;
 }
 
 void mg::Server::pollEvents(unsigned int timeout) {

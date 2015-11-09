@@ -32,6 +32,7 @@ set(SOURCES
 	#net
 	${CMAKE_CURRENT_SOURCE_DIR}/net/server.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/net/client.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/net/packet.cpp
 
     PARENT_SCOPE
 )
@@ -74,6 +75,7 @@ set(HEADERS
 	#net
 	${CMAKE_CURRENT_SOURCE_DIR}/net/server.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/net/client.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/net/packet.hpp
 
     PARENT_SCOPE
 )

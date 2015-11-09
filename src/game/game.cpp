@@ -51,18 +51,12 @@ bool mg::Game::load() {
     	-1.0f,  1.0f,  0.0f, 1.0f
 	};
 
-	_server.setAddress("127.0.0.1", 1234);
-	if(!_server.initialize()) {
-		printf("failed to initialize server.\n");
-		return false;
-	}
-
 	_screenMesh->setVertexFormat(mg::VertexFormat::PPTT);
 	if(!_screenMesh->uploadVertexData(quad)) {
 		return false;
 	}
 
-	if(!_fbo->createColorTexture(glm::vec2(640, 480))) {
+	if(!_fbo->createColorTexture(glm::vec2(1440, 900))) {
 		printf("failed to create FBO color texture.\n");
 		return false;
 	}
@@ -149,8 +143,6 @@ bool mg::Game::run() {
 
 		_window.pollEvents();
 		_window.swapBuffers();
-
-		_server.pollEvents(0);
 	}
 
 	return true;

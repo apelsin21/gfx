@@ -11,16 +11,13 @@ namespace mg {
 			ENetAddress _address;
 			ENetEvent _event;
 			ENetHost* _host;
-
-			std::string _hostString;
 		public:
 			Server();
 			~Server();
 
 			bool initialize();
 
-			void setAddress(const std::string&, unsigned short);
-			std::string getAddress() const;
+			unsigned short getPort() const;
 
 			void pollEvents(unsigned int);
 	};
