@@ -133,7 +133,13 @@ bool mg::Client::send(mg::Packet& packet) {
 		return false;
 	}
 
+	if(packet.getInternalPacket() == nullptr) {
+		printf("client tried to send packet with no data.\n");
+		return false;
+	}
+
 	enet_peer_send(m_peer, 0, packet.getInternalPacket());
+
 	return true;
 }
 

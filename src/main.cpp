@@ -19,7 +19,7 @@ int main(void) {
 	}
 
 	mg::Packet packet;
-	packet.setData("bajs", strlen("bajs") + 1);
+	packet.setData("nä!", strlen("") + 1);
 
 	if(!client.connect("192.168.1.3", 1234)) {
 		return -1;
