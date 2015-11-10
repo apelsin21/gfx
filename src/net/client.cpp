@@ -96,7 +96,8 @@ void mg::Client::pollEvents(unsigned int timeout) {
 	while(enet_host_service(m_host, &m_event, timeout) > 0) {
 		switch(m_event.type) {
 			case ENET_EVENT_TYPE_CONNECT:
-				printf("connected to peer.\n");
+				printf("connected to server.\n");
+				m_isConnected = true;
 				break;
 			case ENET_EVENT_TYPE_RECEIVE:
         		printf(
@@ -110,7 +111,7 @@ void mg::Client::pollEvents(unsigned int timeout) {
 				enet_packet_destroy(m_event.packet);
 				break;
 			case ENET_EVENT_TYPE_DISCONNECT:
-				printf("Got disconnect event from server.\n");
+				printf("disconnected from server.\n");
 
 				m_event.peer->data = NULL;
 				m_isConnected = false;

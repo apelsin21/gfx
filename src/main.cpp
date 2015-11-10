@@ -13,11 +13,6 @@ int main(void) {
 		return -1;
 	}
 
-	mg::Server server;
-	if(!server.initialize()) {
-		return -1;
-	}
-
 	mg::Client client;
 	if(!client.initialize()) {
 		return -1;
@@ -26,17 +21,16 @@ int main(void) {
 	mg::Packet packet;
 	packet.setData("bajs", strlen("bajs") + 1);
 
-	if(!client.connect("127.0.0.1", 1234)) {
+	if(!client.connect("192.168.1.3", 1234)) {
 		return -1;
 	}
 
-	while(true) {
-		client.pollEvents(1);
-		server.pollEvents(1);
+	client.pollEvents(10);
 
-		if(client.isConnected()) {
-			client.send(packet);
-		}
+	client.send(packet);
+
+	while(client.isConnected()) {
+		client.pollEvents(10);
 	}
 
 	enet_deinitialize();

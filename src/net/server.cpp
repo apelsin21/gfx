@@ -53,7 +53,7 @@ void mg::Server::pollEvents(unsigned int timeout) {
 				}
 
 				printf(
-					"Client connected from %s:%u.\n",
+					"%s:%u connected.\n",
 					m_addrString.get(),
 					m_event.peer->address.port
 				);
@@ -71,9 +71,14 @@ void mg::Server::pollEvents(unsigned int timeout) {
 				enet_packet_destroy(m_event.packet);
 				break;
 			case ENET_EVENT_TYPE_DISCONNECT:
+				if(enet_address_get_host_ip(&m_event.peer->address, m_addrString.get(), m_maxAddrStringSize) < 0) {
+					fprintf(stderr, "failed to get address string for disconnecting client address.\n");
+				}
+
 				printf(
-					"%s disconnected.\n",
-					m_event.peer->data
+					"%s:%u disconnected.\n",
+					m_addrString.get(),
+					m_event.peer->address.port
 				);
 
 				m_event.peer->data = NULL;
