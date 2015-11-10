@@ -60,12 +60,14 @@ void mg::Server::pollEvents(unsigned int timeout) {
 
 				break;
 			case ENET_EVENT_TYPE_RECEIVE:
+				if(enet_address_get_host_ip(&m_event.peer->address, m_addrString.get(), m_maxAddrStringSize) < 0) {
+					fprintf(stderr, "failed to get address string for disconnecting client address.\n");
+				}
         		printf(
-					"A packet of length %u containing %s was received from %s on channel %u.\n",
-                	m_event.packet->dataLength,
-                	m_event.packet->data,
-                	m_event.peer->data,
-                	m_event.channelID
+					"%s:%u : %s.\n",
+					m_addrString.get(),
+					m_event.peer->address.port,
+                	m_event.packet->data
 				);
 
 				enet_packet_destroy(m_event.packet);

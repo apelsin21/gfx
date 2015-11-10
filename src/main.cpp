@@ -30,7 +30,7 @@ int main(void) {
 	client.send(packet);
 
 	while(client.isConnected()) {
-		client.pollEvents(10);
+		client.pollEvents(100);
 	}
 
 	enet_deinitialize();
