@@ -16,7 +16,10 @@ namespace mg {
 
 			bool setData(const void*, size_t);
 
+			ENetPacket* getInternalPacket();
+
 			size_t getSize() const;
+			ENetPacketFlag getInternalPacketFlag() const;
 	};
 }
 

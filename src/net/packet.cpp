@@ -3,6 +3,7 @@
 mg::Packet::Packet() {
 	m_flag = ENET_PACKET_FLAG_RELIABLE;
 	m_size = 0;
+	m_packet = nullptr;
 }
 mg::Packet::~Packet() {
 	enet_packet_destroy(m_packet);
@@ -30,6 +31,13 @@ bool mg::Packet::setData(const void* data, size_t size) {
 	return true;
 }
 
+ENetPacket* mg::Packet::getInternalPacket() {
+	return m_packet;
+}
+
+ENetPacketFlag mg::Packet::getInternalPacketFlag() const {
+	return m_flag;
+}
 size_t mg::Packet::getSize() const {
 	return m_size;
 }

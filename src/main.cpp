@@ -1,5 +1,7 @@
 #include <enet/enet.h>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "net/packet.hpp"
 #include "net/server.hpp"
@@ -16,10 +18,25 @@ int main(void) {
 		return -1;
 	}
 
-	fprintf(stdout, "starting server at port %u.\n", server.getPort());
+	mg::Client client;
+	if(!client.initialize()) {
+		return -1;
+	}
+
+	mg::Packet packet;
+	packet.setData("bajs", strlen("bajs") + 1);
+
+	if(!client.connect("127.0.0.1", 1234)) {
+		return -1;
+	}
 
 	while(true) {
-		server.pollEvents(1000);
+		client.pollEvents(1);
+		server.pollEvents(1);
+
+		if(client.isConnected()) {
+			client.send(packet);
+		}
 	}
 
 	enet_deinitialize();
