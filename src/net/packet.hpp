@@ -3,23 +3,43 @@
 
 #include <enet/enet.h>
 #include <cstdio>
+#include <cstring>
+
+#include <vector>
+#include <string>
+#include <ostream>
 
 namespace mg {
 	class Packet {
 		protected:
-			ENetPacket* m_packet;
 			ENetPacketFlag m_flag; //type of the packet, reliable, unreliable, etc.
-			unsigned int m_size; //content size in bytes
+
+			std::vector<char> m_data;
+			void append(const void* data, std::size_t size);
 		public:
-			Packet();
+			Packet(ENetPacketFlag = ENET_PACKET_FLAG_RELIABLE);
 			~Packet();
 
-			bool setData(const void*, size_t);
+			void clear();
 
 			ENetPacket* getInternalPacket();
 
 			size_t getSize() const;
 			ENetPacketFlag getInternalPacketFlag() const;
+
+			mg::Packet& operator >>(const std::string&);
+			mg::Packet& operator >>(const char*);
+			mg::Packet& operator >>(char);
+			mg::Packet& operator >>(int);
+			mg::Packet& operator >>(float);
+			mg::Packet& operator >>(double);
+
+			mg::Packet& operator <<(const std::string&);
+			mg::Packet& operator <<(const char*);
+			mg::Packet& operator <<(char);
+			mg::Packet& operator <<(int);
+			mg::Packet& operator <<(float);
+			mg::Packet& operator <<(double);
 	};
 }
 

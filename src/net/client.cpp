@@ -88,7 +88,7 @@ bool mg::Client::forceDisconnect() {
 }
 
 void mg::Client::pollEvents(unsigned int timeout) {
-	if(m_host == nullptr) {
+	if(!m_host) {
 		fprintf(stderr, "tried to poll events for uninitialized client.\n");
 		return;
 	}
@@ -101,7 +101,7 @@ void mg::Client::pollEvents(unsigned int timeout) {
 				break;
 			case ENET_EVENT_TYPE_RECEIVE:
         		printf(
-					"A packet of length %u containing %s was received from %s on channel %u.\n",
+					"a packet of length %u containing %s was received from %s on channel %u.\n",
                 	m_event.packet->dataLength,
                 	m_event.packet->data,
                 	m_event.peer->data,
@@ -112,8 +112,6 @@ void mg::Client::pollEvents(unsigned int timeout) {
 				break;
 			case ENET_EVENT_TYPE_DISCONNECT:
 				printf("disconnected from server.\n");
-
-				m_event.peer->data = NULL;
 				m_isConnected = false;
 				break;
 			default:
@@ -130,11 +128,6 @@ bool mg::Client::send(mg::Packet& packet) {
 	}
 	if(m_peer == nullptr) {
 		fprintf(stderr, "tried to send packet from unconnected client.\n");
-		return false;
-	}
-
-	if(packet.getInternalPacket() == nullptr) {
-		printf("client tried to send packet with no data.\n");
 		return false;
 	}
 
