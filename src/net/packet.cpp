@@ -54,7 +54,7 @@ mg::Packet& mg::Packet::operator <<(double data) {
 }
 
 ENetPacket* mg::Packet::getInternalPacket() {
-	ENetPacket* packet = enet_packet_create((void*)&m_data[0], m_data.size() + 1, m_flag);
+	ENetPacket* packet = enet_packet_create((void*)&m_data[0], m_data.size(), m_flag);
 	return packet;
 }
 

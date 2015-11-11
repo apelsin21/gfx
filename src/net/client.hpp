@@ -1,9 +1,14 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
-#include <string>
-
 #include <cstdio>
+
+#include <string>
+#include <thread>
+#include <mutex>
+#include <chrono>
+#include <queue>
+#include <memory>
 
 #include <enet/enet.h>
 
@@ -12,27 +17,34 @@
 namespace mg {
 	class Client {
 		protected:
-			ENetHost* m_host;
-			ENetPeer* m_peer;
-			ENetEvent m_event;
-			ENetAddress m_connectionAddress;
+			bool m_isConnected, m_shouldExitThread;
+			std::mutex m_eventQueueMutex, m_packetQueueMutex;
+			std::queue<ENetEvent> m_eventQueue, m_eventQueueCopy;
+			std::queue<ENetPacket*> m_packetQueue;
+			std::unique_ptr<std::thread> m_workerThread;
 
-			bool m_isConnected;
+			long m_roundTrip, m_roundTripVariance; //in milliseconds
+
+			void runInThread(const ENetAddress&);
+			void sendQueuedPacketsInThread(ENetPeer*);
+			void destroyEventQueue();
+			void destroyPacketQueue();
 		public:
 			Client();
 			~Client();
 
-			bool initialize();
-
-			bool connect(const std::string&, unsigned short);
-			bool disconnect();
-			bool forceDisconnect();
-
-			bool send(mg::Packet&);
-
-			void pollEvents(unsigned int);
-
 			bool isConnected() const;
+
+			void connect(const std::string&, unsigned short);
+			void disconnect();
+
+			void send(mg::Packet&);
+
+			void consumeEvents(
+				std::function<void()>,
+				std::function<void()>,
+		   		std::function<void(const enet_uint8*, std::size_t)>
+			);
 	};
 }
 
