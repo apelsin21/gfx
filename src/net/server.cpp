@@ -13,7 +13,10 @@ mg::Server::~Server() {
 	}
 }
 
-bool mg::Server::initialize() {
+bool mg::Server::listen(const std::string& ip, unsigned short port) {
+	enet_address_set_host(&m_address, ip.c_str());
+	m_address.port = port;
+
 	m_host = enet_host_create(
 		&m_address,
 		32,
@@ -25,7 +28,7 @@ bool mg::Server::initialize() {
 	if(m_host == nullptr) {
 		printf("An error occurred while trying to create an ENet server host.\n \
 				Most likely, the port %u is already bound and therefore unavailable.\n",
-				&m_address.port);
+				m_address.port);
 		return false;
 	}
 

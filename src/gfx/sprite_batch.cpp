@@ -3,6 +3,7 @@
 mg::SpriteBatch::SpriteBatch() {
 	_max = 10000;
 	_current = 0;
+	m_updateDelta = 0;
 
 	_tempBuffer = std::vector<float>(_max);
 
@@ -13,6 +14,7 @@ mg::SpriteBatch::SpriteBatch(unsigned int max) {
 	_max = max;
 	_current = 0;
 	_tempBuffer = std::vector<float>(_max);
+	m_updateDelta = 0;
 
 	_vao = 0;
 	_defaultUV = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -91,19 +93,22 @@ std::shared_ptr<mg::GLVertexBuffer> mg::SpriteBatch::getBuffer() const {
 }
 
 void mg::SpriteBatch::update() {
-	_buffer->updateRegion(_tempBuffer, 0, sizeof(float) * _current);
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	glBufferSubData(GL_ARRAY_BUFFER, sizeof(float) * _current);
+
+	m_updateDelta = 0;
 }
 
-//void mg::SpriteBatch::drawAll(unsigned int texture) {
-//	glBindTexture(GL_TEXTURE_2D, texture);
-//	glBindVertexArray(_vao);
-//
-//	if(_buffer->updateRegion(_tempBuffer, 0, sizeof(float) * _current)) {
-//		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, _current/8);
-//	} else {
-//		printf("Failed to update spritebatch vertexbuffer.\n");
-//		return;
-//	}
-//
-//	_current = 0;
-//}
+void mg::SpriteBatch::drawAll(unsigned int texture) {
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindVertexArray(_vao);
+
+	if(_buffer->updateRegion(_tempBuffer, 0, sizeof(float) * _current)) {
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, _current/8);
+	} else {
+		printf("Failed to update spritebatch vertexbuffer.\n");
+		return;
+	}
+
+	_current = 0;
+}

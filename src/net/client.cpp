@@ -1,8 +1,9 @@
 #include "net/client.hpp"
 
 mg::Client::Client() {
-	m_isConnected = false;
-	m_shouldExitThread = false;
+	m_shouldExitThread.store(false);
+	m_rtt.store(0);
+	m_rttVariance.store(0);
 }
 mg::Client::~Client() {
 }
@@ -19,17 +20,21 @@ void mg::Client::runInThread(const ENetAddress& address) {
 		return;
 	}
 
-	unsigned int timeout = 3000;
+	unsigned int timeout = 1000;
 	enet_peer_timeout(peer, 0, timeout, timeout);
 
 	bool isDisconnecting = false;
 	unsigned int disconnectStartTime = 0;
 
+	ENetEvent e;
+
 	while(peer != nullptr) {
-		m_roundTrip = peer->roundTripTime;
-		m_roundTripVariance = peer->roundTripTimeVariance;
+		{
+			m_rtt.store(peer->roundTripTime);
+			m_rttVariance.store(peer->roundTripTimeVariance);
+		}
 		
-		if(m_shouldExitThread) {
+		if(m_shouldExitThread.load()) {
 			if(!isDisconnecting) {
 				enet_peer_disconnect(peer, 0);
 				isDisconnecting = true;
@@ -51,7 +56,6 @@ void mg::Client::runInThread(const ENetAddress& address) {
 		enet_host_service(host, 0, 0);
 
 		{
-			ENetEvent e;
 			while(enet_host_check_events(host, &e) > 0) {
 				std::lock_guard<std::mutex> lock(m_eventQueueMutex);
 				m_eventQueue.push(e);
@@ -74,7 +78,7 @@ void mg::Client::sendQueuedPacketsInThread(ENetPeer* peer) {
 			auto qp = m_packetQueue.front();
 			m_packetQueue.pop();
 
-			if(enet_peer_send(peer, 0, qp) != 0) {
+			if(enet_peer_send(peer, 0, qp) < 0) {
 				printf("client failed to send packet.\n");
 			}
 			if(qp->referenceCount == 0) {
@@ -85,8 +89,8 @@ void mg::Client::sendQueuedPacketsInThread(ENetPeer* peer) {
 }
 
 void mg::Client::connect(const std::string& ip, unsigned short port) {
-	if(ip.empty()) {
-		fprintf(stderr, "tried to connect client to an empty address.\n");
+	if(m_workerThread != nullptr) {
+		fprintf(stderr, "tried to connect a connected or connecting client.\n");
 		return;
 	}
 
@@ -95,7 +99,10 @@ void mg::Client::connect(const std::string& ip, unsigned short port) {
 	enet_address_set_host(&connectionAddress, ip.c_str());
 	connectionAddress.port = port;
 
-	m_shouldExitThread = false;
+	m_rtt = 0;
+	m_rttVariance = 0;
+	m_shouldExitThread.store(false);
+
 	m_workerThread = std::make_unique<std::thread>(&mg::Client::runInThread, this, connectionAddress);
 }
 void mg::Client::disconnect() {
@@ -124,6 +131,7 @@ void mg::Client::consumeEvents(
 
 		while(!m_eventQueueCopy.empty()) {
 			auto& e = m_eventQueueCopy.front();
+			m_eventQueueCopy.pop();
 
 			switch(e.type) {
 				case ENET_EVENT_TYPE_CONNECT:
@@ -142,7 +150,6 @@ void mg::Client::consumeEvents(
 				default:
 					break;
 			}
-			m_eventQueueCopy.pop();
 		}
 
 		if(isDisconnected) {
@@ -168,7 +175,7 @@ void mg::Client::destroyPacketQueue() {
 }
 
 void mg::Client::destroyEventQueue() {
-	std::lock_guard<std::mutex> lock2(m_eventQueueMutex);
+	std::lock_guard<std::mutex> lock(m_eventQueueMutex);
 	while(!m_eventQueue.empty()) {
 		auto& e = m_eventQueue.front();
 		if(e.type == ENET_EVENT_TYPE_RECEIVE) {
@@ -176,4 +183,11 @@ void mg::Client::destroyEventQueue() {
 		}
 		m_eventQueue.pop();
 	}
+}
+
+unsigned int mg::Client::getRTT() const {
+	return m_rtt.load();
+}
+unsigned int mg::Client::getRTTVariance() const {
+	return m_rttVariance.load();
 }

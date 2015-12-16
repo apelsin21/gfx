@@ -1,43 +1,65 @@
 #include "game/game.hpp"
 
 mg::Game::Game() {
-	_window.setCaption("Game thing");
-	_window.setResolution(glm::vec2(800, 600));
-	_wireframe = false;
-	_windowIsFocused = false;
-	_lastKey = -1;
-	_timesRendered = 0;
+	m_window.setCaption("Game thing");
+	m_window.setResolution(glm::vec2(800, 600));
+	m_wireframe = false;
+	m_windowIsFocused = false;
+	m_lastKey = -1;
+	m_timesRendered = 0;
 
-	_fbo = std::make_shared<mg::FrameBuffer>();
-	_uniforms = std::make_shared<mg::ShaderUniforms>();
+	m_fbo = std::make_shared<mg::FrameBuffer>();
+	m_uniforms = std::make_shared<mg::ShaderUniforms>();
 
-	_worldBatch = std::make_shared<mg::Batch>();
-	_worldTexture = std::make_shared<mg::Texture>();
-	_worldShader = std::make_shared<mg::Shader>();
+	m_worldBatch = std::make_shared<mg::Batch>();
+	m_worldTexture = std::make_shared<mg::Texture>();
+	m_worldShader = std::make_shared<mg::Shader>();
 
-	_screenBatch = std::make_shared<mg::Batch>();
-	_screenShader = std::make_shared<mg::Shader>();
-	_screenMesh = std::make_shared<mg::Mesh>();
+	m_screenBatch = std::make_shared<mg::Batch>();
+	m_screenShader = std::make_shared<mg::Shader>();
+	m_screenMesh = std::make_shared<mg::Mesh>();
 }
 mg::Game::~Game() {
 }
 
 bool mg::Game::load() {
-    if(!_worldShader->loadFromFile("data/shaders/world.vert", "data/shaders/world.frag")) {
+    if(!m_worldShader->loadFromFile("data/shaders/world.vert", "data/shaders/world.frag")) {
         return false;
     }
-	if(!_textureLoader.load("data/textures/cave_rock.png", _worldTexture)) {
+	if(!m_textureLoader.load("data/textures/cave_rock.png", m_worldTexture)) {
         return false;
     }
 
-	if(!_world.generateVoxels()) {
+	std::clock_t start = std::clock();
+	if(!m_world.generateVoxels()) {
 		return false;
 	}
-	if(!_world.generateMesh()) {
+	std::clock_t end = std::clock();
+ 	double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
+	printf("world voxels took %f seconds.\n", elapsed_secs);
+
+	start = std::clock();
+	if(!m_world.generateMesh()) {
+		return false;
+	}
+	end = std::clock();
+ 	elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
+	printf("world mesh took %f seconds.\n", elapsed_secs);
+
+	if(!m_font.load("data/fonts/FreeSans.ttf", 32)) {
+		fprintf(stderr, "failed to load font.\n");
 		return false;
 	}
 
-	if(!_screenShader->loadFromFile("data/shaders/screen.vert", "data/shaders/screen.frag")) {
+	/*
+	m_fontMesh = m_font.getMeshFromString(L"Bajskorv.");
+	if(m_fontMesh == nullptr) {
+		printf("failed to create mesh from font.\n");
+		return false;
+	}
+	*/
+
+	if(!m_screenShader->loadFromFile("data/shaders/screen.vert", "data/shaders/screen.frag")) {
 		return false;
 	}
 
@@ -51,17 +73,17 @@ bool mg::Game::load() {
     	-1.0f,  1.0f,  0.0f, 1.0f
 	};
 
-	_screenMesh->setVertexFormat(mg::VertexFormat::PPTT);
-	if(!_screenMesh->uploadVertexData(quad)) {
+	m_screenMesh->setVertexFormat(mg::VertexFormat::PPTT);
+	if(!m_screenMesh->uploadVertexData(quad)) {
 		return false;
 	}
 
-	if(!_fbo->createColorTexture(glm::vec2(1440, 900))) {
+	if(!m_fbo->createColorTexture(glm::vec2(1680, 1050))) {
 		printf("failed to create FBO color texture.\n");
 		return false;
 	}
 
-	_renderer.setClearColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
+	m_renderer.setClearColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
 
 	return true;
 }
@@ -70,79 +92,79 @@ bool mg::Game::run() {
 	bool run = true;
 
 	while(run) {
-		if(_keyboard.isKeyDown(mg::KEY::ESCAPE)) {
-			_window.grabInput(false);
-			_mouse.hide(false);
+		if(m_keyboard.isKeyDown(mg::KEY::ESCAPE)) {
+			m_window.grabInput(false);
+			m_mouse.hide(false);
 		}
-		if(_keyboard.isKeyDown(mg::KEY::Q)) {
+		if(m_keyboard.isKeyDown(mg::KEY::Q)) {
 			run = false;
 		}
-		if(_keyboard.isKeyDown(mg::KEY::P)) {
-			_wireframe = !_wireframe;
+		if(m_keyboard.isKeyDown(mg::KEY::P)) {
+			m_wireframe = !m_wireframe;
 
-			if(_wireframe) {
+			if(m_wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			} else {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			}
 		}
-		if(_mouse.isLeftButtonDown()) {
-			_window.grabInput(true);
-			_mouse.hide(true);
+		if(m_mouse.isLeftButtonDown()) {
+			m_window.grabInput(true);
+			m_mouse.hide(true);
 			glm::vec2 res = glm::vec2(
-				_window.getResolution().x / 2,
-				_window.getResolution().y / 2
+				m_window.getResolution().x / 2,
+				m_window.getResolution().y / 2
 			);
-			_mouse.setPosition(res, _window);
+			m_mouse.setPosition(res, m_window);
 		}
-		if(_keyboard.isKeyDown(mg::KEY::SPACE)) {
-			if(!_world.setSphere(_player.getPosition(), 10, -10.f)) {
+		if(m_keyboard.isKeyDown(mg::KEY::SPACE)) {
+			if(!m_world.setSphere(m_player.getPosition(), 10, -1.f)) {
 				printf("failed to add voxel\n");
 			}
 		}
-		if(_keyboard.isKeyDown(mg::KEY::G)) {
-			if(!_world.generateMesh()) {
+		if(m_keyboard.isKeyDown(mg::KEY::G)) {
+			if(!m_world.generateMesh()) {
 				printf("world failed to generate vertices.\n");
 			}
 		}
-		if(_keyboard.isKeyDown(mg::KEY::R)) {
-			_world.reset();
-			if(!_world.generateVoxels()) {
+		if(m_keyboard.isKeyDown(mg::KEY::R)) {
+			m_world.reset();
+			if(!m_world.generateVoxels()) {
 				printf("failed to re-generate voxels.\n");
 			}
 		}
-		if(_window.isInputGrabbed()) {
-			_player.update(_keyboard, _mouse, _window);
+		if(m_window.isInputGrabbed()) {
+			m_player.update(m_keyboard, m_mouse, m_window);
 		}
 
-		_uniforms->add("u_view", 		&_player.getViewMatrix()[0][0]);
-		_uniforms->add("u_projection", 	&_player.getProjectionMatrix()[0][0]);
-		_uniforms->add("u_eye_pos", 	std::make_shared<glm::vec3>(_player.getPosition()));
+		m_uniforms->add("u_view", 		&m_player.getViewMatrix()[0][0]);
+		m_uniforms->add("u_projection", 	&m_player.getProjectionMatrix()[0][0]);
+		m_uniforms->add("u_eye_pos", 	std::make_shared<glm::vec3>(m_player.getPosition()));
 
-		_renderer.setSize(_window.getResolution());
+		m_renderer.setSize(m_window.getResolution());
 
-		if(!_worldBatch->set(_world.getMesh(), _uniforms, _worldTexture, _worldShader)) {
+		if(!m_worldBatch->set(m_world.getMesh(), m_uniforms, m_worldTexture, m_worldShader)) {
 			printf("failed to set worldBatch.\n");
 			return false;
 		}
 
-		if(!_renderer.render(_fbo, _worldBatch)) {
+		if(!m_renderer.render(m_fbo, m_worldBatch)) {
 			printf("failed to render world.\n");
 			return false;
 		}
 
-		if(!_screenBatch->set(_screenMesh, nullptr, _fbo->getColorTexture(), _screenShader)) {
+		if(!m_screenBatch->set(m_screenMesh, nullptr, m_fbo->getColorTexture(), m_screenShader)) {
 			printf("failed to set screenBatch.\n");
 			return false;
 		}
 
-		if(!_renderer.render(_screenBatch)) {
+		if(!m_renderer.render(m_screenBatch)) {
 			printf("failed to render screen.\n");
 			return false;
 		}
 
-		_window.pollEvents();
-		_window.swapBuffers();
+		m_window.pollEvents();
+		m_window.swapBuffers();
 	}
 
 	return true;

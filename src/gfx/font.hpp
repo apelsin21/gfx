@@ -5,6 +5,7 @@
 #include <map>
 #include <algorithm>
 #include <stdexcept>
+#include <memory>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -14,20 +15,19 @@
 #include <glm/glm.hpp>
 
 #include "gfx/glyph.hpp"
+#include "gfx/mesh.hpp"
 
 namespace mg {
     class Font {
 		protected:
-			GLuint id;
+			GLuint m_id;
+            std::map<wchar_t, mg::Glyph> m_glyphs;
+			std::wstring m_cacheString;
+            std::string m_path;
+            glm::vec2 m_resolution;
         public:
 			Font();
 			~Font();
-
-            std::map<wchar_t, mg::Glyph> glyphs;
-
-            std::string path;
-			std::wstring cacheString;
-            glm::vec2 resolution;
 
 			void createID();
 			void deleteID();
@@ -35,7 +35,9 @@ namespace mg {
 			bool hasValidID();
 			unsigned int getID();
 
-            bool load(const std::string&, unsigned int);
+            bool load(std::string, unsigned int);
+
+			//std::shared_ptr<mg::Mesh> getMeshFromString(const std::wstring&);
 
 			void render();
     };

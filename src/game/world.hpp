@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <memory>
+#include <cstdio>
+#include <cstring>
 
 #include <glm/gtc/noise.hpp>
 #include <glm/gtx/norm.hpp>

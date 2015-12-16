@@ -1,6 +1,8 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <ctime>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -34,37 +36,38 @@
 namespace mg {
 	class Game {
 		protected:
-			mg::SDL2Window _window;
-			mg::SDL2Keyboard _keyboard;
-			mg::SDL2Mouse _mouse;
+			mg::SDL2Window 		m_window;
+			mg::SDL2Keyboard 	m_keyboard;
+			mg::SDL2Mouse 		m_mouse;
 
-			mg::Renderer _renderer;
-			mg::Font _font;
-			mg::TextureLoader _textureLoader;
-			mg::MeshLoader _meshLoader;
+			mg::Renderer 	m_renderer;
+			mg::Font 		m_font;
 
-			std::shared_ptr<mg::FrameBuffer> _fbo;
-			std::shared_ptr<mg::ShaderUniforms> _uniforms;
+			mg::MeshLoader 					m_meshLoader;
+			mg::TextureLoader 				m_textureLoader;
+			std::shared_ptr<mg::Texture> 	m_worldTexture;
 
-			std::shared_ptr<mg::Batch> _worldBatch;
-			std::shared_ptr<mg::Texture> _worldTexture;
-			std::shared_ptr<mg::Shader> _worldShader;
+			std::shared_ptr<mg::Mesh> m_fontMesh;
+			std::shared_ptr<mg::Mesh> m_screenMesh;
 
-			std::shared_ptr<mg::Shader> _screenShader;
-			std::shared_ptr<mg::Batch> _screenBatch;
-			std::shared_ptr<mg::Mesh> _screenMesh;
+			std::shared_ptr<mg::FrameBuffer> 	m_fbo;
+			std::shared_ptr<mg::ShaderUniforms> m_uniforms;
 
-			mg::SoundPlayer _soundPlayer;
-			mg::Sound _sound;
+			std::shared_ptr<mg::Batch> m_screenBatch;
+			std::shared_ptr<mg::Batch> m_worldBatch;
 
-			mg::Player _player;
-			mg::World _world;
+			std::shared_ptr<mg::Shader> m_worldShader;
+			std::shared_ptr<mg::Shader> m_screenShader;
 
-			mg::Server _server;
+			mg::SoundPlayer m_soundPlayer;
+			mg::Sound m_sound;
 
-			int _lastKey, _timesRendered;
-			bool _wireframe, _windowIsFocused;
-			std::clock_t _lastTime, _currentTime;
+			mg::Player m_player;
+			mg::World m_world;
+
+			int m_lastKey, m_timesRendered;
+			bool m_wireframe, m_windowIsFocused;
+			std::clock_t m_lastTime, m_currentTime;
 		public:
 			Game();
 			~Game();

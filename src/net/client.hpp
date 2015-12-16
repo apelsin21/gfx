@@ -9,6 +9,7 @@
 #include <chrono>
 #include <queue>
 #include <memory>
+#include <atomic>
 
 #include <enet/enet.h>
 
@@ -17,13 +18,13 @@
 namespace mg {
 	class Client {
 		protected:
-			bool m_isConnected, m_shouldExitThread;
 			std::mutex m_eventQueueMutex, m_packetQueueMutex;
 			std::queue<ENetEvent> m_eventQueue, m_eventQueueCopy;
 			std::queue<ENetPacket*> m_packetQueue;
 			std::unique_ptr<std::thread> m_workerThread;
 
-			long m_roundTrip, m_roundTripVariance; //in milliseconds
+			std::atomic_bool m_shouldExitThread;
+			std::atomic_uint_fast32_t m_rtt, m_rttVariance; //in milliseconds
 
 			void runInThread(const ENetAddress&);
 			void sendQueuedPacketsInThread(ENetPeer*);
@@ -39,6 +40,9 @@ namespace mg {
 			void disconnect();
 
 			void send(mg::Packet&);
+
+			unsigned int getRTT() const;
+			unsigned int getRTTVariance() const;
 
 			void consumeEvents(
 				std::function<void()>,

@@ -34,7 +34,7 @@ bool mg::Renderer::render(std::shared_ptr<mg::FrameBuffer> fbo, std::shared_ptr<
 		return false;
 	}
 
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
@@ -58,11 +58,6 @@ bool mg::Renderer::render(std::shared_ptr<mg::FrameBuffer> fbo, std::shared_ptr<
 
 	glClearColor(0.f, 1.f, 1.f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	if(glIsProgram(batch->getShader()->getGLHandle()) == GL_FALSE) {
-		printf("renderer batch got invalid shaderprogram.\n");
-		return false;
-	}
 
 	const GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
 	glDrawBuffers(1, buffers);

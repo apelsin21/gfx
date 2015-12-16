@@ -9,36 +9,36 @@ mg::Font::~Font() {
 
 void mg::Font::createID() {
     if(!this->hasValidID()) {
-        glGenTextures(1, &this->id);
+        glGenTextures(1, &m_id);
         this->bindID(); //Texture name isn't valid until bound
     }
 }
 void mg::Font::deleteID() {
     if(this->hasValidID()) {
-        glDeleteTextures(1, &this->id);
+        glDeleteTextures(1, &m_id);
     }
 }
 void mg::Font::bindID() {
-    glBindTexture(GL_TEXTURE_2D, this->id);
+    glBindTexture(GL_TEXTURE_2D, m_id);
 }
 bool mg::Font::hasValidID() {
-    if(glIsTexture(this->id) == GL_TRUE) {
+    if(glIsTexture(m_id) == GL_TRUE) {
         return true;
     } else {
         return false;
     }
 }
 unsigned int mg::Font::getID() {
-    return this->id;
+    return m_id;
 }
 
-bool mg::Font::load(const std::string& path, unsigned int size) {
+bool mg::Font::load(std::string path, unsigned int size) {
+    m_path = std::move(path);
+
 	if(!this->hasValidID()) {
-        printf("Font %s tried load, but the texture is invalid.\n", path.c_str());
+        printf("Font %s tried load, but the texture is invalid.\n", m_path.c_str());
         return false;
 	}
-
-    this->path = path;
 
     FT_Library fl;
     FT_GlyphSlot fg;
@@ -46,19 +46,19 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
 	FT_Matrix fm;
 
     if(FT_Init_FreeType(&fl)) {
-        printf("Freetype failed to initialize loading font %s.\n", path.c_str());
+        printf("Freetype failed to initialize loading font %s.\n", m_path.c_str());
         return false;
     }
 
-    int error = FT_New_Face(fl, path.c_str(), 0, &ff);
+    int error = FT_New_Face(fl, m_path.c_str(), 0, &ff);
 
 	if(error == FT_Err_Unknown_File_Format) {
-        printf("Font %s failed to load, unknown font format.\n", path.c_str());
+        printf("Font %s failed to load, unknown font format.\n", m_path.c_str());
         return false;
     }
 
     if(FT_Set_Pixel_Sizes(ff, 0, size) != 0) {
-        printf("Font failed to set pixel size %d on %s. Unavailable in font?\n", size, path.c_str());
+        printf("Font failed to set pixel size %d on %s. Unavailable in font?\n", size, m_path.c_str());
         return false;
 	}
     fg = ff->glyph;
@@ -72,27 +72,27 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
     FT_Set_Transform(ff, &fm, NULL);
 
 	//if we have no characters to cache, load some common characters
-	if(this->cacheString.empty()) {
-		this->cacheString = L" abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ1234567890!#¤%&/\"()=?`*^_-:.,'@£$€¥{[]};<>|";
+	if(m_cacheString.empty()) {
+		m_cacheString = L" abcdefghijklmnopqrstuvwxyzåäöABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ1234567890!#¤%&/\"()=?`*^_-:.,'@£$€¥{[]};<>|";
 	}
-    for(size_t i = 0; i < this->cacheString.size(); i++) {
-        if(FT_Load_Char(ff, this->cacheString[i], FT_LOAD_RENDER)) {
-            printf("failed to load character %c from font %s\n", (wchar_t)i, path.c_str());
+    for(size_t i = 0; i < m_cacheString.size(); i++) {
+        if(FT_Load_Char(ff, m_cacheString[i], FT_LOAD_RENDER)) {
+            printf("failed to load character %c from font %s\n", (wchar_t)i, m_path.c_str());
             continue;
         }
 
-		this->resolution.x += fg->bitmap.width;
-		this->resolution.y = std::max((unsigned int)0, fg->bitmap.rows);
+		m_resolution.x += fg->bitmap.width;
+		m_resolution.y = std::max((unsigned int)0, fg->bitmap.rows);
     }
 
 	this->bindID();
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, this->resolution.x, this->resolution.y, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_resolution.x, m_resolution.y, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	float x = 0;
-	for(size_t i = 0; i < this->cacheString.size(); i++) {
-        if(FT_Load_Char(ff, this->cacheString[i], FT_LOAD_RENDER)) {
+	for(size_t i = 0; i < m_cacheString.size(); i++) {
+        if(FT_Load_Char(ff, m_cacheString[i], FT_LOAD_RENDER)) {
             continue;
         }
 
@@ -104,15 +104,15 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
 		character.left = fg->bitmap_left;
 		character.top = fg->bitmap_top;
 
-		float offset = x / this->resolution.x;
+		float offset = x / m_resolution.x;
 		character.uvs = glm::vec4(
 			offset,
 			0.0f,
-			offset + (character.resolution.x / this->resolution.x),
-			character.resolution.y / this->resolution.y
+			offset + (character.resolution.x / m_resolution.x),
+			character.resolution.y / m_resolution.y
 		);
 
-		this->glyphs[this->cacheString[i]] = character;
+		m_glyphs[m_cacheString[i]] = character;
 
 		x += character.resolution.x;
 	}
@@ -128,3 +128,44 @@ bool mg::Font::load(const std::string& path, unsigned int size) {
 
     return true;
 }
+
+/*std::shared_ptr<mg::Mesh> mg::Font::getMeshFromString(const std::wstring& text) {
+	glm::vec2 pen;
+	std::shared_ptr<mg::Mesh> mesh = std::make_shared<mg::Mesh>();
+	std::vector<float> vertexData;
+
+	for(unsigned int i = 0; i < text.size(); i++) {
+		mg::Glyph glyph = m_glyphs[text[i]];
+
+		vertexData.reserve(vertexData.size() + 6*4);
+    	float newQuad[] = {
+			-1.0f  1.0f  0.0f 1.0f //Top left
+    		 1.0f  1.0f  1.0f 1.0f //Top right
+    		 1.0f -1.0f  1.0f 0.0f //Bottom right
+    		 1.0f -1.0f  1.0f 0.0f //Bottom right
+    		-1.0f -1.0f  0.0f 0.0f //Bottom left
+    		-1.0f  1.0f  0.0f 1.0f //Top left
+		}
+
+		//add(
+		//	glm::vec2(pen.x + glyph.left + glyph.resolution.x, pen.y - (glyph.top + glyph.advance.y - glyph.resolution.y)),
+		//	glm::vec2(glyph.resolution.x, glyph.resolution.y),
+		//	glyph.uvs
+		//);
+
+		if(text[i] == '\n') { //newline
+			pen = glm::vec2(pen.x, pen.y - (m_resolution.y*2.0f));
+		} else if(text[i] == '\t') { //tab
+			pen.x += (glyph.advance.x*2.0f) + (m_glyphs[' '].advance.x * 8.0f);
+		} else { //a normal character
+			pen.x += glyph.advance.x*2.0f;
+		}
+	}
+
+	if(!mesh.uploadVertexData(vertexData)) {
+		return nullptr;
+	}
+
+	return mesh;
+}
+*/

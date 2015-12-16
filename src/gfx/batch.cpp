@@ -1,12 +1,12 @@
 #include "gfx/batch.hpp"
 
 mg::Batch::Batch() {
-	glGenVertexArrays(1, &_vao);
-	glBindVertexArray(_vao);
+	glGenVertexArrays(1, &m_vao);
+	glBindVertexArray(m_vao);
 }
 mg::Batch::~Batch() {
-	if(glIsVertexArray(_vao) == GL_TRUE) {
-		glDeleteVertexArrays(1, &_vao);
+	if(glIsVertexArray(m_vao) == GL_TRUE) {
+		glDeleteVertexArrays(1, &m_vao);
 	}
 }
 
@@ -25,27 +25,27 @@ bool mg::Batch::set(
 		return false;
 	}
 
-	_mesh = mesh;
-	_uniforms = uniforms;
-	_texture = texture;
-	_shader = shader;
+	m_mesh 		=	std::move(mesh		);
+	m_uniforms 	= 	std::move(uniforms	);
+	m_texture 	= 	std::move(texture	);
+	m_shader    =	std::move(shader	);
 
-	if(glIsVertexArray(_vao) == GL_FALSE) {
+	if(glIsVertexArray(m_vao) == GL_FALSE) {
 		printf("batch failed to bind VAO.\n");
 		return false;
 	}
-	if(glIsBuffer(_mesh->getVertexBuffer()) == GL_FALSE) {
+	if(glIsBuffer(m_mesh->getVertexBuffer()) == GL_FALSE) {
 		printf("batch failed to bind mesh vertex buffer.\n");
 		return false;
 	}
 
-	glBindVertexArray(_vao);
+	glBindVertexArray(m_vao);
 
-	GLint pos = _shader->getAttribLocation("v_pos");
-	GLint normal = _shader->getAttribLocation("v_normal");
-	GLint uv = _shader->getAttribLocation("v_uv");
+	GLint pos = m_shader->getAttribLocation("v_pos");
+	GLint normal = m_shader->getAttribLocation("v_normal");
+	GLint uv = m_shader->getAttribLocation("v_uv");
 
-	switch(_mesh->getVertexFormat()) {
+	switch(m_mesh->getVertexFormat()) {
 		case mg::VertexFormat::PPTT:
 			if(pos == -1) {
 				printf("batch failed to find v_pos shader attribute.\n");
@@ -58,7 +58,7 @@ bool mg::Batch::set(
 			glEnableVertexAttribArray(pos);
 			glEnableVertexAttribArray(uv);
 
-			glBindBuffer(GL_ARRAY_BUFFER, _mesh->getVertexBuffer());
+			glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getVertexBuffer());
 
 			glVertexAttribPointer(
 					pos,
@@ -90,7 +90,7 @@ bool mg::Batch::set(
 			glEnableVertexAttribArray(pos);
 			glEnableVertexAttribArray(normal);
 
-			glBindBuffer(GL_ARRAY_BUFFER, _mesh->getVertexBuffer());
+			glBindBuffer(GL_ARRAY_BUFFER, m_mesh->getVertexBuffer());
 
 			glVertexAttribPointer(
 					pos,
@@ -119,18 +119,18 @@ bool mg::Batch::set(
 }
 
 GLuint mg::Batch::getVAO() const {
-	return _vao;
+	return m_vao;
 }
 
 std::shared_ptr<mg::Mesh> mg::Batch::getMesh() const {
-	return _mesh;
+	return m_mesh;
 }
 std::shared_ptr<mg::ShaderUniforms> mg::Batch::getUniforms() const {
-	return _uniforms;
+	return m_uniforms;
 }
 std::shared_ptr<mg::Texture> mg::Batch::getTexture() const {
-	return _texture;
+	return m_texture;
 }
 std::shared_ptr<mg::Shader> mg::Batch::getShader() const {
-	return _shader;
+	return m_shader;
 }

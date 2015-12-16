@@ -19,7 +19,7 @@ namespace mg {
 			Server();
 			~Server();
 
-			bool initialize();
+			bool listen(const std::string&, unsigned short);
 
 			std::string getAddress();
 			unsigned short getPort() const;

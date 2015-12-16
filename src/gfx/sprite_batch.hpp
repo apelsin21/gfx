@@ -15,8 +15,8 @@
 namespace mg {
 	class SpriteBatch {
 		public:
-			GLuint _vao;
-			std::shared_ptr<mg::GLVertexBuffer> _buffer;
+			GLuint _vao, m_vbo;
+			unsigned int m_updateDelta;
 
 			unsigned int _max, _current;
 			glm::vec4 _defaultUV;

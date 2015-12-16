@@ -13,12 +13,12 @@
 namespace mg {
 	class Batch {
 		protected:
-			std::shared_ptr<mg::Mesh>           _mesh;
-			std::shared_ptr<mg::ShaderUniforms> _uniforms;
-			std::shared_ptr<mg::Texture>  		_texture;
-			std::shared_ptr<mg::Shader>         _shader;
+			std::shared_ptr<mg::Mesh>           m_mesh;
+			std::shared_ptr<mg::ShaderUniforms> m_uniforms;
+			std::shared_ptr<mg::Texture>  		m_texture;
+			std::shared_ptr<mg::Shader>         m_shader;
 
-			GLuint _vao;
+			GLuint m_vao;
 		public:
 			Batch();
 			~Batch();
